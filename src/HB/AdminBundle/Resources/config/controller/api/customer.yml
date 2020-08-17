@@ -1,0 +1,6 @@
+services:
+#    hb.admin.controller.api.customer.signup:
+#        class: HB\AdminBundle\Controller\Api\SignUpController
+#        arguments:
+#            - "@doctrine.orm.entity_manager"
+#            - "@security.password_encoder"

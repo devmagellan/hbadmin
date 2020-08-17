@@ -1,0 +1,28 @@
+services:
+    hb.admin.controller.api.hook.in.type_form:
+        class: HB\AdminBundle\Controller\Api\Hook\In\TypeFormController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@customer.sign_up.service"
+            - "@intercom_client"
+
+    hb.admin.controller.api.hook.in.teachable:
+        class: HB\AdminBundle\Controller\Api\Hook\In\TeachableController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@customer.sign_up.service"
+            - "@intercom_client"
+
+    hb.admin.controller.api.hook.in.youcanbookme:
+        class: HB\AdminBundle\Controller\Api\Hook\In\YouCanBookMeController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@customer.sign_up.service"
+            - "@intercom_client"
+
+    hb.admin.controller.api.hook.in.bigmarker:
+        class: HB\AdminBundle\Controller\Api\Hook\In\BigmarkerController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@customer.sign_up.service"
+            - "@intercom_client"

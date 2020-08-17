@@ -1,0 +1,26 @@
+<link id="bsdp-css" href="{{ asset('bundles/hbadmin/datetimepicker-master/build/jquery.datetimepicker.min.css') }}"
+      rel="stylesheet">
+
+{#    datepicker init   #}
+<script src="{{ asset('bundles/hbadmin/datetimepicker-master/build/jquery.datetimepicker.full.min.js') }}"></script>
+<script src="{{ asset('bundles/hbadmin/vendors/js/moment.min.js') }}"></script>
+<script>
+    $(function () {
+        $.datetimepicker.setLocale('ru');
+
+        $('.datepicker').datetimepicker({
+            format: 'Y-m-d',
+            timepicker: false,
+        });
+
+        $('.datetimepicker').datetimepicker({
+            format: 'Y-m-d H:i',
+        });
+
+        $('.datetimepicker-webinar').datetimepicker({
+            format: 'Y-m-d H:i',
+            minDate: moment().add(1, 'days').format('YYYY-MM-DD HH:mm')
+        });
+    });
+
+</script>

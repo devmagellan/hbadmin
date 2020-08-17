@@ -1,0 +1,19 @@
+services:
+    hb.admin.controller.sale_funnel.walker_start.create:
+        class: HB\AdminBundle\Controller\SaleFunnel\WalkerStart\CreateController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@router"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.walker_start.remove:
+        class: HB\AdminBundle\Controller\SaleFunnel\WalkerStart\RemoveController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@router"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.walker_start.info:
+        class: HB\AdminBundle\Controller\SaleFunnel\WalkerStart\InfoController
+        arguments:
+            - "@twig"

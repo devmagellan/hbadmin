@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>HBAdmin</title>
+    <link href="{{ asset('bundles/hbadmin/') }}vendors/css/font-awesome.min.css" rel="stylesheet">
+    <link href="{{ asset('bundles/hbadmin/') }}vendors/css/simple-line-icons.min.css" rel="stylesheet">
+    <link href="{{ asset('bundles/hbadmin/') }}css/style.css" rel="stylesheet">
+
+    {% include '@HBAdmin/Component/user-guiding-layer-js.html.twig' %}
+
+</head>
+
+<body class="app flex-row align-items-center">
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card-group">
+                <div class="card p-4">
+                    <div class="card-body">
+
+
+                        {% for message in app.flashes('success') %}
+                            <div class="alert alert-primary" role="alert">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+
+                        {% for message in app.flashes('error') %}
+                            <div class="alert alert-danger" role="alert">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+
+
+                        <h1>Авторизация</h1>
+                        {% if error %}
+                            <p style="color: red">{{ error.messageKey|trans({}, 'security', 'ru') }}</p>
+                        {% endif %}
+                        <form method="post" action="{{ path('login') }}">
+                        <p class="text-muted">Авторизируйтесь в системе</p>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="icon-user"></i></span>
+                            </div>
+                            <input name="_username" type="text" class="form-control" placeholder="Email">
+                        </div>
+                        <div class="input-group mb-4">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="icon-lock"></i></span>
+                            </div>
+                            <input name="_password" type="password" class="form-control" placeholder="Пароль">
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <button type="submit" class="btn btn-primary px-4">Войти</button>
+                            </div>
+                            <div class="col-6 text-right">
+                                <a href="{{ path('hb.customer.password.recovery.request') }}" class="btn btn-link px-0">Забыли пароль?</a>
+                            </div>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{{ asset('bundles/hbadmin/') }}vendors/js/jquery.min.js"></script>
+<script src="{{ asset('bundles/hbadmin/') }}vendors/js/popper.min.js"></script>
+<script src="{{ asset('bundles/hbadmin/') }}vendors/js/bootstrap.min.js"></script>
+
+</body>
+</html>

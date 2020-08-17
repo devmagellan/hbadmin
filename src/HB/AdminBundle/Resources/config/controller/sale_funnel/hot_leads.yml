@@ -1,0 +1,44 @@
+services:
+    hb.admin.controller.sale_funnel.hot_leads.create:
+        class: HB\AdminBundle\Controller\SaleFunnel\HotLeads\CreateController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@router"
+            - "@access.service"
+            - "@twig"
+
+    hb.admin.controller.sale_funnel.hot_leads.remove:
+        class: HB\AdminBundle\Controller\SaleFunnel\HotLeads\RemoveController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@router"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.hot_leads.remove_success_history:
+        class: HB\AdminBundle\Controller\SaleFunnel\HotLeads\RemoveSuccessHistoryController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@router"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.hot_leads.edit:
+        class: HB\AdminBundle\Controller\SaleFunnel\HotLeads\EditController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@router"
+            - "@form.factory"
+            - "@form.handler"
+            - "@twig"
+            - "@session.flash_bag"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.hot_leads.edit_success_history:
+        class: HB\AdminBundle\Controller\SaleFunnel\HotLeads\EditSuccessHistoryController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@router"
+            - "@form.factory"
+            - "@form.handler"
+            - "@twig"
+            - "@session.flash_bag"
+            - "@access.service"

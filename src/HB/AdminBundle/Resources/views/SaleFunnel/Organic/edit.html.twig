@@ -1,0 +1,273 @@
+{% extends "@HBAdmin/layout.html.twig" %}
+
+{% import '@HBAdmin/macros/view_link.html.twig' as demo_link %}
+{% import '@HBAdmin/macros/return_to_course.html.twig' as return %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="{{ path('hb.courses.list') }}">Продукты</a>
+        </li>
+        <li class="breadcrumb-item active">
+            <a href="{{ path('hb.course.edit', {id: funnel.course.id}) }}">{{ funnel.course.info.title }}</a>
+        </li>
+        <li class="breadcrumb-item">Воронки</li>
+        <li class="breadcrumb-item">Органическая воронка</li>
+        <li class="breadcrumb-item"><b>Наполнение</b></li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+    {% set block_required = '<div class="pull-right"><span class="form-error-icon badge badge-danger text-uppercase">Обязательный</span></div>' %}
+
+    <div class="card">
+        <div class="card-header">
+            Блоки воронки {{ return.render(funnel.course.id) }}
+            <div class="pull-right">
+                {{ demo_link.render(asset('bundles/hbadmin/img/funnel_landing/organic.jpg')) }}
+
+                <a href="{{ path('hb.sale_funnel.organic.preview', {id: funnel.id}) }}"
+                   class="btn btn-sm btn-pill btn-outline-primary"
+                   title="Предпросмотр"
+                   target="_blank"
+                >
+                    <i class="fa fa-eye"></i>
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            <h4>
+                <a href="https://docs.google.com/document/d/19A-rSvMTAqVsuviRa5USvmZfSb6Hr9wus7Hb_CBY9yE/edit"
+                   target="_blank"> Пример заполненной органической воронки</a>
+            </h4>
+            <div id="accordion" role="tablist">
+
+                <div class="card">
+                    <div class="card-header" role="tab">
+                        <h5 class="mb-0">
+                            <a data-toggle="collapse" href="#block_1" aria-expanded="true" aria-controls="collapseOne">
+                                Б1. Первый экран - баннер
+                            </a>
+                        </h5>
+
+                    </div>
+                    <div class="collapse show" id="block_1" role="tabpanel" aria-labelledby="headingOne"
+                         data-parent="#accordion">
+                        <div class="card-body block1">
+                            {{ render(controller('hb.admin.controller.sale_funnel.organic.block1banner:handleAction', {id: funnel.id})) }}
+                        </div>
+
+                        {% include '@HBAdmin/SaleFunnel/Organic/blocks/js/block1-js.html.twig' %}
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header" role="tab">
+                        {{ block_required | raw }}
+                        <h5 class="mb-0">
+                            <a class="collapsed" data-toggle="collapse" href="#block_2" aria-expanded="false"
+                               aria-controls="collapseTwo">
+                                Б2. Что мы придумали
+                            </a>
+                        </h5>
+                    </div>
+                    <div class="collapse" id="block_2" role="tabpanel" aria-labelledby="headingTwo"
+                         data-parent="#accordion">
+                        <div class="card-body block2">
+                            {{ render(controller('hb.admin.controller.sale_funnel.organic.block2main_info:handleAction', {id: funnel.id})) }}
+                        </div>
+                        {% include '@HBAdmin/SaleFunnel/Organic/blocks/js/block2-js.html.twig' %}
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header" role="tab">
+                        {{ block_required | raw }}
+                        <h5 class="mb-0">
+                            <a class="collapsed" data-toggle="collapse" href="#block_3" aria-expanded="false"
+                               aria-controls="collapseThree">
+                                Б3. Чему Вы научитесь
+                            </a>
+                        </h5>
+                    </div>
+                    <div class="collapse" id="block_3" role="tabpanel" aria-labelledby="headingThree"
+                         data-parent="#accordion">
+                        <div class="card-body block3">
+                            {{ render(controller('hb.admin.controller.sale_funnel.organic.block3knowledge:handleAction', {id: funnel.id})) }}
+                        </div>
+                        {% include '@HBAdmin/SaleFunnel/Organic/blocks/js/block3-js.html.twig' %}
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header" role="tab">
+                        <h5 class="mb-0">
+                            <a class="collapsed" data-toggle="collapse" href="#block_4" aria-expanded="false"
+                               aria-controls="collapseThree">
+                                Б4. Призыв к действию 1
+                            </a>
+                        </h5>
+                    </div>
+                    <div class="collapse" id="block_4" role="tabpanel" aria-labelledby="headingThree"
+                         data-parent="#accordion">
+                        <div class="card-body block4">
+                            {{ render(controller('hb.admin.controller.sale_funnel.organic.block4action_call_1:handleAction', {id: funnel.id})) }}
+                        </div>
+
+                        {% include '@HBAdmin/SaleFunnel/Organic/blocks/js/block4-js.html.twig' %}
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header" role="tab">
+                        {{ block_required | raw }}
+                        <h5 class="mb-0">
+                            <a class="collapsed" data-toggle="collapse" href="#block_5" aria-expanded="false"
+                               aria-controls="collapseThree">
+                                Б5. Курс рекомендуется
+                            </a>
+                        </h5>
+                    </div>
+                    <div class="collapse" id="block_5" role="tabpanel" aria-labelledby="headingThree"
+                         data-parent="#accordion">
+                        <div class="card-body block5">
+                            {{ render(controller('hb.admin.controller.sale_funnel.organic.block5recommended:handleAction', {id: funnel.id})) }}
+                        </div>
+
+                        {% include '@HBAdmin/SaleFunnel/Organic/blocks/js/block5-js.html.twig' %}
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header" role="tab">
+                        {{ block_required | raw }}
+                        <h5 class="mb-0">
+                            <a class="collapsed" data-toggle="collapse" href="#block_6" aria-expanded="false"
+                               aria-controls="collapseThree">
+                                Б6. Автор курса
+                            </a>
+                        </h5>
+                    </div>
+                    <div class="collapse" id="block_6" role="tabpanel" aria-labelledby="headingThree"
+                         data-parent="#accordion">
+                        <div class="card-body block6">
+                            {{ render(controller('hb.admin.controller.sale_funnel.organic.block6author:handleAction', {id: funnel.id})) }}
+                        </div>
+                        {% include '@HBAdmin/SaleFunnel/Organic/blocks/js/block6-js.html.twig' %}
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header" role="tab">
+                        <h5 class="mb-0">
+                            <a class="collapsed" data-toggle="collapse" href="#block_7" aria-expanded="false"
+                               aria-controls="collapseThree">
+                                Б7. Видео отзывы
+                            </a>
+                        </h5>
+                    </div>
+                    <div class="collapse" id="block_7" role="tabpanel" aria-labelledby="headingThree"
+                         data-parent="#accordion">
+                        <div class="card-body block7">
+                            {{ render(controller('hb.admin.controller.sale_funnel.organic.block7feedback:handleAction', {id: funnel.id})) }}
+                        </div>
+                        {% include '@HBAdmin/SaleFunnel/Organic/blocks/js/block7-js.html.twig' %}
+                    </div>
+                </div>
+
+
+                <div class="card">
+                    <div class="card-header" role="tab">
+                        <h5 class="mb-0">
+                            <a class="collapsed" data-toggle="collapse" href="#block_8" aria-expanded="false"
+                               aria-controls="collapseThree">
+                                Б8. Призыв к действию 2
+                            </a>
+                        </h5>
+                    </div>
+                    <div class="collapse" id="block_8" role="tabpanel" aria-labelledby="headingThree"
+                         data-parent="#accordion">
+                        <div class="card-body block8">
+                            {{ render(controller('hb.admin.controller.sale_funnel.organic.block8action_call_2:handleAction', {id: funnel.id})) }}
+                        </div>
+                        {% include '@HBAdmin/SaleFunnel/Organic/blocks/js/block8-js.html.twig' %}
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header" role="tab">
+                        <h5 class="mb-0">
+                            <a class="collapsed" data-toggle="collapse" href="#block_9" aria-expanded="false"
+                               aria-controls="collapseThree">
+                                Б9. Логотипы компаний
+                            </a>
+                        </h5>
+                    </div>
+                    <div class="collapse" id="block_9" role="tabpanel" aria-labelledby="headingThree"
+                         data-parent="#accordion">
+                        <div class="card-body block9">
+                            {{ render(controller('hb.admin.controller.sale_funnel.organic.block9companies:handleAction', {id: funnel.id})) }}
+                        </div>
+                        {% include '@HBAdmin/SaleFunnel/Organic/blocks/js/block9-js.html.twig' %}
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header" role="tab">
+                        <h5 class="mb-0">
+                            <a class="collapsed" data-toggle="collapse" href="#block_10" aria-expanded="false"
+                               aria-controls="collapseThree">
+                                Б10. Дополнительные блоки
+                            </a>
+                        </h5>
+                    </div>
+                    <div class="collapse" id="block_10" role="tabpanel" aria-labelledby="headingThree"
+                         data-parent="#accordion">
+                        <div class="card-body block10">
+                            {{ render(controller('hb.admin.controller.sale_funnel.organic.block10additional_blocks:handleAction', {id: funnel.id})) }}
+                        </div>
+                        {% include '@HBAdmin/SaleFunnel/Organic/blocks/js/block10-js.html.twig' %}
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header" role="tab">
+                        <h5 class="mb-0">
+                            <a class="collapsed" data-toggle="collapse" href="#block_11" aria-expanded="false"
+                               aria-controls="collapseThree">
+                                Б11. Тексты для страницы оплаты
+                            </a>
+                        </h5>
+                    </div>
+                    <div class="collapse" id="block_11" role="tabpanel" aria-labelledby="headingThree"
+                         data-parent="#accordion">
+                        <div class="card-body block11">
+                            {{ render(controller('hb.admin.controller.sale_funnel.organic.block11payment_text:handleAction', {id: funnel.id})) }}
+                        </div>
+                        {% include '@HBAdmin/SaleFunnel/Organic/blocks/js/block11-js.html.twig' %}
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header" role="tab">
+                        <h5 class="mb-0">
+                            <a class="collapsed" data-toggle="collapse" href="#block_12" aria-expanded="false"
+                               aria-controls="collapseThree">
+                                Б12. Подпись автора на сертификат
+                            </a>
+                        </h5>
+                    </div>
+                    <div class="collapse" id="block_12" role="tabpanel" aria-labelledby="headingThree"
+                         data-parent="#accordion">
+                        <div class="card-body block12">
+                            {{ render(controller('hb.admin.controller.sale_funnel.organic.block12photo_signature:handleAction', {id: funnel.id})) }}
+                        </div>
+                        {% include '@HBAdmin/SaleFunnel/Organic/blocks/js/block12-js.html.twig' %}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

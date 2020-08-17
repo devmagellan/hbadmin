@@ -1,0 +1,70 @@
+{% if saved %}
+    <div class="alert alert-success" role="alert">Сохранено!</div>
+{% endif %}
+<div class="row">
+
+    <div class="col-md-6">
+        <h5>Домашнее задание</h5>
+
+        <form method="post" name="block2_homework" data-funnel-id="{{ funnel.id }}">
+            {{ form_widget(formHomework) }}
+
+            <button type="submit" class="btn btn-success">
+                Сохранить
+            </button>
+        </form>
+
+        <br>
+        <h6>Файл домашнего задания (не обязательно)</h6>
+        {% if funnel.block2HomeworkFile %}
+
+            <a href="{{ funnel.block2HomeworkFile.fileUrl }}" target="_blank">
+                {{ funnel.block2HomeworkFile.fileName }}
+            </a>
+
+            <button class="btn btn-pill btn-sm btn-outline-danger" id="block2_remove_homework_file"><i
+                        class="fa fa-remove"></i>
+            </button>
+            <br><br>
+        {% endif %}
+        <button type="button" class="btn btn-outline-blue" id="block2_upload_homework_file">
+            <i class="fa fa-file"></i>Загрузить файл
+        </button>
+
+    </div>
+
+    <div class="col-md-6">
+        <h5>Рабочая тетрадь</h5>
+        <form method="post" name="block2_workbook" data-funnel-id="{{ funnel.id }}">
+            <a href="https://drive.google.com/file/d/0B4tVRHBn-r6KeTZRTUxqZXlfNVEtWlc4NU1ZZFp3Vkk1RDEw/view?usp=drive_open"
+               target="_blank">Пример рабочей тетради</a>
+            <br>
+
+            {{ form_widget(formWorkbook) }}
+
+            <button type="submit" class="btn btn-success">
+                Сохранить
+            </button>
+        </form>
+
+        <br>
+        <h6>Файл рабочей тетради (обязательно)</h6>
+        {% if funnel.block2WorkBookFile %}
+
+            <a href="{{ funnel.block2WorkBookFile.fileUrl }}" target="_blank">
+                {{ funnel.block2WorkBookFile.fileName }}
+            </a>
+            <button class="btn btn-pill btn-sm btn-outline-danger" id="block2_remove_workbook_file"><i
+                        class="fa fa-remove"></i>
+            </button>
+            <br><br>
+        {% endif %}
+
+
+        <button type="button" class="btn btn-outline-blue" id="block2_upload_workbook_file">
+            <i class="fa fa-file"></i>Загрузить файл
+        </button>
+
+    </div>
+
+</div>

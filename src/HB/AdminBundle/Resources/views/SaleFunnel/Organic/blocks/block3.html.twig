@@ -1,0 +1,39 @@
+{% if added %}
+    <div class="alert alert-success" role="alert">Добавлено!</div>
+{% endif %}
+<div class="row">
+    <div class="col-md-4">
+        <form method="post" name="block3" data-funnel-id="{{ funnel.id }}">
+            {{ form_widget(form) }}
+            <button type="submit" class="btn btn-success">
+                Добавить
+            </button>
+        </form>
+    </div>
+
+    <div class="col-md-4">
+        {% if funnel.block3KnowledgeSkills | length != 3 and funnel.block3KnowledgeSkills| length != 6 %}
+            <span class="invalid-feedback d-block">
+                <span class="d-block">
+                    <span class="form-error-icon badge badge-danger text-uppercase">Ошибка</span> <span class="form-error-message">Необходимо указать 3 или 6 навыков.</span>
+                </span>
+            </span>
+        {% endif %}
+        {% if funnel.block3KnowledgeSkills | length > 0 %}
+            <table class="table">
+                {% for skill in funnel.block3KnowledgeSkills %}
+                    <tr>
+                        <td>{{ skill.skill }}</td>
+                        <td>
+                            <button type="button" id="block3_remove_skill_{{ skill.id }}" data-skill-id="{{ skill.id }}" class="btn btn-pill btn-sm btn-outline-danger">
+                                <i class="fa fa-remove"></i>
+                            </button>
+                        </td>
+                    </tr>
+                {% endfor %}
+
+            </table>
+        {% endif %}
+    </div>
+
+</div>

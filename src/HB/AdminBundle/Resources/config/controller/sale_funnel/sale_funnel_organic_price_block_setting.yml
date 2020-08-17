@@ -1,0 +1,37 @@
+services:
+    hb.admin.controller.sale_funnel_organic_price_block.setting.basic:
+        class: HB\AdminBundle\Controller\SaleFunnel\Organic\PriceBlock\PriceBlockBasicController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@form.factory"
+            - "@twig"
+            - "@form.handler"
+            - "@course.price_block.service"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel_organic_price_block.setting.optimal:
+        class: HB\AdminBundle\Controller\SaleFunnel\Organic\PriceBlock\PriceBlockOptimalController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@form.factory"
+            - "@twig"
+            - "@form.handler"
+            - "@course.price_block.service"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel_organic_price_block.setting.vip:
+        class: HB\AdminBundle\Controller\SaleFunnel\Organic\PriceBlock\PriceBlockVIPController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@form.factory"
+            - "@twig"
+            - "@form.handler"
+            - "@course.price_block.service"
+            - "@access.service"
+
+
+    hb.admin.controller.sale_funnel_organic_block.setting.remove_thesis:
+        class: HB\AdminBundle\Controller\SaleFunnel\Organic\PriceBlock\RemovePriceBlockSettingThesisController
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - "@access.service"

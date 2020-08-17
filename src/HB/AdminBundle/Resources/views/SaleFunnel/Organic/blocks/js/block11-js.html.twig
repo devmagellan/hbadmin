@@ -1,0 +1,65 @@
+<script>
+
+    function updateBlock11() {
+        $.get(
+            Routing.generate('hb.sale_funnel.organic.block11payment_text', {id: {{ funnel.id }}}),
+            function (response) {
+                if (response.status && response.status === 'error' && response.message) {
+                    alert(response.message);
+                } else {
+                    $('div.block11').html(response);
+                }
+
+
+            }
+        );
+    }
+
+    function removePaymentText(id)
+    {
+        openHoldon();
+        $.post(
+            Routing.generate('hb.sale_funnel.organic.block11payment_text.remove', {id: id, funnel: {{ funnel.id }} }),
+            function (response) {
+                if ('success' === response.status) {
+                    updateBlock11();
+                } else if (response.status && response.status === 'error' && response.message) {
+                    alert(response.message);
+                }
+                closeHoldon();
+            }
+        )
+    }
+
+    $(function () {
+        var block11 = $('div.block11');
+        $(block11).on('submit', 'form[name=block11]', function (e) {
+            openHoldon();
+            e.preventDefault();
+
+            var formData = $(this).serialize();
+            var id = $(this).data('funnel-id');
+
+            $.ajax({
+                type: "POST",
+                url: Routing.generate('hb.sale_funnel.organic.block11payment_text', {id: id}),
+                data: formData,
+                dataType: "json",
+                success: function (response) {
+                    $(block11).html(response.responseText);
+                    closeHoldon();
+                },
+                error: function (response) {
+                    $(block11).html(response.responseText);
+                    closeHoldon();
+                }
+            });
+
+            return false;
+        }).on('click', 'button[id^=block11_remove_payment_text_]', function () {
+            var id = $(this).data('text-id');
+            removePaymentText(id)
+        });
+
+    });
+</script>

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>HBAdmin</title>
+
+    <link rel="apple-touch-icon" sizes="57x57" href="//cdn.baxtep.com/img/favicon/apple-icon-57x57.png?v=1">
+    <link rel="apple-touch-icon" sizes="60x60" href="//cdn.baxtep.com/img/favicon/apple-icon-60x60.png?v=1">
+    <link rel="apple-touch-icon" sizes="72x72" href="//cdn.baxtep.com/img/favicon/apple-icon-72x72.png?v=1">
+    <link rel="apple-touch-icon" sizes="76x76" href="//cdn.baxtep.com/img/favicon/apple-icon-76x76.png?v=1">
+    <link rel="apple-touch-icon" sizes="114x114" href="//cdn.baxtep.com/img/favicon/apple-icon-114x114.png?v=1">
+    <link rel="apple-touch-icon" sizes="120x120" href="//cdn.baxtep.com/img/favicon/apple-icon-120x120.png?v=1">
+    <link rel="apple-touch-icon" sizes="144x144" href="//cdn.baxtep.com/img/favicon/apple-icon-144x144.png?v=1">
+    <link rel="apple-touch-icon" sizes="152x152" href="//cdn.baxtep.com/img/favicon/apple-icon-152x152.png?v=1">
+    <link rel="apple-touch-icon" sizes="180x180" href="//cdn.baxtep.com/img/favicon/apple-icon-180x180.png?v=1">
+    <link rel="icon" type="image/png" sizes="192x192" href="//cdn.baxtep.com/img/favicon/android-icon-192x192.png?v=1">
+    <link rel="icon" type="image/png" sizes="32x32" href="//cdn.baxtep.com/img/favicon/favicon-32x32.png?v=1">
+    <link rel="icon" type="image/png" sizes="96x96" href="//cdn.baxtep.com/img/favicon/favicon-96x96.png?v=1">
+    <link rel="icon" type="image/png" sizes="16x16" href="//cdn.baxtep.com/img/favicon/favicon-16x16.png?v=1">
+
+    <link rel="manifest" href="//cdn.baxtep.com/img/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="//cdn.baxtep.com/img/favicon/ms-icon-144x144.png?v=1">
+    <meta name="theme-color" content="#FF6400">
+
+    <!-- Icons -->
+    <link href="{{ asset('bundles/hbadmin/vendors/css/flag-icon.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('bundles/hbadmin/vendors/css/font-awesome.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('bundles/hbadmin/vendors/css/simple-line-icons.min.css') }}" rel="stylesheet">
+
+    <!-- Main styles for this application -->
+    <link href="{{ asset('bundles/hbadmin/css/style.css') }}" rel="stylesheet">
+    <link href="{{ asset('bundles/hbadmin/bootstrap4-editable/additional/datetimepicker.css') }}" rel="stylesheet">
+    {#<link href="{{ asset('bundles/hbadmin/bootstrap4-editable/additional/bootstrap-editable.css') }}" rel="stylesheet" >#}
+    <link href="{{ asset('bundles/hbadmin/css/own.css') }}" rel="stylesheet">
+
+    <script src="{{ asset('bundles/hbadmin/vendors/js/jquery.min.js') }}"></script>
+    <script src="{{ asset('bundles/hbadmin/vendors/js/popper.min.js') }}"></script>
+    <script src="{{ asset('bundles/hbadmin/vendors/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('bundles/hbadmin/vendors/js/pace.min.js') }}"></script>
+
+    <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
+
+
+    <link href="{{ asset('bundles/hbadmin/Holdon/css/HoldOn.min.css') }}" rel="stylesheet">
+    <script src="{{ asset('bundles/hbadmin/Holdon/js/HoldOn.min.js') }}"></script>
+
+    <link rel="stylesheet" href="{{ asset('bundles/hbadmin/jquery-ui/jquery-ui.min.css') }}">
+
+    <script src="{{ asset('bundles/hbadmin/js/imageDimensionCheck.js') }}"></script>
+    <script src="{{ asset('bundles/hbadmin/js/fileExtensionCheck.js') }}"></script>
+
+    <!--Upload care-->
+    <script>UPLOADCARE_PUBLIC_KEY = "{{ upload_care_public }}";</script>
+    <script src="{{ asset('bundles/hbadmin/uploadcare/init.js') }}" charset="utf-8"></script>
+    <script src="{{ asset('bundles/hbadmin/uploadcare/dimensionCheck.js') }}" charset="utf-8"></script>
+    <script src="{{ asset('bundles/hbadmin/uploadcare/fileSizeCheck.js') }}" charset="utf-8"></script>
+    <script src="{{ asset('bundles/hbadmin/uploadcare/uploadcare.full.min.js') }}" charset="utf-8"></script>
+    <script src="{{ asset('bundles/hbadmin/js/plugins/character_count/character-counter.js') }}"></script>
+    <script src="{{ asset('bundles/hbadmin/jquery-ui/jquery-ui.min.js') }}"></script>
+
+    {% include '@HBAdmin/datepicker/datepicker-init.html.twig' %}
+
+    {% block css_head %}{% endblock %}
+    {% block js_head %}{% endblock %}
+
+    {% include '@HBAdmin/Component/user-guiding-layer-js.html.twig' %}
+
+    <script>
+        var hbApp = {
+            segmentKey: '{{ segment_key }}',
+            dripAccount: '2090226',
+            userName: '{{ app.user.firstname }} {{ app.user.surname }}',
+            userEmail: '{{ app.user.username }}',
+            userId: '{{ app.user.id }}',
+            // userHash: '{{ app.user.id | sha_256 }}'
+            userHash: '{{ app.user.username | sha_256 }}'
+        }
+    </script>
+</head>
+<body class="app header-fixed sidebar-fixed aside-menu-fixed aside-menu-hidden">
+<header class="app-header navbar">
+    <button class="navbar-toggler mobile-sidebar-toggler d-lg-none" type="button">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <a class="navbar-brand" href="#"></a>
+    <button class="navbar-toggler sidebar-toggler d-md-down-none" type="button">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <ul class="nav navbar-nav ml-auto">
+        <li class="nav-item dropdown">
+            <a href="{{ path('hb.customer.self.edit') }}" style="display:inline-block" class="nav-link nav-link"
+               data-toggle="dropdown" role="button"
+               aria-haspopup="true" aria-expanded="false"
+               onclick="document.location='{{ path('hb.customer.self.edit') }}'"
+            >
+                {{ app.user.username }}
+                [{{ app.user.roles|join(',') }}]
+                <small class="alert-gray-100">.{{ app.user.id }}</small>
+            </a>
+            <a style="display:inline-block; margin: 0 10px" class="btn btn-primary"
+               href="{{ path('logout') }}">Выйти</a>
+        </li>
+    </ul>
+</header>
+<div class="app-body">
+    <div class="sidebar">
+        <nav class="sidebar-nav">
+            <ul class="nav">
+
+                <li class="nav-title">
+                    Основное
+                </li>
+                <li class="nav-title">
+                    <a href="{{ path('hb.customer_actions') }}" class="nav-link">
+                        <i class="fa fa-user-circle-o"></i>
+                        Логи {{ render(controller('hb.admin.controller.customer_action.count:handleAction')) }}
+                    </a>
+                </li>
+
+                <hr>
+                <li class="nav-title">
+                    Пользователи
+                </li>
+                <li class="nav-item">
+                    <a href="{{ path('hb.customer.create') }}" class="nav-link"><i class="fa fa-plus"></i> Добавить</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ path('hb.customer.list') }}" class="nav-link"><i class="icon-menu"></i> Список</a>
+                </li>
+
+                <hr>
+                <li class="nav-title">
+                    Продукты
+                </li>
+                <li class="nav-item">
+                    <a href="{{ path('hb.course.create') }}" class="nav-link"><i class="fa fa-plus"></i>
+                        Добавить</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ path('hb.courses.list') }}" class="nav-link"><i class="icon-menu"></i> Список</a>
+                </li>
+
+                <hr>
+                <li class="nav-title">
+                    Отчеты {# Финансы #}
+                </li>
+
+
+                <li class="nav-item">
+                    <a href="{{ path('hb.finance.teachable_transaction') }}" class="nav-link">
+                        <i class="fa fa-credit-card"></i>
+                        Транзакции
+
+                        {% if is_granted('ROLE_ADMIN') %}
+                            {% set count_without_relations_transactions = render(controller('hb.admin.controller.finance.transactions_without_relation:handleAction')) %}
+                            {% if count_without_relations_transactions %}
+                                <span class="badge badge-danger">{{ count_without_relations_transactions }}</span>
+                            {% endif %}
+                        {% endif %}
+
+                    </a>
+                </li>
+
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li class="nav-item">
+                        <a href="{{ path('hb.finance.admin.payments') }}" class="nav-link"><i class="fa fa-dollar"></i>
+                            Выплаты</a>
+                    </li>
+                    {# todo: remove at all <li class="nav-item"><a href="{{ path('hb.finance.admin.reports') }}" class="nav-link"><i class="fa fa-file-excel-o"></i> Отчеты</a></li>#}
+                {% elseif (is_granted("ROLE_AUTHOR") or is_granted("ROLE_PRODUCER")) %}
+                    <li class="nav-item">
+                        <a href="{{ path('hb.finance.customer.payments') }}" class="nav-link">
+                            <i class="fa fa-dollar"></i>Выплаты
+                        </a>
+                    </li>
+                    {# todo: remove at all <li class="nav-item"><a href="{{ path('hb.finance.customer.report') }}" class="nav-link"><i class="fa fa-file-excel-o"></i> Отчеты</a></li>#}
+                {% endif %}
+
+                <li class="nav-item">
+                    <a href="{{ path('hb.teachable_student.comments_list') }}" class="nav-link">
+                        <i class="fa fa-comment-o"></i>
+                        Ответы
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ path('hb.teachable_student.activity_list') }}" class="nav-link">
+                        <i class="fa fa-users"></i>
+                        Активность
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ path('hb.teachable_student.progress_list') }}" class="nav-link">
+                        <i class="fa fa-line-chart"></i>
+                        Успеваемость
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ path('hb.finance.drip') }}" class="nav-link">
+                        <img src="{{ asset('bundles/hbadmin/img/drip_transparent.png') }}" style="height: 23px;">
+                        CRM
+                    </a>
+                </li>
+
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li class="nav-item">
+                        <a href="{{ path('hb.finance.admin.consolidate_report') }}" class="nav-link">
+                            <i class="fa fa-dollar"></i> Сводный отчет</a>
+                    </li>
+                {% endif %}
+            </ul>
+
+        </nav>
+        <button class="sidebar-minimizer brand-minimizer" type="button"></button>
+    </div>
+    <!-- Main content -->
+    <main class="main">
+        {% block breadcrumbs %}{% endblock %}
+        <div class="container-fluid">
+            <br>
+            {% for message in app.flashes('error') %}
+                <div class="alert alert-danger" role="alert">
+                    {{ message | raw}}
+                </div>
+            {% endfor %}
+
+            {% for message in app.flashes('warning') %}
+                <div class="alert alert-warning" role="alert">
+                    {{ message | raw }}
+                </div>
+            {% endfor %}
+
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success" role="alert">
+                    {{ message | raw }}
+                </div>
+            {% endfor %}
+
+            {% block body %}{% endblock %}
+
+        </div>
+        <!-- /.conainer-fluid -->
+    </main>
+</div>
+<footer class="app-footer">
+    <span><a href="https://heartbeat.education/" target="_blank">Heartbeat.Education</a> © 2017-2019</span>
+</footer>
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal_alert" id="open_alert_modal"
+        style="display: none">
+    Launch modal
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="modal_alert" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Инфо</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{{ asset('bundles/hbadmin/js/app.js') }}"></script>
+
+<script>
+    function openHoldon(message = 'Loading...') {
+        HoldOn.open({
+            theme: 'sk-fading-circle',
+            message: "<h4>" + message + "</h4>"
+        });
+    }
+
+    function closeHoldon() {
+        HoldOn.close();
+    }
+
+    function openModal(title = 'Информация', message = '') {
+        $('div[id=modal_alert] [id=exampleModalCenterTitle]').text(title);
+        $('div[id=modal_alert] div.modal-body').text(message);
+        $('button[id=open_alert_modal]').trigger('click');
+    }
+
+    $('input[type=text]:visible, input[type=email]:visible, input[type=password]:visible').characterCounter();
+
+
+</script>
+
+
+{% block js_footer %}{% endblock %}
+
+<script>
+    $('textarea').characterCounter({
+        textArea: true
+    });
+
+    // if use WYSIWYG - cannot listen event.
+    var textareaTrigger = setTimeout(function tick() {
+        $('textarea').trigger('change');
+        textareaTrigger = setTimeout(tick, 1000); // (*)
+    }, 1000);
+
+    $('[data-toggle=tooltip]').tooltip()
+</script>
+
+</body>
+</html>

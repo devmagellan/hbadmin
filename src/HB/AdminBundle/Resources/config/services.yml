@@ -1,0 +1,231 @@
+imports:
+    - { resource: controller/customer.yml}
+    - { resource: controller/course.yml}
+    - { resource: controller/customer_action.yml}
+    - { resource: controller/lesson.yml}
+    - { resource: controller/lesson_section.yml }
+    - { resource: controller/lesson_element.yml }
+    - { resource: controller/upload_care.yml }
+    - { resource: controller/sale_funnel.yml }
+    - { resource: controller/sale_funnel/one_time_offer.yml }
+    - { resource: controller/sale_funnel/sale_funnel_organic_price_block_setting.yml }
+    - { resource: controller/funnel_priority.yml }
+    - { resource: controller/api/customer.yml }
+    - { resource: controller/api/webhook.yml }
+    - { resource: controller/api/webhook_teachable.yml }
+    - { resource: controller/finance.yml }
+    - { resource: controller/teachable_student.yml }
+
+services:
+    customer.action_handler:
+        class: HB\AdminBundle\Manager\CustomerActionsManager
+        arguments:
+            - "@doctrine.orm.entity_manager"
+
+    form.handler:
+        class: HB\AdminBundle\Service\FormHandler
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@validator"
+            - "@session.flash_bag"
+
+    image.manager:
+        class: HB\AdminBundle\Service\ImageManager
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "%images_dir%"
+
+    upload_care.service:
+        class: HB\AdminBundle\Service\UploadCareService
+        arguments:
+            - '%upload_care_public%'
+            - '%upload_care_secret%'
+            - '@doctrine.orm.entity_manager'
+
+    course.price_block.service:
+        class:  HB\AdminBundle\Service\PriceBlockSettingService
+        arguments:
+            - '@doctrine.orm.entity_manager'
+
+    access.service:
+        class:  HB\AdminBundle\Service\CourseAccessService
+        arguments:
+            - '@security.token_storage'
+            - '@intercom.event_recorder'
+
+    sale_funnel.one_time_offer:
+        class:  HB\AdminBundle\Service\SaleFunnel\OneTimeOfferService
+        arguments:
+            - '@doctrine.orm.entity_manager'
+
+    customer.access.service:
+        class: HB\AdminBundle\Service\CustomerAccessService
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@security.token_storage"
+
+    kernel.exception.listener:
+        class: HB\AdminBundle\Listener\KernelExceptionListener
+        arguments:
+            - "@session.flash_bag"
+            - "@router"
+            - "@sentry.client"
+            - "@intercom.event_recorder"
+            - "@security.token_storage"
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception }
+
+    course_action.update.listener:
+        class: HB\AdminBundle\Listener\CourseActionListener
+        arguments:
+            - "@access.service"
+            - "@intercom.event_recorder"
+            - "@translator.default"
+            - "@sentry.client"
+        tags:
+            - { name: doctrine.event_listener, event: postPersist, method: postPersist }
+            - { name: doctrine.event_listener, event: preUpdate, method: preUpdate }
+            - { name: doctrine.event_listener, event: preRemove, method: preRemove }
+            - { name: kernel.event_listener, event: kernel.terminate, method: kernelTerminate }
+
+    customer.activity_listener:
+        class: HB\AdminBundle\Listener\CustomerActivityListener
+        arguments:
+            - "@security.token_storage"
+            - "@doctrine.orm.entity_manager"
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: updateCustomerActivityDate }
+
+    param_converter.query_resource:
+        class: HB\AdminBundle\Component\Request\JsonPostRequestParamConverter
+        arguments:
+            - '@validator'
+            - '@serializer'
+        tags:
+            - { name: request.param_converter }
+
+    custom_mailer:
+        class:  HB\AdminBundle\Component\Mailer\Mailer
+        arguments:
+            - "@twig"
+            - "@mailer"
+
+    email.sender:
+        class: HB\AdminBundle\Service\EmailSender
+        arguments:
+            - "@custom_mailer"
+            - "@router"
+            - "%email_from%"
+
+    file_moving.service:
+        class:  HB\AdminBundle\Service\FileMovingService
+        arguments:
+            - '%dropbox_app_key%'
+            - '%dropbox_app_secret%'
+            - '%dropbox_token%'
+            - '@upload_care.service'
+            - '@doctrine.orm.entity_manager'
+
+    sandbox_course.service:
+        class: HB\AdminBundle\Service\SandBoxCourseService
+        arguments:
+            - '@doctrine.orm.entity_manager'
+
+    twig.sha256:
+        class: HB\AdminBundle\Twig\Extensions
+        tags:
+            - { name: twig.extension }
+        arguments:
+            - '%intercom_secret%'
+
+    twig.price_block:
+        class: HB\AdminBundle\Twig\PriceBlockExtension
+        arguments:
+            - '@course.price_block.service'
+        tags:
+            - { name: twig.extension }
+
+    twig.log_route:
+        class: HB\AdminBundle\Twig\LogRouterExtension
+        arguments:
+            - '@router'
+        tags:
+            - { name: twig.extension }
+
+    customer.sign_up.service:
+        class: HB\AdminBundle\Service\Customer\SignUpService
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@security.password_encoder'
+            - '@sandbox_course.service'
+            - '@custom_mailer'
+            - '%email_from%'
+            - '@router'
+
+    sms.sender:
+        class: HB\AdminBundle\Service\SmsSender
+        arguments:
+            - '@doctrine.orm.entity_manager'
+
+    zapier.event.collector:
+        class: HB\AdminBundle\Service\ZapierEventCollector
+        arguments:
+            - '@doctrine.orm.entity_manager'
+
+    intercom.attributes_collector:
+        class: HB\AdminBundle\Service\Intercom\IntercomAttributesCollector
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - "@intercom_client"
+            - "@zapier.event.collector"
+
+    intercom.event_recorder:
+        class: HB\AdminBundle\Service\Intercom\IntercomEventRecorder
+        arguments:
+            - "@intercom_client"
+            - "@security.token_storage"
+
+    intercom_client:
+        class: HB\AdminBundle\Service\Intercom\IntercomClient
+        arguments:
+            - "%intercom_token%"
+
+    teachable.course_mapper:
+        class: HB\AdminBundle\Service\TeachableCourseMapper
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@teachable.webhooks_mapper"
+
+    teachable.webhooks_mapper:
+        class: HB\AdminBundle\Service\TeachableWebhooksMapper
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@student.progress.aggregator"
+
+    statistic.collector:
+        class: HB\AdminBundle\Service\StatisticCollector
+        arguments:
+            - "@doctrine.orm.entity_manager"
+
+    student.progress.aggregator:
+        class: HB\AdminBundle\Service\StudentProgressAggregator
+        arguments:
+            - "@doctrine.orm.entity_manager"
+
+    amqp.manager:
+        class: HB\AdminBundle\AMQP\AMQPManager
+        arguments:
+            - "%amqp_host%"
+            - "%amqp_port%"
+            - "%amqp_user%"
+            - "%amqp_pass%"
+
+    amqp.webhook_channel:
+        class: HB\AdminBundle\AMQP\WebhookChannel
+        arguments:
+            - "@amqp.manager"
+            - "%amqp_queue_teachable_webhook%"
+            - "%amqp_exchange_name%"
+            - "@doctrine.orm.entity_manager"
+            - "@teachable.webhooks_mapper"
+            - "@teachable.course_mapper"

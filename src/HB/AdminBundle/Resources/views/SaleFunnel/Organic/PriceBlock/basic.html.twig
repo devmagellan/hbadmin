@@ -1,0 +1,84 @@
+{% import '@HBAdmin/macros/tooltip.html.twig' as tooltip %}
+
+<div class="card card-accent-blue">
+    <div class="card-header">
+        <b>Базовый</b> тарифный план
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                {% if saved %}
+                    <div class="alert alert-success" role="alert">Сохранено!</div>
+                {% endif %}
+
+                Количество уроков: <b>{{ lessonCount }}</b>
+                <form name="price_block_setting_basic">
+
+                    {{ form_row(form.title) }}
+
+                    <div class="form-group">
+                        {{ form_label(form.subscriptionType) }}
+                        <a class="btn btn-pill btn-sm btn-orange questionTrigger"
+                                data-toggle="tooltip" data-placement="bottom" title=""
+                                data-original-title='Выберите тип оплаты: "Единоразовый платеж" или "Ежемесячная подписка"'
+                                style="margin-left: 10px">
+                            <i class="fa fa-question"></i>
+                        </a>
+                            {{ form_widget(form.subscriptionType) }}
+                    </div>
+
+                    {{ form_row(form.price) }}
+
+                    <button class="btn btn-xs btn-outline-success">Сохранить</button>
+                </form>
+            </div>
+
+            {% if saleFunnelOrganicPriceBlockSetting.id %}
+                <div class="col-md-6">
+                    {% if added %}
+                        <div class="alert alert-warning" role="alert">Добавлено!</div>
+                    {% endif %}
+
+                    {% if saleFunnelOrganicPriceBlockSetting.theses | length < constant('\\HB\\AdminBundle\\Entity\\SaleFunnelOrganicPriceBlockThesis::MAX_ADDITIONAL_THESIS') %}
+                        <a href="{{ asset('bundles/hbadmin/images/sale_funnel_packets.png') }}" target="_blank">
+                            Пример заполнения
+                        </a>
+                        <form name="add_thesis_{{ funnel.id }}" data-funnel-id="{{ funnel.id }}"
+                              type="{{ constant('\\HB\\AdminBundle\\Entity\\CoursePriceBlock::TYPE_BASIC') }}">
+
+                            {{ form_label(formThesis.description) }} {{ tooltip.render("В строке ниже добавьте пункт тарифного плана и нажмите кнопку 'ДОБАВИТЬ'") }}
+                            {{ form_widget(formThesis.description) }}
+
+                            <button type="submit" class="btn btn-sm btn-success">Добавить</button>
+                        </form>
+                    {% endif %}
+
+                    {% if saleFunnelOrganicPriceBlockSetting.theses | length > 0 %}
+                        <hr>
+                        <table class=" table-align-middle">
+                            <tr>
+                                <td>№</td>
+                                <th>Тезисы</th>
+                                <th></th>
+                            </tr>
+                            {% for key, thesis in saleFunnelOrganicPriceBlockSetting.theses %}
+                                <tr>
+                                    <td>{{ key+1 }}.</td>
+                                    <td>{{ thesis.description }}</td>
+                                    <td>
+                                        <button id="thesis_{{ thesis.id }}" data-thesis-id="{{ thesis.id }}"
+                                                class="btn btn-sm btn-pill btn-outline-danger">
+                                            <i class="fa fa-remove"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+
+    </div>
+</div>

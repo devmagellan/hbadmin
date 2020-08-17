@@ -1,0 +1,25 @@
+{% if lesson.lessonFile %}
+    <a href="{{ lesson.lessonFile.fileUrl }}" target="_blank">{{ lesson.lessonFile.fileName }}</a>
+    <a href="{{ path('hb.sale_funnel.mini_course.lesson.remove.file_lesson', {id: lesson.id}) }}"
+       class="btn btn-pill btn-sm btn-danger"><i class="fa fa-remove"></i> </a><br>
+{% endif %}
+
+<button type="button" class="btn btn-orange" id="add_file_lesson"
+        data-lesson-id="{{ lesson.id }}">
+    <i class="fa fa-file"></i>
+    Загрузить файл урока
+</button>
+
+<hr>
+
+{% if lesson.homeWorkFile %}
+    <a href="{{ lesson.homeWorkFile.fileUrl }}" target="_blank">{{ lesson.homeWorkFile.fileName }}</a>
+    <a href="{{ path('hb.sale_funnel.mini_course.lesson.remove.file_homework', {id: lesson.id}) }}"
+       class="btn btn-pill btn-sm btn-danger"><i class="fa fa-remove"></i> </a><br>
+{% endif %}
+
+<button type="button" class="btn btn-orange" id="add_file_homework"
+        data-lesson-id="{{ lesson.id }}">
+    <i class="fa fa-file"></i>
+    Загрузить файл домашнего задания
+</button>

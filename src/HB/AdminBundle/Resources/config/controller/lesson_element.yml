@@ -1,0 +1,48 @@
+services:
+    hb.admin.controller.lesson_element.update_priority:
+        class: HB\AdminBundle\Controller\LessonElement\UpdatePriorityLessonElementsController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@access.service"
+
+    hb.admin.controller.lesson_element.remove:
+        class: HB\AdminBundle\Controller\LessonElement\RemoveController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@router"
+            - "@session.flash_bag"
+            - "@upload_care.service"
+            - "@access.service"
+
+    hb.admin.controller.lesson_element.list:
+        class: HB\AdminBundle\Controller\LessonElement\ListController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@twig"
+            - "@access.service"
+
+    hb.admin.controller.lesson_element.text.edit:
+        class: HB\AdminBundle\Controller\LessonElement\LessonElementTextEditController
+        arguments:
+            - "@router"
+            - "@form.handler"
+            - "@session.flash_bag"
+            - "@form.factory"
+            - "@twig"
+            - "@access.service"
+
+    hb.admin.controller.lesson_element.iframe.edit:
+        class: HB\AdminBundle\Controller\LessonElement\LessonElementIframeEditController
+        arguments:
+            - "@router"
+            - "@form.handler"
+            - "@session.flash_bag"
+            - "@form.factory"
+            - "@twig"
+            - "@access.service"
+
+    hb.admin.controller.lesson_element.inline.edit:
+        class: HB\AdminBundle\Controller\LessonElement\UpdateElementInlineController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@access.service"

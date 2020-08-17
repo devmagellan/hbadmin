@@ -1,0 +1,118 @@
+{% extends "@HBAdmin/layout.html.twig" %}
+
+{% import '@HBAdmin/macros/return_to_course.html.twig' as return %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="{{ path('hb.courses.list') }}">Продукты</a>
+        </li>
+        <li class="breadcrumb-item active">
+            <a href="{{ path('hb.course.edit', {id: funnel.course.id}) }}">{{ funnel.course.info.title }}</a>
+        </li>
+        <li class="breadcrumb-item">Воронки</li>
+        <li class="breadcrumb-item"><b>Горячие лиды</b></li>
+    </ol>
+{% endblock %}
+
+{% block js_footer %}
+    <script>
+        $(function () {
+            $('button[id=edit_success_history]').click(function () {
+
+                $.post(
+                    Routing.generate('hb.sale_funnel.hot_leads.edit_success_history', {id: $(this).data('id')}),
+                    function (response) {
+                        if (response.status && response.status === 'error' && response.message) {
+                            alert(response.message);
+                        } else {
+                            $('div.sale_funnel_modal_body').html(response);
+                            $('button[id=modal_open]').trigger('click');
+                        }
+
+                    }
+                );
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block body %}
+
+    <div class="card">
+        <div class="card-header">
+            Редактирование воронки {{ return.render(funnel.course.id) }}
+        </div>
+        <div class="card-body">
+            <div class="row">
+
+                <div class="col-md-6">
+                    {{ form_start(formHistory) }}
+
+                    {{ form_widget(formHistory) }}
+
+                    <button class="btn btn-success">Добавить</button>
+
+                    {{ form_end(formHistory) }}
+                </div>
+
+                {% if funnel.histories | length > 0 %}
+                    <div class="col-md-6">
+                        {{ form_start(formFunnel) }}
+
+                        {{ form_widget(formFunnel) }}
+
+                        <button class="btn btn-success">Сохранить</button>
+
+                        {{ form_end(formFunnel) }}
+                    </div>
+                {% endif %}
+
+            </div>
+
+            <br>
+            {% if funnel.histories | length > 0 %}
+
+                {% for history in funnel.histories %}
+                    <div class="row">
+                        <div class="col-md-11">
+                            {{ history.description |raw }}
+                        </div>
+                        <div class="col-md-1">
+                            <button class="btn btn-pill btn-sm btn-primary" id="edit_success_history"
+                                    data-id="{{ history.id }}">
+                                <i class="fa fa-edit"></i>
+                            </button>
+                            <a href="{{ path('hb.sale_funnel.hot_leads.remove_success_history', {id: history.id}) }}"
+                               class="btn btn-pill btn-sm btn-danger">
+                                <i class="fa fa-remove"></i>
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+    </div>
+
+    <div class="modal" tabindex="-1" role="dialog" id="sale_funnel_modal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Редактировать</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="sale_funnel_modal_body">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#sale_funnel_modal"
+            style="display: none;" id="modal_open">
+    </button>
+
+{% endblock %}

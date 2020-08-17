@@ -1,0 +1,331 @@
+{% extends "@HBAdmin/layout.html.twig" %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="{{ path('hb.courses.list') }}">Продукты</a>
+        </li>
+        <li class="breadcrumb-item active">
+            <a href="{{ path('hb.course.edit', {id: funnel.course.id}) }}">
+                {{ funnel.course.info.title }}
+            </a>
+        </li>
+        <li class="breadcrumb-item"><b>Тарифные планы</b></li>
+        <li class="breadcrumb-item">
+            <a href="{{ path('hb.lesson_section.list', {id: funnel.course.id}) }}">Разделы и уроки</a>
+        </li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+
+    <a href="{{ path('hb.lesson_section.list', {id: funnel.course.id}) }}" class="btn btn-lg btn-link">
+        Перейти к наполнению разделов и уроков
+        <i class="fa fa-arrow-right"></i>
+    </a>
+    <br><br>
+
+    <div class="card">
+        <div class="card-header">
+            Тарифные планы Вашего курса
+            <a class="btn btn-pill btn-sm btn-orange questionTrigger"
+                    data-toggle="tooltip" data-placement="bottom" title=""
+                    data-original-title="Выберите и настройте тарифные основные планы вашего курса.">
+                <i class="fa fa-question"></i>
+            </a>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <form action="{{ path('hb.sale_funnel.organic.price_blocks', {id: funnel.id}) }}" method="post" name="price_blocks">
+                        {{ form_widget(form) }}
+                        <button type="submit" class="btn btn-success js-intercom-plans-submit">
+                            Сохранить
+                        </button>
+                    </form>
+                </div>
+
+                <div class="col-md-7">
+                    <div class="text-center">
+                        <h5>Примеры тарифных планов</h5>
+                        <img src="{{ asset('bundles/hbadmin/img/price_blocks.png') }}" style="max-width: 100%">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    {% if funnel.priceBlocks|length > 0 %}
+        <div class="price_blocks">
+
+            {% for availableBlock in funnel.priceBlocks %}
+                {% if availableBlock.type == constant('\\HB\\AdminBundle\\Entity\\CoursePriceBlock::TYPE_BASIC') %}
+                    <div class="basic_price_block">
+                        {{ render(controller('hb.admin.controller.sale_funnel_organic_price_block.setting.basic:handleAction', {funnel: funnel})) }}
+                    </div>
+
+                    <script>
+                        $(function () {
+                            $('div.basic_price_block').on('submit', 'form[name=price_block_setting_basic]', function (e) {
+                                openHoldon();
+                                e.preventDefault();
+
+                                $.ajax({
+                                    type: "POST",
+                                    url: Routing.generate('hb.sale_funnel_organic_price_block_setting.basic', {id: {{ funnel.id }} }),
+                                    data: $(this).serialize(),
+                                    dataType: "json",
+                                    success: function (response) {
+                                        $('div.basic_price_block').html(response.responseText);
+                                        closeHoldon();
+                                    },
+                                    error: function (response) {
+                                        $('div.basic_price_block').html(response.responseText);
+                                        closeHoldon();
+                                    }
+                                });
+
+                                return false;
+                            }).on('click', 'button[id^=thesis]', function () {
+                                openHoldon();
+                                $.post(
+                                    Routing.generate('hb.sale_funnel_organic_price_block_setting.remove.thesis', {id: $(this).data('thesis-id')}),
+                                    function (response) {
+                                        if (response.status && response.status === 'error' && response.message) {
+                                            alert(response.message);
+                                            closeHoldon();
+                                        } else {
+                                            updateBasicBlock({{ funnel.id }});
+                                        }
+                                    }
+                                );
+                                closeHoldon();
+                            }).on('submit', 'form[name^=add_thesis]', function (e) {
+                                openHoldon();
+                                e.preventDefault();
+
+                                $.ajax({
+                                    type: "POST",
+                                    url: Routing.generate('hb.sale_funnel_organic_price_block_setting.basic', {id: {{ funnel.id }} }),
+                                    data: $(this).serialize(),
+                                    dataType: "json",
+                                    success: function (response) {
+                                        $('div.basic_price_block').html(response.responseText);
+                                        $('form[name^=add_thesis]').reset();
+                                        alert('stmh');
+                                        closeHoldon();
+                                    },
+                                    error: function (response) {
+                                        $('div.basic_price_block').html(response.responseText);
+                                        closeHoldon();
+                                    }
+                                });
+
+                                updateOptimalBlock({{ funnel.id }});
+                                updateVipBlock({{ funnel.id }});
+
+                                return false;
+                            })
+                        });
+                    </script>
+                    {% elseif availableBlock.type == constant('\\HB\\AdminBundle\\Entity\\CoursePriceBlock::TYPE_OPTIMAL') %}
+                    <div class="optimal_price_block">
+                        {{ render(controller('hb.admin.controller.sale_funnel_organic_price_block.setting.optimal:handleAction', {funnel: funnel})) }}
+                    </div>
+
+                    <script>
+                        var optimal_block = $('div.optimal_price_block');
+
+                        $(function () {
+                            $(optimal_block).on('submit', 'form[name=price_block_setting_optimal]', function (e) {
+                                openHoldon();
+                                e.preventDefault();
+
+
+                                $.ajax({
+                                    type: "POST",
+                                    url: Routing.generate('hb.sale_funnel_organic_price_block_setting.optimal', {id: {{ funnel.id }} }),
+                                    data: $(this).serialize(),
+                                    dataType: "json",
+                                    success: function (response) {
+                                        $(optimal_block).html(response.responseText);
+                                        closeHoldon();
+                                    },
+                                    error: function (response) {
+                                        $(optimal_block).html(response.responseText);
+                                        closeHoldon();
+                                    }
+                                });
+
+                                return false;
+                            }).on('click', 'button[id^=thesis]', function () {
+                                openHoldon();
+                                $.post(
+                                    Routing.generate('hb.sale_funnel_organic_price_block_setting.remove.thesis', {id: $(this).data('thesis-id')}),
+                                    function (response) {
+                                        if (response.status && response.status === 'error' && response.message) {
+                                            alert(response.message);
+                                            closeHoldon();
+                                        } else {
+                                            updateOptimalBlock({{ funnel.id }});
+                                        }
+                                    }
+                                );
+                                closeHoldon();
+                            }).on('submit', 'form[name^=add_thesis]', function (e) {
+                                openHoldon();
+                                e.preventDefault();
+
+                                $.ajax({
+                                    type: "POST",
+                                    url: Routing.generate('hb.sale_funnel_organic_price_block_setting.optimal', {id: {{ funnel.id }} }),
+                                    data: $(this).serialize(),
+                                    dataType: "json",
+                                    success: function (response) {
+                                        $(optimal_block).html(response.responseText);
+                                        closeHoldon();
+                                    },
+                                    error: function (response) {
+                                        $(optimal_block).html(response.responseText);
+                                        closeHoldon();
+                                    }
+                                });
+
+                                updateVipBlock({{ funnel.id }});
+
+                                return false;
+                            })
+                        });
+                    </script>
+                    {% elseif availableBlock.type == constant('\\HB\\AdminBundle\\Entity\\CoursePriceBlock::TYPE_VIP') %}
+                    <div class="vip_price_block">
+                        {{ render(controller('hb.admin.controller.sale_funnel_organic_price_block.setting.vip:handleAction', {funnel: funnel})) }}
+                    </div>
+
+                    <script>
+                        var vip_block = $('div.vip_price_block');
+
+                        $(function () {
+                            $(vip_block).on('submit', 'form[name=price_block_setting_vip]', function (e) {
+                                openHoldon();
+                                e.preventDefault();
+
+
+                                $.ajax({
+                                    type: "POST",
+                                    url: Routing.generate('hb.sale_funnel_organic_price_block_setting.vip', {id: {{ funnel.id }} }),
+                                    data: $(this).serialize(),
+                                    dataType: "json",
+                                    success: function (response) {
+                                        $(vip_block).html(response.responseText);
+                                        closeHoldon();
+                                    },
+                                    error: function (response) {
+                                        $(vip_block).html(response.responseText);
+                                        closeHoldon();
+                                    }
+                                });
+
+                                return false;
+                            }).on('click', 'button[id^=thesis]', function () {
+                                openHoldon();
+                                $.post(
+                                    Routing.generate('hb.sale_funnel_organic_price_block_setting.remove.thesis', {id: $(this).data('thesis-id')}),
+                                    function (response) {
+                                        if (response.status && response.status === 'error') {
+                                            alert(response.message);
+                                            closeHoldon();
+                                        } else {
+                                            updateVipBlock({{ funnel.id }});
+                                        }
+                                    }
+                                );
+                                closeHoldon();
+                            }).on('submit', 'form[name^=add_thesis]', function (e) {
+                                openHoldon();
+                                e.preventDefault();
+
+                                $.ajax({
+                                    type: "POST",
+                                    url: Routing.generate('hb.sale_funnel_organic_price_block_setting.vip', {id: {{ funnel.id }} }),
+                                    data: $(this).serialize(),
+                                    dataType: "json",
+                                    success: function (response) {
+                                        $(vip_block).html(response.responseText);
+                                        closeHoldon();
+                                    },
+                                    error: function (response) {
+                                        $(vip_block).html(response.responseText);
+                                        closeHoldon();
+                                    }
+                                });
+
+                                return false;
+                            })
+                        });
+                    </script>
+                {% endif %}
+
+            {% endfor %}
+            <script>
+                function updateBasicBlock(id) {
+                    $.get(
+                        Routing.generate('hb.sale_funnel_organic_price_block_setting.basic', {id: id}),
+                        function (response) {
+                            if (response.status && response.status === 'error' && response.message) {
+                                alert(response.message);
+                            } else {
+                                $('div.basic_price_block').html(response);
+                            }
+
+                            closeHoldon();
+                        }
+                    );
+                }
+
+                function updateOptimalBlock(id) {
+                    $.get(
+                        Routing.generate('hb.sale_funnel_organic_price_block_setting.optimal', {id: id}),
+                        function (response) {
+                            if (response.status && response.status === 'error' && response.message) {
+                                alert(response.message);
+                            } else {
+                                $('div.optimal_price_block').html(response);
+                            }
+
+                            closeHoldon();
+                        }
+                    );
+                }
+
+                function updateVipBlock(id) {
+                    $.get(
+                        Routing.generate('hb.sale_funnel_organic_price_block_setting.vip', {id: id}),
+                        function (response) {
+                            $('div.vip_price_block').html(response);
+                            closeHoldon();
+                        }
+                    );
+                }
+            </script>
+
+        </div>
+    {% endif %}
+
+    <a href="{{ path('hb.lesson_section.list', {id: funnel.course.id}) }}" class="btn btn-lg btn-link">
+        Перейти к наполнению разделов и уроков
+        <i class="fa fa-arrow-right"></i>
+    </a>
+    <br><br>
+
+    <script>
+        $(function () {
+           var checked_price_blocks = $('form[name=price_blocks] input[type=checkbox]:checked');
+           if (checked_price_blocks.length === 0) {
+               $('form[name=price_blocks] input[type=checkbox]').prop('checked', true);
+           }
+        });
+    </script>
+
+{% endblock %}

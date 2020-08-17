@@ -1,0 +1,41 @@
+.btn-pill{
+    border-radius: 50em;
+}
+.questionTrigger{
+    border-radius: 50em;
+}
+.auto-width{
+    width: auto;
+}
+
+/* -- Progress bar custom (with holdon) -- */
+
+#progressbar {
+    max-height: 15px;
+    text-align: center;
+    width: 200px;
+    height: 57px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: 80px 0 0 -100px;
+}
+
+
+#progressbar .ui-progressbar-value {
+    background: lightskyblue;
+}
+
+#holdon-overlay {
+    opacity: 0.5 !important;
+}
+
+.btn-ssm {
+    padding: 0.15rem 0.3rem;
+    font-size: 0.6rem;
+    line-height: 1;
+}
+
+.questionTrigger{
+	line-height:1;
+}

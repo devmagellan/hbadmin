@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+<head>
+
+<link href="src/css/HoldOn.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<div class="container">
+</script></div><input type="submit" class=" btn btn-danger" value="Fading Circle Theme" onclick="testHoldon('sk-fading-circle');">
+                                                                                 
+</div>
+<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="src/js/HoldOn.js"></script>
+<script>
+	function testHoldon(themeName){
+		HoldOn.open({
+			theme:themeName,
+			message:"<h4>Loading...</h4>"
+		});
+		setTimeout(function(){
+			HoldOn.close();
+		},2000);
+	}
+</script>
+</body>
+</html>

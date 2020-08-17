@@ -1,0 +1,30 @@
+services:
+    hb.admin.controller.teachable_student.activity_list:
+        class: HB\AdminBundle\Controller\TeachableStudent\ActivityListController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@security.token_storage"
+            - "@knp_paginator"
+            - "@twig"
+
+    hb.admin.controller.teachable_student.progress_list:
+        class: HB\AdminBundle\Controller\TeachableStudent\ProgressListController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@security.token_storage"
+            - "@knp_paginator"
+            - "@twig"
+
+    hb.admin.controller.teachable_student.comments:
+        class: HB\AdminBundle\Controller\TeachableStudent\CommentController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@security.token_storage"
+            - "@knp_paginator"
+            - "@twig"
+
+    hb.admin.controller.teachable_student.comment_rating:
+        class: HB\AdminBundle\Controller\TeachableStudent\CommentRatingController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@student.progress.aggregator"

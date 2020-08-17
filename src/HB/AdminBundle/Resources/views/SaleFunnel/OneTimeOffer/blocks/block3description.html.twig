@@ -1,0 +1,103 @@
+<div class="row">
+    <style>
+        table td {
+            border-top: 0 !important;
+        }
+    </style>
+    <div class="col-md-12">
+        {% if saved %}
+            <div class="alert alert-success" role="alert">Сохранено!</div>
+        {% endif %}
+
+        <span class="alert-gray-100">К указанным ниже блокам мы добавим 3 призыва к действию и информацию о вас из органической воронки</span>
+        <br><br>
+
+        {{ form_start(form) }}
+
+        <table class="table">
+            <tr>
+                <td style="width: 60%">
+                    {{ form_row(form.thankText) }}
+                    <small class="alert-gray-100">
+                        Вы можете внести изменения в этот текст, за исключением того что в квадратных скобках.
+                        Текст в квадратных скобках определяется на предыдущей странице. [действие] может быть подписка или
+                        регистрация, [контент] может быть содержимое вашего лидмагнита или вебинар.
+                    </small>
+                    <br><br>
+
+                    {{ form_row(form.description) }}
+                    <small class="alert-gray-100">
+                        По умолчанию мы добавим этот текст. Если у вас есть вариант текста, который будет лучше мотивировать на
+                        покупку вашего единоразового предложения, замените им текст по умолчанию в этом поле.
+                    </small>
+                    <br><br>
+
+
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    {{ form_row(form.videoText) }}
+                    <small class="alert-gray-100">
+                        По умолчанию мы добавим этот текст. Если у вас есть вариант текста, который будет лучше мотивировать на
+                        покупку вашего единоразового предложения, замените им текст по умолчанию в этом поле
+                    </small>
+                    <br><br>
+                </td>
+                <td class="text-center">
+                    {% if funnel.video %}
+                        <video width="480" height="360" controls>
+                            <source src="{{ funnel.video.fileUrl }}">
+                        </video><br>
+                    {% endif %}
+
+                    <button type="button" class="btn btn-orange"
+                            data-file-type="{{ constant('\\HB\\AdminBundle\\Entity\\SaleFunnel\\SalesFunnelOneTimeOffer::OTO_FILE_TYPE_VIDEO') }}"
+                            data-block="3"
+                            id="add_file_video">
+                        <i class="fa fa-file-movie-o"></i> Загрузить видеопризыв
+                    </button>
+                    {% if funnel.video %}
+                        <a href="{{ path('hb.sale_funnel.one_time_offer.remove.file', {id: funnel.id, type: constant('\\HB\\AdminBundle\\Entity\\SaleFunnel\\SalesFunnelOneTimeOffer::OTO_FILE_TYPE_VIDEO') }) }}"
+                           class="btn btn-danger"><i class="fa fa-remove"></i> Удалить</a>
+                    {% endif %}
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <small class="alert-gray-100">В этом поле вы можете добавить то, для чего вам не хватило наших стандартных
+                        блоков
+                    </small>
+                    {{ form_row(form.additionalText) }}
+                    <br>
+                    <button class="btn btn-success" type="button" id="form_submit_description">Сохранить</button>
+                </td>
+                <td class="text-center">
+                    {% if funnel.image %}
+                        <img src="{{ funnel.image.fileUrl }}" style="max-height: 320px;">
+                    {% endif %}
+                    <br>
+                    <button type="button" class="btn btn-purple"
+                            data-file-type="{{ constant('\\HB\\AdminBundle\\Entity\\SaleFunnel\\SalesFunnelOneTimeOffer::OTO_FILE_TYPE_IMAGE') }}"
+                            data-block="3"
+                            id="add_file_video">
+                        <i class="fa fa-file-movie-o"></i> Загрузить картинку
+                    </button>
+                    {% if funnel.image %}
+                        <a href="{{ path('hb.sale_funnel.one_time_offer.remove.file', {id: funnel.id, type: constant('\\HB\\AdminBundle\\Entity\\SaleFunnel\\SalesFunnelOneTimeOffer::OTO_FILE_TYPE_IMAGE') }) }}"
+                           class="btn btn-danger"><i class="fa fa-remove"></i> Удалить</a>
+                    {% endif %}</td>
+            </tr>
+            <tr>
+                <td class="text-center"></td>
+                <td></td>
+            </tr>
+        </table>
+
+        {{ form_widget(form) }}
+
+        {{ form_end(form) }}
+    </div>
+</div>

@@ -1,0 +1,93 @@
+services:
+    hb.admin.controller.course.list:
+        class: HB\AdminBundle\Controller\Course\ListController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@twig"
+            - "@knp_paginator"
+            - "@security.token_storage"
+            - "@sandbox_course.service"
+
+    hb.admin.controller.course.create:
+        class: HB\AdminBundle\Controller\Course\CreateController
+        arguments:
+            - "@form.factory"
+            - "@twig"
+            - "@router"
+            - "@form.handler"
+            - "@doctrine.orm.entity_manager"
+            - "@customer.access.service"
+
+    hb.admin.controller.course.create_sandbox:
+        class: HB\AdminBundle\Controller\Course\CreateSandBoxController
+        arguments:
+            - "@sandbox_course.service"
+            - "@router"
+            - "@security.token_storage"
+            - "@session.flash_bag"
+
+    hb.admin.controller.course.edit:
+        class: HB\AdminBundle\Controller\Course\EditController
+        arguments:
+            - "@form.handler"
+            - "@twig"
+            - "@form.factory"
+            - "@session.flash_bag"
+            - "@router"
+            - "@doctrine.orm.entity_manager"
+            - "@access.service"
+            - "@customer.access.service"
+            - "@teachable.course_mapper"
+
+    hb.admin.controller.course.remove:
+        class: HB\AdminBundle\Controller\Course\RemoveController
+        arguments:
+            - "@router"
+            - "@doctrine.orm.entity_manager"
+            - "@access.service"
+
+    hb.admin.controller.course.change_status:
+        class: HB\AdminBundle\Controller\Course\ChangeStatusController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@security.token_storage"
+            - "@session.flash_bag"
+            - "@router"
+            - "@email.sender"
+
+    hb.admin.controller.course.request_moderate:
+        class: HB\AdminBundle\Controller\Course\RequestPublishController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@router"
+            - "@session.flash_bag"
+            - "@intercom.event_recorder"
+
+    hb.admin.controller.course.external_links_form:
+        class: HB\AdminBundle\Controller\Course\ExternalLinksController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@form.factory"
+            - "@twig"
+            - "@security.token_storage"
+
+    hb.admin.controller.external.funnels.queue:
+        class: HB\AdminBundle\Controller\Course\GoToFunnelsQueueLinkController
+        arguments:
+            - "@intercom.event_recorder"
+            
+    hb.admin.controller.course.stop_lessons:
+        class: HB\AdminBundle\Controller\Course\StopLessonsController
+        arguments:
+            - "@access.service"
+            - "@form.handler"
+            - "@twig"
+            - "@router"
+            - "@form.factory"
+            - "@session.flash_bag"
+
+    hb.admin.controller.redirect:
+        class: HB\AdminBundle\Controller\RedirectController
+        arguments:
+            - '@sandbox_course.service'
+            - '@security.token_storage'

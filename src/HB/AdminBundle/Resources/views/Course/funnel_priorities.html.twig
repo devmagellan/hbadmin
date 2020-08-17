@@ -1,0 +1,121 @@
+<style>
+    body.dragging, body.dragging * {
+        cursor: move !important;
+    }
+
+    .dragged {
+        position: absolute;
+        opacity: 0.5;
+        z-index: 2000;
+    }
+
+    ul.priorities_list {
+        list-style: none;
+        padding-left: 0;
+    }
+
+    ul.priorities_list li.placeholder {
+        position: relative;
+        height: 35px;
+        background: #4caae9;
+        margin: 0;
+        padding: 0;
+    }
+
+    .priority {
+        border-collapse: collapse;
+        padding: 10px 40px 10px 20px;
+        border-left: 2px solid transparent;
+        border-top: 1px solid lightgray;
+    }
+
+    .priority:hover {
+        border-left: 2px solid #4caae9;
+    }
+
+    .fa-arrows {
+        cursor: move;
+    }
+
+</style>
+
+<script src="{{ asset('bundles/hbadmin/js/Sortable.min.js') }}"></script>
+
+<script>
+    $(function () {
+        function priorityUpdate() {
+            var ids = {};
+            var priorities = $('ul.priorities_list li');
+
+            priorities.each(function (idx, priority) {
+                ids[$(priority).data('priority-id')] = idx;
+            });
+
+            openHoldon();
+            $.post(
+                Routing.generate('hb.sale_funnel.priority.update_priority', {id: '{{ course.id }}'}),
+                {ids: JSON.stringify(ids)}, function (response) {
+                    if (response.status && response.status === 'error' && response.message) {
+                        alert(response.message);
+                    }
+                    closeHoldon();
+                }
+            );
+        }
+
+        $("ul.priorities_list").sortable({
+            handle: 'i.fa.fa-arrows',
+            onDrop: function ($item, container) {
+                $item.removeClass(container.group.options.draggedClass).removeAttr("style");
+                $("body").removeClass(container.group.options.bodyClass);
+                priorityUpdate();
+            }
+        });
+
+    });
+
+
+</script>
+
+
+<div class="card">
+    <div class="card-header">
+        Приоритетность воронок
+    </div>
+    <div class="card-body">
+        <a href="{{ path('hb.sale_funnel.priority.reset_to_default', {id: course.id}) }}"
+           class="btn btn-pill btn-sm btn-primary">Сгенерировать значения по умолчанию</a>
+        <hr>
+
+        <ul class="priorities_list">
+            {% for priority in priorities %}
+                {% if (priority.funnelType == constant('\\HB\\AdminBundle\\Entity\\Types\\FunnelType::ORGANIC') and course.salesFunnelOrganic)
+                    or (priority.funnelType == constant('\\HB\\AdminBundle\\Entity\\Types\\FunnelType::LEAD_COLLECTIONS') and course.saleFunnelLeadCollections | length > 0)
+                    or (priority.funnelType == constant('\\HB\\AdminBundle\\Entity\\Types\\FunnelType::BROKEN_BASKET') and course.salesFunnelBrokenBasket )
+                    or (priority.funnelType == constant('\\HB\\AdminBundle\\Entity\\Types\\FunnelType::POST_SALE') and course.salesFunnelPostSale )
+                    or (priority.funnelType == constant('\\HB\\AdminBundle\\Entity\\Types\\FunnelType::CROSS_SALE') and course.salesFunnelCrossSale )
+                    or (priority.funnelType == constant('\\HB\\AdminBundle\\Entity\\Types\\FunnelType::HOT_LEADS') and course.salesFunnelHotLeads )
+                    or (priority.funnelType == constant('\\HB\\AdminBundle\\Entity\\Types\\FunnelType::LAYER_CAKES') and course.saleFunnelLayerCakes | length > 0 )
+                    or (priority.funnelType == constant('\\HB\\AdminBundle\\Entity\\Types\\FunnelType::MINI_COURSE') and course.salesFunnelMiniCourse )
+                    or (priority.funnelType == constant('\\HB\\AdminBundle\\Entity\\Types\\FunnelType::WEBINAR') and course.salesFunnelWebinar | length > 0 )
+                    or (priority.funnelType == constant('\\HB\\AdminBundle\\Entity\\Types\\FunnelType::DOWN_SELLS') and course.salesFunnelDownSells | length > 0 )
+                    or (priority.funnelType == constant('\\HB\\AdminBundle\\Entity\\Types\\FunnelType::WALKER_START') and course.salesFunnelWalkerStart )
+                    or (priority.funnelType == constant('\\HB\\AdminBundle\\Entity\\Types\\FunnelType::AUTHOR_CLUB') and course.salesFunnelAuthorClub )
+                    or (priority.funnelType == constant('\\HB\\AdminBundle\\Entity\\Types\\FunnelType::EDUCATIONAL') and course.salesFunnelEducational )
+                    or (priority.funnelType == constant('\\HB\\AdminBundle\\Entity\\Types\\FunnelType::ONE_TIME_OFFER') and course.salesFunnelOneTimeOffer | length > 0 )
+                %}
+
+                    <li data-priority-id="{{ priority.id }}">
+                        <div class="priority">
+                            <i class="fa fa-arrows"></i>
+                            {{ priority.funnelType.name }}
+                        </div>
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+
+
+    </div>
+</div>
+

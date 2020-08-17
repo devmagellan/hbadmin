@@ -1,0 +1,156 @@
+<script src="{{ asset('bundles/hbadmin/bootstrap4-editable/js/bootstrap-editable.min.js') }}"></script>
+
+<script>
+    $(function () {
+        $('button[id=add_answer]').click(function (e) {
+            var list = $('ul[id=answers-list]');
+            var counter = list.data('widget-counter') | list.children().length;
+
+            if (!counter) {
+                counter = list.children().length;
+            }
+
+            var newWidget = list.attr('data-prototype');
+            var close_button = "<button class='btn btn-sm pull-right' style='z-index: 99' type='button' id='remove_answer_" + counter + "' ><i class='fa fa-remove'></i></button>";
+
+            newWidget = newWidget.replace(/__name__/g, counter);
+            counter++;
+            list.data(' widget-counter', counter);
+
+            var newElem = $(list.attr('data-widget-tags')).html(close_button + newWidget);
+            newElem.appendTo(list);
+        });
+
+        $('ul[id=answers-list]').on('click', 'button[id^=remove_answer]', (function () {
+            $(this).parent().remove();
+        }));
+    });
+</script>
+<script>
+    $(function () {
+        $('input[id^=right_answer_]').change(function () {
+            $this = $(this);
+            var ajax_loader = "<img src='{{ asset('bundles/hbadmin/ajax-loader.gif') }}' id='ajax_loader'>";
+            var id = $(this).attr('id').split('_')[2];
+            var url = Routing.generate('hb.lesson.quiz.change_answer_right', {id: id});
+
+            $this.hide().after(ajax_loader);
+
+            $.post(url, function (response) {
+                $('#ajax_loader').remove();
+                $this.show();
+
+                if (response.status && response.status === 'error' && response.message) {
+                    alert(response.message);
+                } else if ('success' !== response.status) {
+                    if ($this.prop('checked') === 'checked') {
+                        $this.prop('checked', false);
+                    } else {
+                        $this.prop('checked', true);
+                    }
+                }
+
+            });
+        });
+    });
+</script>
+
+<script>
+    $(function () {
+        let path = Routing.generate("hb.lesson.quiz.inline_edit");
+
+        $('a[id^=question]').editable({
+            url: path,
+            mode: 'popup',
+            name: 'question',
+            emptytext: '---'
+        });
+        $('a[id^=answer]').editable({
+            url: path,
+            mode: 'popup',
+            name: 'answer',
+            emptytext: '---'
+        });
+    });
+</script>
+
+<script>
+
+    function openUploadDialog() {
+        uploadcare.openDialog(null, {
+            tabs: '{{ upload_care_sources }}',
+            validators: [
+                maxFileSize({{ max_file_size }})
+            ]
+        }).done(function (file) {
+            openHoldon('Загрузка файла...');
+            file.progress(function(uploadInfo) {
+                $('#progressbar').progressbar({value: uploadInfo.progress * 100});
+            });
+
+            file.promise()
+                .done(function (fileInfo) {
+                    addFileToLesson(fileInfo);
+                });
+        });
+    }
+
+    function addFileToLesson(response) {
+        openHoldon('Добавление файла...');
+
+        var uuid = response.uuid;
+        var cdn = response.cdnUrl;
+        var file_name = '';
+        if (response.sourceInfo.file) {
+            file_name = response.sourceInfo.file.name;
+        } else {
+            file_name = response.name;
+        }
+
+        $.post(
+            Routing.generate('hb.lesson.add.file', {id: '{{ lesson.id }}'}),
+            {uuid: uuid, cdn: cdn, file_name: file_name},
+            function (answer) {
+                if ('error' === answer.status) {
+                    alert(answer.message);
+                } else {
+                    var url = Routing.generate('hb.lesson_element.list', {lesson: {{ lesson.id }} });
+                    $.post(url, function (response) {
+                        if (response.status && response.status === 'error' && response.message) {
+                            alert(response.message);
+                        } else {
+                            $('div.lesson-elements').html(response);
+                        }
+                    });
+                }
+
+                closeHoldon();
+            });
+    }
+
+    function uploadFileToLesson() {
+        var path = Routing.generate('hb.lesson.add.file.check.count', {id: '{{ lesson.id }}'});
+
+        $.post(path, function (answer) {
+            if (answer.status === 'error') {
+                if (answer.errorMessage) {
+                    alert(answer.errorMessage);
+                } else if (answer.message) {
+                    alert(answer.message);
+                }
+                closeHoldon();
+            } else {
+                closeHoldon();
+
+                openUploadDialog();
+            }
+        });
+    }
+
+
+    function focusOnQuiz() {
+        $('#quiz_tab').trigger('click');
+        window.scrollTo(0, 0);
+    }
+
+</script>

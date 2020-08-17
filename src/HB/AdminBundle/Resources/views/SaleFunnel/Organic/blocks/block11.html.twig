@@ -1,0 +1,61 @@
+{% if added %}
+    <div class="alert alert-success" role="alert">Добавлено!</div>
+{% endif %}
+<div class="row">
+    {% set payment_text_length = (funnel.block11PaymentTexts | length ) %}
+    <div class="col-md-6">
+        <div class="alert-gray-100">
+            <small>
+                Настоятельно рекомендуем заполнить, это повышает продажи
+            </small>
+        </div>
+
+        {% if payment_text_length < 6 %}
+            <form method="post" name="block11" data-funnel-id="{{ funnel.id }}">
+                {{ form_widget(form) }}
+                <button type="submit" class="btn btn-success">
+                    Добавить
+                </button>
+            </form>
+        {% endif %}
+
+        <div class="alert-gray-100">
+            <small>Например,
+                <br>- Научитесь говорить и выступать в любой ситуации спокойно, уверенно, без страха.
+                <br>- Овладеете четкой, красивой дикцией
+                <br>- Свободно работать с видео камерой (записывать видео/выход в прямой эфир).
+            </small>
+        </div>
+
+    </div>
+
+    <div class="col-md-6">
+
+        {% if payment_text_length > 0 and payment_text_length < 3 %}
+            <span class="invalid-feedback d-block">
+                <span class="d-block">
+                    <span class="form-error-icon badge badge-danger text-uppercase">Ошибка</span> <span
+                            class="form-error-message">Необходимо указать минимум 3 текста оплаты.</span>
+                </span>
+            </span>
+        {% endif %}
+        {% if payment_text_length > 0 %}
+            <table class="table">
+                {% for text in funnel.block11PaymentTexts %}
+                    <tr>
+                        <td>{{ text.description }}</td>
+                        <td>
+                            <button type="button" id="block11_remove_payment_text_{{ text.id }}"
+                                    data-text-id="{{ text.id }}"
+                                    class="btn btn-pill btn-sm btn-outline-danger">
+                                <i class="fa fa-remove"></i>
+                            </button>
+                        </td>
+                    </tr>
+                {% endfor %}
+
+            </table>
+        {% endif %}
+    </div>
+
+</div>

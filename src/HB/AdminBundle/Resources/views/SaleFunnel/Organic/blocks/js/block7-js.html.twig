@@ -1,0 +1,157 @@
+<script>
+
+    function updateBlock7() {
+        $.get(
+            Routing.generate('hb.sale_funnel.organic.block7feedback', {id: {{ funnel.id }}}),
+            function (response) {
+                if (response.status && response.status === 'error' && response.message) {
+                    alert(response.message);
+                } else {
+                    $('div.block7').html(response);
+                }
+            }
+        );
+    }
+
+    function block7UploadVideo(id) {
+        uploadcare.openDialog(null, {
+            tabs: '{{ upload_care_sources }}',
+            validators: [
+                maxFileSize({{ max_file_size }})
+            ]
+        }).done(function (file) {
+            openHoldon('Загрузка файла');
+            file.progress(function(uploadInfo) {
+                $('#progressbar').progressbar({value: uploadInfo.progress * 100});
+            });
+
+            file.promise()
+                .done(function (fileInfo) {
+                    block7UpdateVideo(fileInfo, id);
+                    closeHoldon();
+                });
+        });
+    }
+
+    function block7UpdateVideo(response, id) {
+        openHoldon();
+        var uuid = response.uuid;
+        var cdn = response.cdnUrl;
+        var file_name = '';
+        if (response.sourceInfo.file) {
+            file_name = response.sourceInfo.file.name;
+        } else {
+            file_name = response.name;
+        }
+
+        var path = Routing.generate('hb.sale_funnel.organic.block7feedback.update.video', {id: id});
+
+        $.post(path, {uuid: uuid, cdn: cdn, file_name: file_name}, function (response) {
+            if (response.status && response.status === 'error' && response.message) {
+                alert(response.message);
+            } else {
+                updateBlock7();
+            }
+
+            closeHoldon();
+        });
+    }
+
+    function block7AddVideo() {
+        uploadcare.openDialog(null, {
+            tabs: '{{ upload_care_sources }}',
+            validators: [
+                maxFileSize({{ max_file_size }})
+            ]
+        }).done(function (file) {
+            openHoldon('Загрузка файла');
+            file.progress(function(uploadInfo) {
+                $('#progressbar').progressbar({value: uploadInfo.progress * 100});
+            });
+
+            file.promise()
+                .done(function (fileInfo) {
+                    $('a.new_file_url').attr('href', fileInfo.cdnUrl).text(fileInfo.sourceInfo.file.name);
+
+                    $('input[id=hb_adminbundle_sale_funnel_organic_block7_feedback_fileCdn]').val(fileInfo.cdnUrl);
+                    $('input[id=hb_adminbundle_sale_funnel_organic_block7_feedback_fileName]').val(fileInfo.sourceInfo.file.name);
+                    $('input[id=hb_adminbundle_sale_funnel_organic_block7_feedback_fileUuid]').val(fileInfo.uuid);
+
+                    closeHoldon();
+                });
+        });
+    }
+
+    function block7RemoveVideo(id) {
+        openHoldon();
+
+        $.post(
+            Routing.generate('hb.sale_funnel.organic.block7feedback.remove.video', {id: id}),
+            function (response) {
+                if (response.status && response.status === 'error' && response.message) {
+                    alert(response.message);
+                } else {
+                    updateBlock7();
+                }
+
+                closeHoldon();
+            });
+    }
+
+    // hb.sale_funnel.organic.block7feedback.remove
+    function block7RemoveFeedback(id) {
+        openHoldon();
+        $.post(
+            Routing.generate('hb.sale_funnel.organic.block7feedback.remove', {id: id, funnel: {{ funnel.id }} }),
+            function (response) {
+                if (response.status && response.status === 'error' && response.message) {
+                    alert(response.message);
+                } else {
+                    updateBlock7();
+                }
+
+                closeHoldon();
+            }
+        )
+    }
+
+
+    $(function () {
+        $('div.block7').on('submit', 'form[name=block7]', function (e) {
+            openHoldon();
+            e.preventDefault();
+
+            var formData = $(this).serialize();
+            var id = $(this).data('funnel-id');
+
+            $.ajax({
+                type: "POST",
+                url: Routing.generate('hb.sale_funnel.organic.block7feedback', {id: id}),
+                data: formData,
+                dataType: "json",
+                success: function (response) {
+                    $('div.block7').html(response.responseText);
+                    closeHoldon();
+                },
+                error: function (response) {
+                    $('div.block7').html(response.responseText);
+                    closeHoldon();
+                }
+            });
+
+            return false;
+        }).on('click', 'button[id^=block7_upload_video_]', function () {
+            var id = $(this).data('feedback-id');
+            block7UploadVideo(id);
+        }).on('click', 'button[id^=block7_remove_video_]', function () {
+            var id = $(this).data('feedback-id');
+            block7RemoveVideo(id);
+        }).on('click', 'button[id^=remove_feedback_]', function () {
+            var id = $(this).data('feedback-id');
+            block7RemoveFeedback(id)
+        }).on('click', 'button[id=block7_upload_new_video]', function () {
+            block7AddVideo()
+        });
+
+    });
+</script>

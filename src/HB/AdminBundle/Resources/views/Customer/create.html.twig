@@ -1,0 +1,167 @@
+{% extends "@HBAdmin/layout.html.twig" %}
+
+{% block js_footer %}
+    <script>
+
+        const form_prefix = 'hb_adminbundle_customer';
+
+        function removePreviousPhoto() {
+            var previous_file_uuid = $('input[id=' + form_prefix + '_photo_uuid]').val();
+            if (previous_file_uuid) {
+                $.post(Routing.generate('hb.upload_care.file.remove', {uuid: previous_file_uuid}), function (response) {
+                        if (response.status && response.status === 'error' && response.message) {
+                            alert(response.message);
+                            closeHoldon();
+                        }
+                    }
+                );
+            }
+        }
+
+        function updatePhoto(response) {
+            var uuid = response.uuid;
+            var cdn = response.cdnUrl;
+            var file_name = '';
+
+            if (response.sourceInfo.file) {
+                file_name = response.sourceInfo.file.name;
+            } else {
+                file_name = response.name;
+            }
+
+            $('img[id=uploaded_photo]').attr('src', cdn);
+            $('input[id=' + form_prefix + '_photo_cdn]').val(cdn);
+            $('input[id=' + form_prefix + '_photo_uuid]').val(uuid);
+            $('input[id=' + form_prefix + '_photo_name]').val(file_name);
+        }
+
+
+        roleChange();
+
+        function roleChange() {
+            var role_manager = '{{ constant('\\HB\\AdminBundle\\Entity\\CustomerRole::ROLE_MANAGER') }}';
+            $('select[id=hb_adminbundle_customer_role]').change(function () {
+                var role_id = $('select[id=hb_adminbundle_customer_role] option:selected').val();
+
+                $.post(
+                    Routing.generate('hb.customer.role.check_type', {id: role_id, compareRole: role_manager}),
+                    function (response) {
+                        if (response.status !== 'success') {
+                            $('tr.authors').hide();
+                            $('tr input[type=checkbox]').prop('checked', false);
+                        } else {
+                            $('tr.authors').show();
+                        }
+                    }
+                )
+            });
+        }
+
+        $('button[id=upload_photo]').on('click', function () {
+            const min_height_crop = $(this).data('min-height');
+            const min_height = min_height_crop/10;
+            const min_width_crop = $(this).data('min-width');
+            const min_width = min_width_crop/10;
+
+            uploadcare.openDialog(null, {
+                imagesOnly: true,
+                tabs: '{{ upload_care_sources }}',
+                crop: min_width_crop + 'x' + min_height_crop + ' minimum',
+                validators: [
+                    minDimensions(min_width, min_height)
+                ]
+            }).done(function (file) {
+                file.progress(function(uploadInfo) {
+                    $('#progressbar').progressbar({value: uploadInfo.progress * 100});
+                });
+
+                file.promise()
+                    .done(function (fileInfo) {
+                        removePreviousPhoto();
+                        updatePhoto(fileInfo);
+                    });
+            });
+        });
+
+        $(function () {
+            $('select[id=hb_adminbundle_customer_role]').trigger('change');
+        });
+    </script>
+{% endblock %}
+
+{% block body %}
+    <div class="card">
+        <div class="card-header">
+            Создание нового пользователя
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <form enctype="multipart/form-data" method="post" action="{{ path('hb.customer.create') }}">
+                        {% set img_src = form.photo_cdn.vars.value %}
+
+                        <img src="{{ img_src }}" height="100" id="uploaded_photo">
+
+                        <button type="button" class="btn btn-sm btn-success" id="upload_photo" data-min-height="250"
+                                data-min-width="250">
+                            <i class="fa fa-photo"></i> Фото(256х256 px)
+                        </button>
+                        <table class="table table-responsive">
+                            <tr>
+                                <td>
+                                    {{ form_row(form.email) }}
+                                    {{ form_row(form.phone) }}
+                                </td>
+                                <td></td>
+                                <td valign="top">
+                                    {{ form_row(form.plainPassword) }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    {{ form_row(form.firstName) }}
+                                </td>
+                                <td></td>
+                                <td>
+                                    {{ form_row(form.surname) }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    {{ form_row(form.role) }}
+                                </td>
+                                <td></td>
+                            </tr>
+                            {% if canChooseCustomerPacket %}
+                                <tr>
+                                    <td colspan="3">
+                                        {{ form_row(form.packet) }}
+                                    </td>
+                                </tr>
+                            {% endif %}
+                            {% if is_granted("ROLE_PRODUCER") %}
+                                <tr class="authors">
+                                    <td colspan="3">
+                                        {{ form_row(form.authors) }}
+                                    </td>
+                                </tr>
+                            {% endif %}
+                            <tr>
+                                <td colspan="3">
+                                    {{ form_row(form.aboutInfo) }}
+                                </td>
+                            </tr>
+                        </table>
+                        {{ form_widget(form.photo_cdn) }}
+                        {{ form_widget(form.photo_uuid) }}
+                        {{ form_widget(form.photo_name) }}
+                        {{ form_widget(form._token) }}
+                        <input type="submit" value="Сохранить" class="btn btn-primary"/>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+{% endblock %}

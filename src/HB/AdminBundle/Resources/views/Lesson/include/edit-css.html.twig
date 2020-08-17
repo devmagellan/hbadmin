@@ -1,0 +1,66 @@
+<style>
+    .form-group {
+        margin-bottom: 0.4em;
+    }
+
+    .form-check {
+        width: 90%;
+    }
+
+    .qa-table th, .qa-table td {
+        padding: 0.2em;
+        border: unset;
+    }
+
+    ul[id=answers-list] {
+        padding-left: 0;
+    }
+
+    ul.elementList {
+        list-style: none;
+        padding-left: unset;
+    }
+
+    .element {
+        border-collapse: collapse;
+        padding: 10px 40px 10px 20px;
+        border-left: 2px solid transparent;
+        border-top: 1px solid lightgray;
+    }
+
+    .element:hover {
+        border-left: 2px solid #4caae9;
+    }
+
+    .element-type {
+        color: grey;
+        font-size: 14px;
+    }
+
+    .fa-arrows {
+        cursor: move;
+    }
+
+    body.dragging, body.dragging * {
+        cursor: move !important;
+    }
+
+    .dragged {
+        position: absolute;
+        opacity: 0.5;
+        z-index: 2000;
+    }
+
+    ul[class^=elementList] li.placeholder {
+        position: relative;
+        height: 60px;
+        background: #4caae9;
+        margin: 0;
+        padding: 0;
+    }
+
+    .fa-remove{
+        color:lightcoral;
+        cursor: pointer;
+    }
+</style>

@@ -1,0 +1,1493 @@
+<!DOCTYPE html>
+<html>
+<!--layouts/application-->
+
+<head>
+    <!--layouts/partials/head-->
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="apple-touch-icon" sizes="57x57" href="//cdn.baxtep.com/img/favicon/apple-icon-57x57.png?v=1">
+    <link rel="apple-touch-icon" sizes="60x60" href="//cdn.baxtep.com/img/favicon/apple-icon-60x60.png?v=1">
+    <link rel="apple-touch-icon" sizes="72x72" href="//cdn.baxtep.com/img/favicon/apple-icon-72x72.png?v=1">
+    <link rel="apple-touch-icon" sizes="76x76" href="//cdn.baxtep.com/img/favicon/apple-icon-76x76.png?v=1">
+    <link rel="apple-touch-icon" sizes="114x114" href="//cdn.baxtep.com/img/favicon/apple-icon-114x114.png?v=1">
+    <link rel="apple-touch-icon" sizes="120x120" href="//cdn.baxtep.com/img/favicon/apple-icon-120x120.png?v=1">
+    <link rel="apple-touch-icon" sizes="144x144" href="//cdn.baxtep.com/img/favicon/apple-icon-144x144.png?v=1">
+    <link rel="apple-touch-icon" sizes="152x152" href="//cdn.baxtep.com/img/favicon/apple-icon-152x152.png?v=1">
+    <link rel="apple-touch-icon" sizes="180x180" href="//cdn.baxtep.com/img/favicon/apple-icon-180x180.png?v=1">
+    <link rel="icon" type="image/png" sizes="192x192" href="//cdn.baxtep.com/img/favicon/android-icon-192x192.png?v=1">
+    <link rel="icon" type="image/png" sizes="32x32" href="//cdn.baxtep.com/img/favicon/favicon-32x32.png?v=1">
+    <link rel="icon" type="image/png" sizes="96x96" href="//cdn.baxtep.com/img/favicon/favicon-96x96.png?v=1">
+    <link rel="icon" type="image/png" sizes="16x16" href="//cdn.baxtep.com/img/favicon/favicon-16x16.png?v=1">
+    <link rel="manifest" href="//cdn.baxtep.com/img/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="//cdn.baxtep.com/img/favicon/ms-icon-144x144.png?v=1">
+    <meta name="theme-color" content="#FF6400">
+    <meta name="csrf-param" content="authenticity_token"/>
+    <meta name="csrf-token"
+          content="Dj6N5bp36bvNjTkSQfI9TJm1ZUcK/MzLtJdsoafd9O+JKojHt/HRATk5pldGgFi/hJYpvDpsyDqcMJZYdPy8xg=="/>
+    <title>{{ funnel.course.info.title }} | Heartbeat Education</title>
+    <meta name="brand_video_player_color" content="#FF6400"/>
+    <meta name="site_title" content="Heartbeat Education"/>
+    <link href="https://cdn.baxtep.com/new/css/style.css" rel="stylesheet">
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700,300i,400i,500i|Source+Sans+Pro:400,600,400i,600i"
+          media="all">
+    <script>
+        window._wq = window._wq || [];
+    </script>
+    <script src="//cdn.baxtep.com/new/js/thbl/application.min.js"></script>
+    <script src="//cdn.baxtep.com/new/js/thbl/student.min.js"></script>
+    <script defer src='https://cdn.baxtep.com/plugins/slick/slick.min.js'></script>
+    <script defer src='https://cdn.baxtep.com/new/js/prototype.js'></script>
+    <script defer src='https://cdn.baxtep.com/new/js/custom.min.js'></script>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
+            var bodyObserver = new MutationObserver(function (mutations) {
+                for (var i = 0; i < mutations.length; i++) {
+                    if (mutations[i].attributeName == 'style') {
+                        if (window.getComputedStyle(mutations[i].target).paddingBottom !== '0px') {
+                            mutations[i].target.style.paddingBottom = ''
+                        }
+                    }
+                }
+                ;
+            });
+
+            bodyObserver.observe(document.body, {
+                attributes: true, attributeFilter: ['style'], childList: false, subtree: false, characterData: false
+            });
+        })
+
+        window.onload = function () {
+            $('.courses_slick').find('.courses_ell').on('click', function (event) {
+                // Product Clicked
+                event.preventDefault();
+                var name = $(this).data('course-name');
+                setCookie('userProd', name, {path: '/'});
+            });
+            $('#user_sign_up').on('click', function (event) {
+                setCookie('userSignup', 'true', {path: '/'});
+            });
+        }
+    </script>
+    <script defer src='https://fast.wistia.com/assets/external/E-v1.js'></script>
+
+    <script defer>
+        window.onload = function () {
+            $(document).ready(function () {
+                var us_login = getCookie('userLogin');
+                if (typeof us_login == 'undefined') {
+                    us_login = false;
+                }
+                var us_signup = getCookie('userSignup');
+                if (typeof us_signup == 'undefined') {
+                    us_signup = false;
+                }
+                if (typeof getCookie('signed_in') !== 'undefined') {
+                    if (getCookie('signed_in') && us_signup) {
+                        var name = getCookie('userProd');
+                        analytics.track('Sign Up', name);
+                        setCookie('userSignup', 'false', {path: '/'});
+                    }
+                    if (getCookie('signed_in') && !us_login) {
+                        var name = getCookie('userProd');
+                        analytics.track('Log In', name);
+                        setCookie('userLogin', 'true', {path: '/'});
+                    }
+                }
+                $('.complete').click(function (event) {
+                    var perc = $('.percentage').text();
+                    perc = perc.replace(/\s+/g, '');
+                    var course = $('#courseSidebar h2').text();
+                    if (perc == "1%") {
+                        analytics.track('Course Started', course);
+                    }
+                    if (perc == "100%") {
+                        analytics.track('Course Finished', course);
+                    }
+                });
+            });
+        }
+    </script>
+    <link href="/blog/rss" rel="alternate" title="RSS Feed" type="application/rss+xml"/>
+    <!--layouts/partials/head-->
+    <meta http-content='IE=Edge' http-equiv='X-UA-Compatible'>
+    <meta content='width=device-width,initial-scale=1.0,user-scalable=no' name='viewport'>
+    <meta id="fedora-keys" data-env="production"
+          data-checkout-sentry-dsn="https://3690aec6f3b7402da92049b937763d96:1e4d614bd6dd4ea6b91cda55289fa4ab@sentry.io/1380079"
+          data-stripe="pk_live_hkgvgSBxG4TAl3zGlXiB1KUX" data-track-all-ahoy="false" data-track-changes-ahoy="false"
+          data-track-clicks-ahoy="false" data-track-sumbits-ahoy="false" data-filepicker="ADNupMnWyR7kCWRvm76Laz"
+          data-taxamo="public_3adAdeo6B9dUufD_mJMEMkTXmxbK-vffcybxQEvrshk"
+          data-iris-url="https://eventable.teachable.cloud"/>
+    <meta id="fedora-data" data-id="13676780" data-name="Александр" data-email="yarosh.alexandr@gmail.com"
+          data-school-id="127625" data-src="null" data-joined-at="&quot;2018-08-09T16:12:05Z&quot;"
+          data-wistia-identifier="127625:student:13676780"
+          data-gravatar-url="https://s.gravatar.com/avatar/bd120fdabbe13bb8c5014329e6727e83?d=mm"
+          data-report-card="{&quot;423609&quot;:{&quot;id&quot;:null,&quot;course_id&quot;:423609,&quot;is_active&quot;:true,&quot;has_full_access&quot;:false,&quot;percent_complete&quot;:0,&quot;enrolled_at&quot;:&quot;2018-12-03T17:34:21Z&quot;,&quot;completed_at&quot;:null,&quot;certificate_page_id&quot;:null,&quot;certificate_serial_number&quot;:null,&quot;completed_lecture_count&quot;:0,&quot;completed_lecture_ids&quot;:[],&quot;days_enrolled&quot;:89},&quot;367631&quot;:{&quot;id&quot;:null,&quot;course_id&quot;:367631,&quot;is_active&quot;:true,&quot;has_full_access&quot;:false,&quot;percent_complete&quot;:0,&quot;enrolled_at&quot;:&quot;2018-10-02T13:20:22Z&quot;,&quot;completed_at&quot;:null,&quot;certificate_page_id&quot;:null,&quot;certificate_serial_number&quot;:null,&quot;completed_lecture_count&quot;:0,&quot;completed_lecture_ids&quot;:[],&quot;days_enrolled&quot;:151},&quot;meta&quot;:{&quot;cached_at&quot;:&quot;2019-01-24T20:47:33Z&quot;}}"
+          data-course-ids="[423609,367631]" data-role="owner" data-last-four="null" data-completed-lecture-ids="[null]"
+          data-school-id="127625" data-school-launched="true" data-preview="logged_out"
+          data-turn-off-fedora-branding="true" data-plan-supports-whitelabeling="true"
+          data-powered-by-text="Разработано"
+          data-asset-path="//https://d3tw2n86njn6hp.cloudfront.net/assets/footer/teachable-logo-white-efd32576079839534d5b6e87bf4424e99b12624f854b2c500a4d3f0b6e2af46b.svg"
+          data-school-preferences="{&quot;ssl_forced&quot;:&quot;true&quot;,&quot;bazaar_enabled&quot;:&quot;false&quot;,&quot;paypal_enabled&quot;:&quot;true&quot;,&quot;autoplay_lectures&quot;:&quot;true&quot;,&quot;comments_threaded&quot;:&quot;true&quot;,&quot;themeable_enabled&quot;:&quot;false&quot;,&quot;course_blocks_beta&quot;:&quot;true&quot;,&quot;eu_vat_tax_enabled&quot;:&quot;false&quot;,&quot;themeable_disabled&quot;:&quot;false&quot;,&quot;comments_moderation&quot;:&quot;false&quot;,&quot;eu_vat_tax_eligible&quot;:&quot;true&quot;,&quot;charge_exclusive_tax&quot;:&quot;true&quot;,&quot;drip_content_enabled&quot;:&quot;true&quot;,&quot;autocomplete_lectures&quot;:&quot;true&quot;,&quot;class_periods_enabled&quot;:&quot;false&quot;,&quot;css_properties_enabled&quot;:&quot;false&quot;,&quot;preenrollments_enabled&quot;:&quot;false&quot;,&quot;native_comments_enabled&quot;:&quot;true&quot;,&quot;new_text_editor_enabled&quot;:&quot;false&quot;,&quot;require_terms_agreement&quot;:&quot;true&quot;,&quot;ssl_forced_from_creation&quot;:&quot;false&quot;,&quot;turn_off_fedora_branding&quot;:&quot;true&quot;,&quot;allow_comment_attachments&quot;:&quot;true&quot;,&quot;authors_can_email_students&quot;:&quot;true&quot;,&quot;authors_can_manage_coupons&quot;:&quot;false&quot;,&quot;teachable_accounts_enabled&quot;:&quot;false&quot;,&quot;teachable_payments_enabled&quot;:&quot;true&quot;,&quot;authors_can_import_students&quot;:&quot;false&quot;,&quot;authors_can_publish_courses&quot;:&quot;false&quot;,&quot;internal_subscriptions_beta&quot;:&quot;true&quot;,&quot;recaptcha_enabled_on_signup&quot;:&quot;false&quot;,&quot;tax_form_collection_enabled&quot;:&quot;false&quot;,&quot;display_vat_inclusive_prices&quot;:&quot;true&quot;,&quot;single_page_checkout_enabled&quot;:&quot;true&quot;,&quot;authors_can_set_course_prices&quot;:&quot;false&quot;,&quot;affiliate_cookie_duration_days&quot;:&quot;365&quot;,&quot;authors_can_issue_certificates&quot;:&quot;false&quot;,&quot;store_student_cards_separately&quot;:&quot;true&quot;,&quot;authors_can_manage_certificates&quot;:&quot;false&quot;,&quot;authors_can_manage_course_pages&quot;:&quot;true&quot;,&quot;disable_js_course_event_tracking&quot;:&quot;false&quot;,&quot;exclusive_vat_on_custom_gateways&quot;:&quot;false&quot;,&quot;owner_teachable_accounts_required&quot;:&quot;true&quot;,&quot;prevent_payment_plan_cancellation&quot;:&quot;true&quot;,&quot;automatically_add_disqus_attachments&quot;:&quot;true&quot;,&quot;recalc_course_pct_on_lecture_publish&quot;:&quot;false&quot;,&quot;turn_off_myteachable_sign_up_branding&quot;:&quot;true&quot;}"
+          data-accessible-features="[&quot;bulk_enroll_students&quot;,&quot;manually_importing_users&quot;,&quot;native_certificates&quot;,&quot;earnings_statements&quot;,&quot;teachable_payments&quot;,&quot;teachable_u&quot;,&quot;drip_content&quot;,&quot;custom_domain&quot;,&quot;coupons&quot;,&quot;graded_quizzes&quot;,&quot;power_editor&quot;,&quot;email&quot;,&quot;course_reports&quot;,&quot;webhooks&quot;,&quot;integrations&quot;,&quot;new_device_confirmation&quot;,&quot;elasticsearch_users&quot;,&quot;elasticsearch_transactions&quot;,&quot;course_compliance&quot;,&quot;reset_progress&quot;]"
+          data-course-data="{&quot;is_lecture_order_enforced&quot;:null,&quot;is_minimum_quiz_score_enforced&quot;:null,&quot;is_video_completion_enforced&quot;:null,&quot;minimum_quiz_score&quot;:null,&quot;maximum_quiz_retakes&quot;:null}"
+          data-course-url="https://heartbeat.education/courses/421007"
+          data-course-id="421007" data-vat-country="null" data-hellosign-id="null"/>
+    <meta id="analytics-keys" name="analytics" data-analytics="{}"/>
+
+</head>
+
+<body class='loaded' data-course-id="421007" data-course-name="{{ funnel.course.info.title }}" data-price="1900"
+      style="padding-bottom: 0px;">
+<div class="main-wrapper">
+    <main class="content js-padboth" style="min-height: 100vh;">
+
+        <!--layouts/partials/header-->
+
+        <!--EOF layouts/partials/header-->
+        <div class='view-school'>
+
+
+            <div class="blocks-page blocks-page-course_sales_page " id="blocks-page-2103090">
+
+
+                <div class="course-block block liquid_html  odd-stripe" id="block-7945824">
+
+
+                    {% if funnel.block1ImageBanner %}
+                        {% set banner = funnel.block1ImageBanner.fileUrl %}
+                    {% else %}
+                        {% set banner = asset('bundles/hbadmin/images/banner_default.jpg') %}
+                    {% endif %}
+                    <section class="tvid">
+                        <div class="tvid_poster tvid_poster-hei" data-dadd="{{ banner }}">
+                            <img src="https://cdn.baxtep.com/new/img/poster/tvid_sample.jpg" class="sample " alt="">
+                            {#<a href="//www.youtube.com/watch?v=JjjafvsMn14"
+                               class="tvid_playicon-mob tvid_playicon js-vidModal">
+                                <img src="https://cdn.baxtep.com/new/img/icon/icon_play-2.png" alt="">
+                            </a>#}
+                        </div>
+                        <div class="tvid_cont">
+                            <div class="tvid_middler">
+                                <div class="container text-center">
+                                    <div class="row">
+                                        <div class="col-xs-12 col-md-8 col-md-offset-2">
+                                            <p class="tvid_h1">{{ funnel.course.info.title }}</p>
+                                        </div>
+                                        <div class="col-xs-12 col-md-8 col-md-offset-2">
+                                            <p class="tvid_p">{{ funnel.course.info.subtitle }}</p>
+                                        </div>
+                                    </div>
+                                    {#<a href="//www.youtube.com/watch?v=JjjafvsMn14" class="tvid_playicon js-vidModal">
+                                        <img src="https://cdn.baxtep.com/new/img/icon/icon_play-2.png" alt="">
+                                    </a>
+                                    <br>#}
+                                    <a class="btn tvid_btn js-ancor"
+                                       href="#pricing-table">{{ funnel.block1ButtonText }}</a>
+                                </div>
+                            </div>
+                            <div class="tvid_arw">
+                                <i class="icon-List-Open"></i>
+                            </div>
+                        </div>
+                    </section>
+
+
+                </div>
+
+
+                <div class="course-block block liquid_html  even-stripe" id="block-7945820">
+
+
+                    <script>
+                        var hbApp = {segmentKey: 'U36BLdqRf6TprcHn1b9CGyxXGcZear0e'}
+                    </script>
+
+
+                </div>
+
+
+                <div class="course-block block coupon_banner  " id="block-7945825">
+
+
+                    <div class='coupon-code-applied hidden'>
+                        <div class='container'>
+                            <div class='row'>
+                                <div class='col-xs-10 col-xs-offset-1 col-md-8 col-md-offset-2'>
+                                    <!-- Caution! the coupon-percent and coupon-text classes are used
+         to set the displayed amount properly -->
+                                    <div class='coupon-percent-text'>
+                                        <span class='coupon-percent'></span> от первоначальной цены!<br>
+                                    </div>
+                                    <div class='coupon-invalid-text hidden'>
+                                        Промокод, который вы указали, истек или недействителен, но курс по-прежнему
+                                        доступен!
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+                <div class="course-block block liquid_html  odd-stripe" id="block-7945819">
+
+
+                    <section class="white">
+                        <div class="container">
+                            <div class="col-xs-12 col-sm-6 col-md-3 ">
+                                <div class="micon_el">
+                                    <div class="micon_decor"></div>
+                                    <div class="micon_img">
+                                        <img src="https://cdn.baxtep.com/new/img/icon/icon-mark.jpg" alt="">
+                                    </div>
+                                    <div class="micon_text">
+                                        <p>
+                                            Онлайн марафон<br>
+
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-6 col-md-3 ">
+                                <div class="micon_el">
+                                    <div class="micon_decor hidden-sm"></div>
+                                    <div class="micon_img">
+                                        <img src="https://cdn.baxtep.com/new/img/icon/icon-calendar.jpg" alt="">
+                                    </div>
+                                    <div class="micon_text">
+                                        <p>
+                                            Ежедневно <br>
+
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-6 col-md-3 ">
+                                <div class="micon_el">
+                                    <div class="micon_decor"></div>
+                                    <div class="micon_img">
+                                        <img src="https://cdn.baxtep.com/new/img/icon/icon-time.jpg" alt="">
+                                    </div>
+                                    <div class="micon_text">
+                                        <p>
+                                            {{ lessonsCount }} занятий <br>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-6 col-md-3">
+                                <div class="micon_el">
+                                    <div class="micon_img">
+                                        <img src="https://cdn.baxtep.com/new/img/icon/icon-flags.jpg" alt="">
+                                    </div>
+                                    <div class="micon_text">
+                                        <p>
+                                            16 июля
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+
+                </div>
+
+
+                <div class="course-block block liquid_html  even-stripe" id="block-7945818">
+
+
+                    <section class="idea">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-xs-12 col-md-10 col-md-offset-1">
+                                    <div class="idea_img">
+                                        {% if funnel.block2CourseImage %}
+                                            {% set block2image = funnel.block2CourseImage.fileUrl %}
+                                        {% else %}
+                                            {% set block2image = asset('bundles/hbadmin/img/what_we_inveted.jpg') %}
+                                        {% endif %}
+                                        <div class="bg" style="background-image: url('{{ block2image }}')"></div>
+                                    </div>
+                                    <div class="idea_wind">
+                                        <p class="idea_h1">
+                                            Что мы придумали?
+                                        </p>
+                                        <div class="idea_text">
+                                            <p>{{ funnel.block2CourseInfo |raw }}</p>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+
+                </div>
+
+
+                <div class="course-block block liquid_html  odd-stripe" id="block-7945823">
+
+
+                </div>
+
+
+                <div class="course-block block liquid_html  even-stripe" id="block-7945822">
+
+
+                    <section class="white">
+                        <p class="micon_h1">
+                            Чему вы научитесь?
+                        </p>
+                        <div class="container">
+
+                            <div class="row">
+                                {% for key, skill in funnel.block3KnowledgeSkills %}
+                                {% if key == 3 %}</div>
+                            <div class="row">{% endif %}
+
+                                <div class="col-xs-12  col-sm-7 col-sm-offset-2 col-md-offset-0 col-md-4 ">
+                                    <div class="micon_el micon_el-mod">
+
+                                        {#<div class="micon_img">
+                                            <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
+                                                 xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                                                 viewBox="0 0 100.353 100.353"
+                                                 style="enable-background:new 0 0 100.353 100.353;" xml:space="preserve"
+                                                 class="orange">
+					<g>
+                        <path d="M50.465,57.735c-19.501,0-35.367,15.867-35.367,35.371c0,0.828,0.671,1.5,1.5,1.5h67.734c0.828,0,1.5-0.672,1.5-1.5
+							C85.832,73.602,69.967,57.735,50.465,57.735z M18.132,91.606c0.786-17.156,14.988-30.871,32.333-30.871
+							s31.548,13.715,32.333,30.871H18.132z"/>
+                        <path d="M49.876,13.379c-11.228,0-20.363,9.135-20.363,20.363s9.135,20.363,20.363,20.363c11.229,0,20.363-9.135,20.363-20.363
+							S61.104,13.379,49.876,13.379z M49.876,51.105c-9.574,0-17.363-7.789-17.363-17.363s7.789-17.363,17.363-17.363
+							c9.574,0,17.363,7.789,17.363,17.363S59.45,51.105,49.876,51.105z"/>
+                        <path d="M25.138,44.889c0.829,0,1.5-0.671,1.5-1.5V23.977c0-0.096-0.011-0.189-0.028-0.28c4.019-9.319,13.054-15.304,23.267-15.304
+							c10.396,0,19.582,6.202,23.486,15.816v19.067c-1.258,3.098-3.085,5.884-5.45,8.28c-0.582,0.59-0.576,1.539,0.014,2.121
+							c0.292,0.289,0.673,0.433,1.054,0.433c0.387,0,0.774-0.149,1.067-0.446c2.52-2.553,4.495-5.504,5.893-8.774h1.054
+							c6.179,0,11.206-5.027,11.206-11.206s-5.027-11.206-11.206-11.206h-1.118c-4.503-10.403-14.596-17.084-26-17.084
+							c-11.41,0-21.504,6.68-26.005,17.084h-0.866c-6.179,0-11.206,5.027-11.206,11.206s5.027,11.206,11.206,11.206H25.138z
+							 M85.201,33.683c0,4.525-3.682,8.206-8.206,8.206h-0.632V25.477h0.632C81.52,25.477,85.201,29.158,85.201,33.683z M14.8,33.683
+							c0-4.525,3.681-8.206,8.206-8.206h0.632v16.412h-0.632C18.481,41.889,14.8,38.208,14.8,33.683z"/>
+                    </g>
+					</svg>
+                                        </div>#}
+                                        <div class="micon_text">
+                                            <p>
+                                                {{ skill.skill }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {% endfor %}
+                            </div>
+
+                        </div>
+                    </section>
+
+
+                </div>
+
+
+                <div class="course-block block liquid_html  odd-stripe" id="block-7945806">
+
+
+                    <section class="imgcont">
+                        {% if funnel.block4Photo %}
+                            {% set block4img = funnel.block4Photo.fileUrl %}
+                        {% else %}
+                            {% set block4img = asset('bundles/hbadmin/images/banner_default.jpg') %}
+                        {% endif %}
+                        <div class="imgcont_img" data-dadd="{{ block4img }}">
+                            <!--<img src="https://cdn.baxtep.com/new/img/poster/tvid_sample.jpg" class="sample " alt="">-->
+                        </div>
+                        <div class="imgcont_cont">
+                            <div class="imgcont_middler">
+                                <div class="container">
+                                    <div class="col-xs-12 col-sm-10 col-sm-offset-1">
+                                        <p class="tvid_h1">
+                                            {% if funnel.block4Title %}
+                                                {{ funnel.block4Title }}
+                                            {% else %}
+                                                {{ constant('\\HB\\AdminBundle\\Entity\\SaleFunnel\\SalesFunnelOrganic::BLOCK4_TITLE') }}
+                                            {% endif %}
+                                        </p>
+
+
+                                        <p class="tvid_p">
+                                            {% if funnel.block4Subtitle %}
+                                                {{ funnel.block4Subtitle }}
+                                            {% else %}
+                                                {{ constant('\\HB\\AdminBundle\\Entity\\SaleFunnel\\SalesFunnelOrganic::BLOCK4_SUBTITLE') }}
+                                            {% endif %}
+                                            <br>
+                                        </p>
+                                        <button class="btn tvid_btn js-ancor" data-target="#pricing-table">
+                                            {% if funnel.block4ButtonText %}
+                                                {{ funnel.block4ButtonText }}
+                                            {% else %}
+                                                {{ constant('\\HB\\AdminBundle\\Entity\\SaleFunnel\\SalesFunnelOrganic::BLOCK4_BUTTON_TEXT') }}
+                                            {% endif %}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+
+                </div>
+
+
+                <div class="course-block block liquid_html  even-stripe" id="block-7945817">
+
+
+                    <section class="white">
+                        <p class="micon_h1">
+                            {% if funnel.block5Type == constant('\\HB\\AdminBundle\\Entity\\SaleFunnel\\SalesFunnelOrganic::BLOCK5_TYPE_RECOMMEND') %}
+                                Курс рекомендуется:
+                            {% else %}
+                                Требования к участникам:
+                            {% endif %}
+                        </p>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-xs-12 col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
+                                    <p class="review_text text-center">
+
+                                        {{ funnel.block5Text | raw }}
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+
+                </div>
+
+
+                <div class="course-block block liquid_html  odd-stripe" id="block-7945816">
+
+
+                    <section class="idea iauthor">
+                        <div class="container">
+                            <div class="text-center">
+                                <p class="idea_h1">
+                                    Автор курса
+                                </p>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12 col-md-10 col-md-offset-1">
+                                    {% if funnel.block6AuthorPhoto %}
+                                        {% set author_photo = funnel.block6AuthorPhoto.fileUrl %}
+                                    {% elseif funnel.course.owner.photo %}
+                                        {% set author_photo = funnel.course.owner.photo.fileUrl %}
+                                    {% else %}
+                                        {% set author_photo = '' %}
+                                    {% endif %}
+
+                                    {% if funnel.block6AuthorVideoFromBanner and funnel.block1VideoBanner %}
+                                        {% set author_video = funnel.block1VideoBanner.fileUrl %}
+                                    {% else %}
+                                        {% if funnel.block6AuthorVideo %}
+                                            {% set author_video = funnel.block6AuthorVideo.fileUrl %}
+                                        {% else %}
+                                            {% set author_video = false %}
+                                        {% endif %}
+                                    {% endif %}
+
+
+                                    <div class="idea_img author"
+                                         style="background:url({{ author_photo }}) center / cover no-repeat">
+                                        {% if author_video %}
+                                            <a href="{{ author_video }}/-/inline/yes/" class="idea_btn js-vidModal">
+                                                Видеобращение автора
+                                                <img src="https://cdn.baxtep.com/new/img/svg/play_video-yellow.svg"
+                                                     alt="">
+                                            </a>
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="idea_wind">
+                                        <div class="idea_head">
+                                            <p class="idea_name">
+                                                {{ funnel.block6AuthorInfo }}
+                                            </p>
+                                            <p class="idea_pos">
+                                                {{ funnel.block6AuthorExperience | raw }}
+                                            </p>
+                                        </div>
+                                        <div class="idea_text">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+
+                </div>
+
+
+                {% if funnel.block7Feedbacks | length > 0 %}
+                    <div class="course-block block liquid_html  even-stripe">
+
+                        <section class="crev">
+                            <div class="container container-mw">
+                                <p class="ccomf_h1">Отзывы</p>
+                                <div class="row">
+
+                                    {% set iterator = 0 %}
+                                    {% for key, feedback in funnel.block7Feedbacks %}
+
+                                    {% if key is divisible by(2) %}
+                                </div>
+                                <div class="row">
+                                    {% endif %}
+
+                                    {% if feedback.feedBackVideo %}
+                                        {% set video_url = feedback.feedBackVideo.fileUrl %}
+                                    {% else %}
+                                        {% set video_url = feedback.feedBackVideo.fileUrl %}
+                                    {% endif %}
+
+                                    <div class="col-xs-12 col-md-6">
+
+                                        <video width="500" height="350" controls>
+                                            <source src="{{ video_url }}">
+                                        </video>
+
+                                        <div class="crev_info">
+                                            <p class="crev_name">{{ feedback.feedBackAuthor }}</p>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                {% endif %}
+
+                <div class="course-block block liquid_html  even-stripe" id="block-7945813">
+
+
+                    <!--<div class="section grey">-->
+                    <!--	<p class="micon_h1 h1">-->
+                    <!--		Отзывы студентов-->
+                    <!--	</p>-->
+                    <!--	<div class="container">-->
+                    <!--		<div class="row">-->
+                    <!--			<div class="col-xs-12 col-sm-10 col-sm-offset-1">-->
+                    <!--				<section class="review">-->
+                    <!--					<div class="review_container">-->
+                    <!--						<div class="win_head review_head text-center">-->
+                    <!--							<ul class="win_headlist text-center listinfo xs-xs-hide">-->
+                    <!--								<li class="listinfo_item">-->
+                    <!--									<p class="listinfo_p"> Оценок:  347</p>-->
+                    <!--								</li>-->
+                    <!--								<li class="listinfo_item">-->
+                    <!--									<p class="listinfo_p">Зарегистрированных студентов: 1 671</p>-->
+                    <!--								</li>-->
+                    <!--							</ul>-->
+                    <!--						</div>-->
+                    <!--						<div class="raiting-holder">-->
+                    <!--							<div class="raiting tb-text-center">-->
+                    <!--								<p class="raiting_digit ">-->
+                    <!--									4.6-->
+                    <!--								</p>-->
+                    <!--								<div class="star_holder" data-raiting="4.6">-->
+
+                    <!--									<ul class="star" >-->
+                    <!--										<li class="star_item">-->
+                    <!--											<p class="star_star">-->
+                    <!--												<i class="icon-Star"></i>-->
+                    <!--											</p>-->
+                    <!--										</li>-->
+                    <!--										<li class="star_item">-->
+                    <!--											<p class="star_star">-->
+                    <!--												<i class="icon-Star"></i>-->
+                    <!--											</p>-->
+                    <!--										</li>-->
+                    <!--										<li class="star_item">-->
+                    <!--											<p class="star_star">-->
+                    <!--												<i class="icon-Star"></i>-->
+                    <!--											</p>-->
+                    <!--										</li>-->
+                    <!--										<li class="star_item">-->
+                    <!--											<p class="star_star">-->
+                    <!--												<i class="icon-Star"></i>-->
+                    <!--											</p>-->
+                    <!--										</li>-->
+                    <!--										<li class="star_item">-->
+                    <!--											<p class="star_star">-->
+                    <!--												<i class="icon-Star"></i>-->
+                    <!--											</p>-->
+                    <!--										</li>-->
+                    <!--									</ul>-->
+                    <!--									<div class="star_hider">-->
+                    <!--										<ul class="star">-->
+                    <!--											<li class="star_item">-->
+                    <!--												<p class="star_star star_star-active">-->
+                    <!--													<i class="icon-Star"></i>-->
+                    <!--												</p>-->
+                    <!--											</li>-->
+                    <!--											<li class="star_item">-->
+                    <!--												<p class="star_star star_star-active">-->
+                    <!--													<i class="icon-Star"></i>-->
+                    <!--												</p>-->
+                    <!--											</li>-->
+                    <!--											<li class="star_item">-->
+                    <!--												<p class="star_star star_star-active">-->
+                    <!--													<i class="icon-Star"></i>-->
+                    <!--												</p>-->
+                    <!--											</li>-->
+                    <!--											<li class="star_item">-->
+                    <!--												<p class="star_star star_star-active">-->
+                    <!--													<i class="icon-Star"></i>-->
+                    <!--												</p>-->
+                    <!--											</li>-->
+                    <!--											<li class="star_item">-->
+                    <!--												<p class="star_star star_star-active">-->
+                    <!--													<i class="icon-Star"></i>-->
+                    <!--												</p>-->
+                    <!--											</li>-->
+                    <!--										</ul>-->
+                    <!--									</div>-->
+                    <!--								</div>-->
+                    <!--								<div class="xs-xs-show">-->
+                    <!--									<ul class="win_headlist listinfo">-->
+                    <!--										<li class="listinfo_item">-->
+                    <!--											<p class="listinfo_p"> Оценок:  347</p>-->
+                    <!--										</li>-->
+                    <!--										<li class="listinfo_item">-->
+                    <!--											<p class="listinfo_p">Зарегистрированных студентов: 1 671</p>-->
+                    <!--										</li>-->
+                    <!--									</ul>-->
+                    <!--								</div>-->
+                    <!--							</div>-->
+                    <!--							<div class="circle-holder">-->
+                    <!--								<div class="circle_el">-->
+                    <!--									<div class="circle" data-cerclevalue="4.9">-->
+                    <!--										<div class="circle_decor" ></div>-->
+                    <!--										<div class="circle_holder">-->
+                    <!--											<div class="circle_text">-->
+                    <!--												<p class="circle_digit">4.9</p>-->
+                    <!--												<p class="circle_discr">Presentation</p>-->
+                    <!--											</div>-->
+                    <!--										</div>-->
+                    <!--									</div>-->
+                    <!--								</div>-->
+                    <!--								<div class="circle_el">-->
+                    <!--									<div class="circle" data-cerclevalue="4.7">-->
+                    <!--										<div class="circle_decor" ></div>-->
+                    <!--										<div class="circle_holder">-->
+                    <!--											<div class="circle_text">-->
+                    <!--												<p class="circle_digit">4.7</p>-->
+                    <!--												<p class="circle_discr">Explanation</p>-->
+                    <!--											</div>-->
+                    <!--										</div>-->
+                    <!--									</div>-->
+                    <!--								</div>-->
+                    <!--								<div class="circle_el">-->
+                    <!--									<div class="circle" data-cerclevalue="4.2">-->
+                    <!--										<div class="circle_decor" ></div>-->
+                    <!--										<div class="circle_holder">-->
+                    <!--											<div class="circle_text">-->
+                    <!--												<p class="circle_digit">4.2</p>-->
+                    <!--												<p class="circle_discr">Detaling</p>-->
+                    <!--											</div>-->
+                    <!--										</div>-->
+                    <!--									</div>-->
+                    <!--								</div>-->
+                    <!--								<div class="circle_el">-->
+                    <!--									<div class="circle" data-cerclevalue="3.5">-->
+                    <!--										<div class="circle_decor" ></div>-->
+                    <!--										<div class="circle_holder">-->
+                    <!--											<div class="circle_text">-->
+                    <!--												<p class="circle_digit">3.5</p>-->
+                    <!--												<p class="circle_discr">Assestment</p>-->
+                    <!--											</div>-->
+                    <!--										</div>-->
+                    <!--									</div>-->
+                    <!--								</div>-->
+                    <!--							</div>-->
+                    <!--						</div>-->
+                    <!--						<div class="review_ell">-->
+                    <!--							<div class="review_user">-->
+                    <!--								<div class="review_ava-holder">-->
+                    <!--									<img src="https://cdn.baxtep.com/new/img/avart/awa1.png" alt="awa1" class="review_ava">-->
+                    <!--								</div>	-->
+                    <!--								<div class="review_info">-->
+                    <!--									<div class="review_postdate">-->
+                    <!--										10 дней назад-->
+                    <!--									</div>-->
+                    <!--									<div class="review_name">-->
+                    <!--										Shivaraj Nesaragi-->
+                    <!--									</div>-->
+                    <!--									<div class="review_icon icon-Context-Menu"></div>-->
+                    <!--								</div>-->
+                    <!--							</div>-->
+                    <!--							<div class="review_text">-->
+                    <!--								<p>Jose knows how to tailor down the course and teach the students in accordance with what they want to listen. It's a great overall course for those who want to study Machine Learning and Python for Data Science from scratch.</p>-->
+                    <!--							</div>-->
+                    <!--						</div>-->
+                    <!--						<div class="review_ell">-->
+                    <!--							<div class="review_user">-->
+                    <!--								<div class="review_ava-holder">-->
+                    <!--									<img src="https://cdn.baxtep.com/new/img/avart/awa2.png" alt="awa2" class="review_ava">-->
+                    <!--								</div>	-->
+                    <!--								<div class="review_info">-->
+                    <!--									<div class="review_postdate">-->
+                    <!--										месяц назад-->
+                    <!--									</div>-->
+                    <!--									<div class="review_name">-->
+                    <!--										Maxim Roubintchik-->
+                    <!--									</div>-->
+                    <!--									<div class="review_icon icon-Context-Menu"></div>-->
+                    <!--								</div>-->
+                    <!--							</div>-->
+                    <!--							<div class="review_text">-->
+                    <!--								<p>Jose knows how to tailor down the course and teach the students in accordance with what they want to listen. It's a great overall course for those who want to study Machine Learning and Python for Data Science from scratch.</p>-->
+                    <!--							</div>-->
+                    <!--						</div>-->
+                    <!--						<div class="review_ell">-->
+                    <!--							<div class="review_user">-->
+                    <!--								<div class="review_ava-holder">-->
+                    <!--									<img src="https://cdn.baxtep.com/new/img/avart/awa3.png" alt="awa3" class="review_ava">-->
+                    <!--								</div>	-->
+                    <!--								<div class="review_info">-->
+                    <!--									<div class="review_postdate">-->
+                    <!--										4 месяца назад-->
+                    <!--									</div>-->
+                    <!--									<div class="review_name">-->
+                    <!--										Army Masnon-->
+                    <!--									</div>-->
+                    <!--									<div class="review_icon icon-Context-Menu"></div>-->
+                    <!--								</div>-->
+                    <!--							</div>-->
+                    <!--							<div class="review_text">-->
+                    <!--								<p>Jose knows how to tailor down the course and teach the students in accordance with what they want to listen. It's a great overall course for those who want to study Machine Learning and Python for Data Science from scratch.</p>-->
+                    <!--							</div>-->
+                    <!--						</div>-->
+                    <!--						<div class="ta-center">-->
+                    <!--							<a class="author_link" href="#">+ Показать больше</a>-->
+                    <!--						</div>-->
+                    <!--					</div>-->
+                    <!--				</section>-->
+                    <!--			</div>-->
+                    <!--		</div>-->
+                    <!--	</div>-->
+                    <!--</div>-->
+
+
+                </div>
+
+
+                <div class="course-block block curriculum  odd-stripe" id="block-7945821">
+
+
+                    <!--pages/partials/block_curriculum-->
+
+                    <section class='platform_white mt'>
+                        <div class="container">
+                            <div class='row'>
+                                <div class="col-xs-12 col-sm-10 col-sm-offset-1">
+                                    <article id="js-plan" class="plan js_hidder-parent">
+                                        <div class="win_head">
+                                            <p class="win_h2 win_h2-head">
+                                                Программа курса
+                                            </p>
+                                            <ul class="win_headlist listinfo">
+                                                <li class="listinfo_item">
+                                                    <p class="listinfo_p">
+                                                        Разделов: {{ funnel.course.lessonSections | length }}</p>
+                                                </li>
+
+                                                <li class="listinfo_item">
+                                                    <p class="listinfo_p listinfo_p-button js-uncollapse"
+                                                       data-collTarget="js-collExamp">
+                                                        <span>Развернуть</span>
+                                                        <span>Свернуть</span> все
+                                                    </p>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <ul id="js-collExamp" class="collapse js-curriculum">
+
+                                            {% for key, section in sections %}
+                                                {% if key == 0 %}
+                                                    {% set first = true %}
+                                                {% else %}
+                                                    {% set first = false %}
+                                                {% endif %}
+
+                                                {{ render(controller('hb.admin.controller.sale_funnel.organic.preview_section:handleAction', {section: section})) }}
+                                            {% endfor %}
+
+                                        </ul>
+
+                                    </article>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+
+                    <!--EOF pages/partials/block_curriculum-->
+
+
+                </div>
+
+
+                <div class="course-block block liquid_html  even-stripe" id="block-7945812">
+
+
+                    <section class="package" id="pricing-table">
+                        <div class="container">
+                            <div class="row">
+                                <div class="package_slider dfc">
+
+                                    {% set block_basic = funnel | getPriceBlock(constant('\\HB\\AdminBundle\\Entity\\CoursePriceBlock::TYPE_BASIC')) %}
+                                    {% set block_optimal = funnel | getPriceBlock(constant('\\HB\\AdminBundle\\Entity\\CoursePriceBlock::TYPE_OPTIMAL')) %}
+                                    {% set block_vip = funnel | getPriceBlock(constant('\\HB\\AdminBundle\\Entity\\CoursePriceBlock::TYPE_VIP')) %}
+
+
+                                    {% if block_basic %}
+                                        <div class="package_slide">
+                                            <article class="package_el">
+                                                <p class="package_n">пакет</p>
+                                                <p class="package_h2">
+                                                    {% if block_basic.title %}
+                                                        {{ block_basic.title }}
+                                                    {% else %}
+                                                        Базовый
+                                                    {% endif %}
+                                                </p>
+                                                <ul class="package_list">
+                                                    {% for thesis in block_basic.theses %}
+                                                        <li class="package_item">
+                                                            <p class="package_p icon-Feature-Video">
+                                                                {{ thesis.description }}
+                                                            </p>
+                                                        </li>
+                                                    {% endfor %}
+                                                </ul>
+                                                <div class="package_price-holder">
+                                                    <p class="package_price">
+                                                        ${{ block_basic.price }}
+                                                    </p>
+                                                </div>
+
+                                                <span data-prodid='821796' data-courseid='421007' data-schoolid=''
+                                                      data-price='1900' class="package_btn buybtn">Купить</span>
+                                            </article>
+                                        </div>
+                                    {% endif %}
+
+                                    {% if block_optimal %}
+                                        <div class="package_slide">
+                                            <article class="package_el">
+                                                <p class="package_n">пакет</p>
+                                                <p class="package_h2">
+                                                    {% if block_optimal.title %}
+                                                        {{ block_optimal.title }}
+                                                    {% else %}
+                                                        Оптимальный
+                                                    {% endif %}
+                                                </p>
+                                                <ul class="package_list">
+                                                    {% for thesis in block_optimal.theses %}
+                                                        <li class="package_item">
+                                                            <p class="package_p icon-Feature-Video">
+                                                                {{ thesis.description }}
+                                                            </p>
+                                                        </li>
+                                                    {% endfor %}
+                                                    {% if block_optimal.courses | length >0 %}
+                                                        {% for course in block_optimal.courses %}
+                                                            <li class="package_item">
+                                                                <p class="package_p icon-Feature-Video">
+                                                                    Бонусный курс "{{ course.info.title }}"
+                                                                </p>
+                                                            </li>
+                                                        {% endfor %}
+                                                    {% endif %}
+                                                </ul>
+                                                <div class="package_price-holder">
+                                                    <p class="package_price">
+                                                        ${{ block_optimal.price }}
+                                                    </p>
+                                                </div>
+
+                                                <span data-prodid='821796' data-courseid='421007' data-schoolid=''
+                                                      data-price='1900' class="package_btn buybtn">Купить</span>
+                                            </article>
+                                        </div>
+                                    {% endif %}
+
+                                    {% if block_vip %}
+                                        <div class="package_slide">
+                                            <article class="package_el">
+                                                <p class="package_n">пакет</p>
+                                                <p class="package_h2">
+                                                    {% if block_vip.title %}
+                                                        {{ block_vip.title }}
+                                                    {% else %}
+                                                        VIP
+                                                    {% endif %}
+                                                </p>
+                                                <ul class="package_list">
+                                                    {% for thesis in block_vip.theses %}
+                                                        <li class="package_item">
+                                                            <p class="package_p icon-Feature-Video">
+                                                                {{ thesis.description }}
+                                                            </p>
+                                                        </li>
+                                                    {% endfor %}
+                                                    {% if block_vip.courses | length >0 %}
+                                                        {% for course in block_vip.courses %}
+                                                            <li class="package_item">
+                                                                <p class="package_p icon-Feature-Video">
+                                                                    Бонусный курс "{{ course.info.title }}"
+                                                                </p>
+                                                            </li>
+                                                        {% endfor %}
+                                                    {% endif %}
+                                                </ul>
+                                                <div class="package_price-holder">
+                                                    <p class="package_price">
+                                                        ${{ block_vip.price }}
+                                                    </p>
+                                                </div>
+
+                                                <span data-prodid='821796' data-courseid='421007' data-schoolid=''
+                                                      data-price='1900' class="package_btn buybtn">Купить</span>
+                                            </article>
+                                        </div>
+                                    {% endif %}
+
+
+                                    {#<div class="package_slide">
+                                        <article class="package_el">
+                                            <p class="package_n">пакет</p>
+                                            <p class="package_h2">Начни Бесплатно</p>
+
+                                            <div class="package_price-holder">
+                                                <p class="package_price">
+                                                    БЕСПЛАТНО
+                                                </p>
+                                            </div>
+
+                                            <span data-prodid='821797' data-courseid='421007' data-schoolid=''
+                                                  data-price='0' class="package_btn buybtn">Купить</span>
+                                        </article>
+                                    </div>#}
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+
+                </div>
+
+                <div class="course-block block liquid_html  odd-stripe" id="block-7945810">
+
+
+                    <section class="imgcont">
+                        {% if funnel.block8Photo %}
+                            {% set block8photo = funnel.block8Photo.fileUrl %}
+                        {% else %}
+                            {% set block8photo = asset('bundles/hbadmin/images/action_call_2.jpg') %}
+                        {% endif %}
+                        <div class="imgcont_img" data-dadd="{{ block8photo }}">
+                            <!--<img src="https://cdn.baxtep.com/new/img/poster/tvid_sample.jpg" class="sample " alt="">-->
+                        </div>
+                        <div class="imgcont_cont">
+                            <div class="imgcont_middler">
+                                <div class="container">
+                                    <div class="col-xs-12 col-sm-10 col-sm-offset-1">
+                                        <p class="tvid_h1">
+                                            {% if funnel.block8Title %}
+                                                {{ funnel.block8Title }}
+                                            {% else %}
+                                                {{ constant('\\HB\\AdminBundle\\Entity\\SaleFunnel\\SalesFunnelOrganic::BLOCK8_TITLE') }}
+                                            {% endif %}
+                                        </p>
+
+
+                                        <p class="tvid_p">
+                                            {% if funnel.block8Subtitle %}
+                                                {{ funnel.block8Subtitle }}
+                                            {% else %}
+                                                {{ constant('\\HB\\AdminBundle\\Entity\\SaleFunnel\\SalesFunnelOrganic::BLOCK8_SUBTITLE') }}
+                                            {% endif %}
+                                        </p>
+                                        <button class="btn tvid_btn js-ancor" data-target="#pricing-table">
+                                            {% if funnel.block8ButtonText %}
+                                                {{ funnel.block8ButtonText }}
+                                            {% else %}
+                                                {{ constant('\\HB\\AdminBundle\\Entity\\SaleFunnel\\SalesFunnelOrganic::BLOCK8_BUTTON_TEXT') }}
+                                            {% endif %}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+
+                </div>
+
+
+                <div class="course-block block liquid_html  even-stripe" id="block-7945809">
+
+
+                    <section class="section white">
+                        <p class="micon_h1 h1">
+                            Как будет проходить процесс обучения?
+                        </p>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-4 col-sm-offset-4 col-md-offset-0 col-md-4">
+                                    <div class="steps_el">
+                                        <div class="steps_img">
+                                            <img src="https://cdn.baxtep.com/new/img/icon/icon-wallet.jpg" alt="">
+                                            <div class="steps_arw"></div>
+                                        </div>
+                                        <div class="steps_text">
+                                            <p>
+                                                регистрация и оплата курса
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-sm-4 col-sm-offset-4 col-md-offset-0 col-md-4">
+                                    <div class="steps_el">
+
+                                        <div class="steps_img">
+                                            <img src="https://cdn.baxtep.com/new/img/icon/icon-idea.jpg" alt="">
+                                            <div class="steps_arw"></div>
+                                        </div>
+                                        <div class="steps_text">
+                                            <p>
+                                                прохождение курса и выполнение домашних заданий
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-sm-4 col-sm-offset-4 col-md-offset-0 col-md-4">
+                                    <div class="steps_el">
+                                        <div class="steps_img">
+                                            <img src="https://cdn.baxtep.com/new/img/icon/icon-sert.jpg" alt="">
+                                        </div>
+                                        <div class="steps_text">
+                                            <p>
+                                                получение навыков и знаний
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+
+                </div>
+
+                <div class="course-block block liquid_html  even-stripe" id="block-8060391">
+                    <section class="white">
+                        <p class="micon_h1">
+                            Наши клиенты
+                        </p>
+                        <div class="container">
+                            <div class="partners-slider">
+                                <div class="partners-slide">
+                                    <img src="https://cdn.baxtep.com/new/img/logos/Glas.jpg" alt="">
+                                </div>
+                                <div class="partners-slide">
+                                    <img src="https://cdn.baxtep.com/new/img/logos/Shabo.jpg" alt="">
+                                </div>
+                                <div class="partners-slide">
+                                    <img src="https://cdn.baxtep.com/new/img/logos/Glas.jpg" alt="">
+                                </div>
+                                <div class="partners-slide">
+                                    <img src="https://cdn.baxtep.com/new/img/logos/Shabo.jpg" alt="">
+                                </div>
+                                <div class="partners-slide">
+                                    <img src="https://cdn.baxtep.com/new/img/logos/Glas.jpg" alt="">
+                                </div>
+                                <div class="partners-slide">
+                                    <img src="https://cdn.baxtep.com/new/img/logos/Glas.jpg" alt="">
+                                </div>
+                                <div class="partners-slide">
+                                    <img src="https://cdn.baxtep.com/new/img/logos/Shabo.jpg" alt="">
+                                </div>
+                                <div class="partners-slide">
+                                    <img src="https://cdn.baxtep.com/new/img/logos/Glas.jpg" alt="">
+                                </div>
+                                <div class="partners-slide">
+                                    <img src="https://cdn.baxtep.com/new/img/logos/Shabo.jpg" alt="">
+                                </div>
+                                <div class="partners-slide">
+                                    <img src="https://cdn.baxtep.com/new/img/logos/Glas.jpg" alt="">
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+
+                {% for additionalBlock in funnel.block10AdditionalBlocks %}
+                    <div class="course-block block liquid_html  odd-stripe" id="block-7945808">
+
+                        <section class="white">
+                            <p class="micon_h1">
+                                {{ additionalBlock.title }}
+                            </p>
+                            <div class="container">
+
+                                <div class="col-xs-12 col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
+                                    {{ additionalBlock.description |raw }}
+                                </div>
+                            </div>
+                        </section>
+
+                    </div>
+                {% endfor %}
+
+
+                <div class="course-block block coupon_banner  " id="block-7945826">
+
+
+                    <div class='coupon-code-applied hidden'>
+                        <div class='container'>
+                            <div class='row'>
+                                <div class='col-xs-10 col-xs-offset-1 col-md-8 col-md-offset-2'>
+                                    <!-- Caution! the coupon-percent and coupon-text classes are used
+     to set the displayed amount properly -->
+                                    <div class='coupon-percent-text'>
+                                        <span class='coupon-percent'></span> от первоначальной цены!<br>
+                                    </div>
+                                    <div class='coupon-invalid-text hidden'>
+                                        Промокод, который вы указали, истек или недействителен, но курс по-прежнему
+                                        доступен!
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+            <!--layouts/partials/footer-->
+
+            <!-- BEGIN HEADER -->
+            <header>
+
+                <div class="container">
+                    <div class="dfc aic">
+                        <div class="col-xs-10 col-sm-5 col-sm-offset-1 col-md-offset-0 col-md-4 col-lg-3">
+                            <div class="logo-holder">
+
+                                <a class='logo-link'
+                                   href='https://heartbeat.education?sa=290096e8-21a1-4d22-8ca5-8c20a1f95c88'>
+
+                                    <div class="logo-large">
+                                        <i class="logo_headicon icon-Logo-Znak"></i>
+                                        <p class="logo-text"><b>HeartBeat</b><br> education</p>
+                                    </div>
+                                </a>
+
+                            </div>
+                        </div>
+                        <div class="col-xs-2 col-sm-5 col-md-8 col-lg-9 poss">
+                            <div class="hmenu-holder">
+                                <div class="hmenu_mbutton js-mbtn">
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                </div>
+
+                                <!--layouts/partials/header_links-->
+                                <div class="hmenu-hider js-hmenu-hidde">
+                                    {#<ul class="hmenu_list cust" style="display:none">
+                                        <li class="hmenu_item">
+                                            <a class="hmenu_link" data-no-turbolinks="true" href="#">
+                                                Онлайн курсы
+                                            </a>
+                                            <ul class="submenu">
+                                                <li class="hmenu_item">
+                                                    <a class="hmenu_link" href="/p/501" target="">
+                                                        Практическое Руководство по Ораторскому Мастерству. 8 Ключевых
+                                                        Навыков
+                                                    </a>
+                                                </li>
+                                                <li class="hmenu_item">
+                                                    <a class="hmenu_link" href="/p/50" target="">
+                                                        Как Создать Онлайн Курс с Нуля за 50 Дней
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li class="hmenu_item">
+                                            <a class="hmenu_link" data-no-turbolinks="true" href="#">
+                                                Практики
+                                            </a>
+                                            <ul class="submenu">
+                                                <li class="hmenu_item">
+                                                    <a class="hmenu_link" href="/p/5032" target="">
+                                                        Практическое Руководство по Ораторскому Мастерству. 8 Ключевых
+                                                        Навыков
+                                                    </a>
+                                                </li>
+                                                <li class="hmenu_item">
+                                                    <a class="hmenu_link" href="/p/po" target="">
+                                                        Как Создать Онлайн Курс с Нуля за 50 Дней
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li class="hmenu_item">
+                                            <a class="hmenu_link" data-no-turbolinks="true" href="#">
+                                                Стримы
+                                            </a>
+                                            <ul class="submenu">
+                                                <li class="hmenu_item">
+                                                    <a class="hmenu_link" href="/p/501" target="">
+                                                        Практическое Руководство по Ораторскому Мастерству. 8 Ключевых
+                                                        Навыков
+                                                    </a>
+                                                </li>
+                                                <li class="hmenu_item">
+                                                    <a class="hmenu_link" href="/p/50" target="">
+                                                        Как Создать Онлайн Курс с Нуля за 50 Дней
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li class="hmenu_item">
+                                            <a class="hmenu_link" data-no-turbolinks="true" href="#">
+                                                Консультации
+                                            </a>
+                                            <ul class="submenu">
+                                                <li class="hmenu_item">
+                                                    <a class="hmenu_link" href="/p/501" target="">
+                                                        Практическое Руководство по Ораторскому Мастерству. 8 Ключевых
+                                                        Навыков
+                                                    </a>
+                                                </li>
+                                                <li class="hmenu_item">
+                                                    <a class="hmenu_link" href="/p/50" target="">
+                                                        Как Создать Онлайн Курс с Нуля за 50 Дней
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>#}
+                                    {#<ul class="hmenu_list">
+
+                                        <!--layouts/partials/header_admin_link-->
+
+                                        <li class="hmenu_item">
+                                            <a class="hmenu_link" data-no-turbolinks='true' href='/admin/dashboard'>
+                                                Администратор
+                                            </a>
+                                        </li>
+
+
+                                        <!-- EOF layouts/partials/header_admin_link-->
+
+                                        <li class="hmenu_item">
+
+                                            <a class='hmenu_link' href='https://merchants.heartbeat.education/'
+                                               target=''>
+                                                Для авторов
+                                            </a>
+
+                                        </li>
+
+                                        <li class="hmenu_item">
+
+                                            <a class='hmenu_link' href='/courses/enrolled' target=''>
+                                                Мои Курсы
+                                            </a>
+
+                                        </li>
+                                    </ul>#}
+                                </div>
+
+
+                                <!--EOF layouts/partials/header_links-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </header>
+
+            <!-- HEADER EOF  -->
+            <footer id="footer">
+                <div class="container ta-center">
+                    <div class="footer">
+                        <div class="footer_logo">
+                            <i class="icon-Logo-Znak"></i>
+                        </div>
+                        <ul class="footer_links">
+
+
+                            <li class="footer_item">
+                                <a href='/p/about-us' target='' class="footer_link">
+                                    О нас
+                                </a>
+                            </li>
+
+                            <li class="footer_item">
+                                <a href='/p/authors' target='' class="footer_link">
+                                    Стать автором
+                                </a>
+                            </li>
+
+                            <li class="footer_item">
+                                <a href='https://help.heartbeat.education' target='_blank' class="footer_link">
+                                    Центр поддержки
+                                </a>
+                            </li>
+
+
+                        </ul>
+                        <ul class="footer_links footer_links-light">
+                            <li class="footer_item">
+                                <a href="/p/terms" class="footer_link footer_link-light">Условия использования</a>
+                            </li>
+                            <li class="footer_item">
+                                <a href="/p/privacy" class="footer_link footer_link-light">Политика
+                                    конфиденциальности</a>
+                            </li>
+                            <li class="footer_item">
+                                <a href="/p/intellectual" class="footer_link footer_link-light">Интеллектуальная
+                                    собственность</a>
+                            </li>
+                        </ul>
+                        <p class="footer_link footer_link-light">&copy;</p>
+                    </div>
+                </div>
+            </footer>
+        </div>
+        <script src='https://www.google.com/recaptcha/api.js' async defer></script>
+        <!--<script type="text/javascript">
+var _dcq = _dcq || [];
+var _dcs = _dcs || {};
+_dcs.account = '5349109';
+
+(function() {
+var dc = document.createElement('script');
+dc.type = 'text/javascript'; dc.async = true;
+dc.src = '//tag.getdrip.com/5349109.js';
+var s = document.getElementsByTagName('script')[0];
+s.parentNode.insertBefore(dc, s);
+})();
+</script>-->
+        <style>
+            .hmenu_list.cust .hmenu_link {
+                font-size: larger;
+            }
+
+            .hmenu_item {
+                position: relative
+            }
+
+            .hmenu_item .submenu {
+                display: none;
+                height: 0;
+                transition: all ease .3s;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                z-index: 1000;
+                float: left;
+                min-width: 160px;
+                padding: 5px 0;
+                margin: 2px 0 0;
+                font-size: 14px;
+                text-align: left;
+                list-style: none;
+                background-color: #fff;
+                background-clip: padding-box;
+                border: 1px solid #ccc;
+                border: 1px solid rgba(0, 0, 0, .15);
+                border-radius: 4px;
+                box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+            }
+
+            .hmenu_item .submenu li a {
+                color: #000;
+                display: block;
+                padding: 3px 20px;
+                clear: both;
+                font-weight: 400;
+                line-height: 1.42857143;
+                color: #333;
+                white-space: nowrap;
+            }
+
+            .hmenu_item .submenu li a:hover {
+                text-decoration: none;
+                background-color: #f5f5f5;
+            }
+
+            .hmenu_item:hover .submenu {
+                display: block;
+                height: auto;
+                transition: all ease .3s;
+            }
+
+            @media screen and (min-width: 992px) {
+                .hmenu_list.cust {
+                    padding-right: 30px;
+                }
+            }
+        </style>
+
+        <!--EOF layouts/partials/footer-->
+
+
+</div>
+
+
+</main>
+</div>
+<div class="icon-load"></div>
+<script>
+    function onloadF() {
+        document.body.style.display = 'inline-block';
+        document.body.offsetHeight; // no need to store this anywhere, the reference is enough
+        document.body.style.display = '';
+        document.body.classList.remove('loaded');
+        /*if(typeof header!=='undefined'&&header.length){
+            document.body.style.paddingTop=header.clientHeight+'px';
+        } else {
+            document.body.style.paddingTop=document.body.querySelector('header').clientHeight+'px';
+        }*/
+    };
+    setTimeout(onloadF, 500);
+</script>
+</body>
+
+</html>

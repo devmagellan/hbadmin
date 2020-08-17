@@ -1,0 +1,130 @@
+{% extends "@HBAdmin/layout.html.twig" %}
+
+{% block js_footer %}
+    <script>
+        $('button[name^=upload_report_file_]').click(function () {
+            var report_id = $(this).data('report-id');
+            uploadReportFile(report_id);
+        });
+
+        function uploadReportFile(report_id) {
+            uploadcare.openDialog(null, {
+                tabs: '{{ upload_care_sources }}',
+                validators: [
+                    maxFileSize(10485760)
+                ]
+            }).done(function (file) {
+                openHoldon('Загрузка файла');
+                file.progress(function (uploadInfo) {
+                    $('#progressbar').progressbar({value: uploadInfo.progress * 100});
+                });
+
+                file.promise()
+                    .done(function (fileInfo) {
+                        updateReportFile(fileInfo, report_id);
+                        closeHoldon();
+                    });
+            });
+        }
+
+        function updateReportFile(response, report_id) {
+            openHoldon('Сохранение в базу данных');
+            var uuid = response.uuid;
+            var cdn = response.cdnUrl;
+            var file_name = '';
+            if (response.sourceInfo.file) {
+                file_name = response.sourceInfo.file.name;
+            } else {
+                file_name = response.name;
+            }
+
+            var path = Routing.generate('hb.finance.admin.report.update_file', {id: report_id});
+
+            $.post(path, {uuid: uuid, cdn: cdn, file_name: file_name}, function (response) {
+                if (response.status && response.status === 'error' && response.message) {
+                    alert(response.message);
+                } else {
+                    $('a[name=file_link_' + report_id + ']').attr('href', cdn).text(file_name);
+                }
+
+                closeHoldon();
+            });
+        }
+
+        $()
+    </script>
+{% endblock %}
+
+{% block body %}
+    <div class="card">
+        <div class="card-header">
+            Список отчетов
+        </div>
+        <div class="card-body">
+
+            {{ form_start(form) }}
+            {{ form_widget(form) }}
+            <button type="submit" class="btn btn-success">Добавить отчет</button>
+            {{ form_end(form) }}
+
+            <br><br>
+
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>id</th>
+                    <th>Дата</th>
+                    <th>Пользователь</th>
+                    <th>Файл</th>
+                    <th>Действие</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% if reports | length > 0 %}
+
+                    {% for report in reports %}
+                        <tr>
+                            <td>{{ report.id }}</td>
+                            <td>
+                                {{ report.reportDate.format("F") | trans([],'messages') }}
+                                {{ report.reportDate.format("Y") }}
+                            </td>
+                            <td>
+                                {{ report.customer }}
+                                <small class="alert-gray-100">[{{ report.customer.role }}]</small>
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-orange" name="upload_report_file_{{ report.id }}"
+                                        data-report-id="{{ report.id }}">
+                                    <i class="fa fa-file-excel-o"></i> Загрузить файл
+                                </button>
+
+                                {% if report.file %}
+                                    <a href="{{ report.file.fileUrl }}" target="_blank"
+                                       name="file_link_{{ report.id }}">{{ report.file.fileName }}</a>
+                                {% else %}
+                                    <a href="" target="_blank"
+                                       name="file_link_{{ report.id }}"></a>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{{ path('hb.finance.admin.report.edit', {id: report.id}) }}"
+                                   class="btn btn-pill btn-sm btn-primary"><i class="fa fa-edit"></i> </a>
+                                <a onclick="return confirm('Подтверждаете удаление отчета?')"
+                                   href="{{ path('hb.finance.admin.report.remove', {id: report.id}) }}"
+                                   class="btn btn-pill btn-sm btn-danger"><i class="fa fa-remove"></i> </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="5" style="text-align: center">Данные появятся по истечению месяца при условии что у
+                            Вас были продажи
+                        </td>
+                    </tr>
+                {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

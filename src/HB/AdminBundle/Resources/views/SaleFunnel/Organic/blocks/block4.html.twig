@@ -1,0 +1,57 @@
+{% if saved %}
+    <div class="alert alert-success" role="alert">Сохранено!</div>
+{% endif %}
+<div class="row">
+    <div class="col-md-6">
+        <small class="alert-gray-100">В этом блоке вы можете удалить информацию по умолчанию и добавить свою</small>
+        <form method="post" name="block4" data-funnel-id="{{ funnel.id }}">
+            {{ form_widget(form) }}
+            <button type="submit" class="btn btn-success">
+                Сохранить
+            </button>
+        </form>
+        <br>
+        <h4>Фото</h4>
+        {% if funnel.block4Photo %}
+
+            <a href="{{ funnel.block4Photo.fileUrl }}" target="_blank">
+                <img src="{{ funnel.block4Photo.fileUrl }}" style="max-height: 200px;">
+            </a>
+            <button class="btn btn-pill btn-sm btn-outline-danger" id="block4_remove_image"><i class="fa fa-remove"></i>
+            </button>
+            <br>
+            <br>
+        {% endif %}
+
+        <button type="button" class="btn btn-orange" id="block4_upload_image"><i class="fa fa-photo"></i>
+            Загрузить фото (1920x700 px)
+        </button>
+    </div>
+
+
+    <div class="col-md-6">
+        <small class="alert-gray-100">Если вы не предоставляете свои варианты текстов и картинки, по умолчанию мы поставим:</small>
+        <table class="table">
+            <tr>
+                <th>Картинка</th>
+                <td>
+                    <a href="{{ asset('bundles/hbadmin/images/banner_default.jpg') }}" target="_blank">
+                        <img src="{{ asset('bundles/hbadmin/images/banner_default.jpg') }}" style="max-width: 200px">
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <th>Заголовок</th>
+                <td>{{ constant('\\HB\\AdminBundle\\Entity\\SaleFunnel\\SalesFunnelOrganic::BLOCK4_TITLE') }}</td>
+            </tr>
+            <tr>
+                <th>Подзаголовок</th>
+                <td>{{ constant('\\HB\\AdminBundle\\Entity\\SaleFunnel\\SalesFunnelOrganic::BLOCK4_SUBTITLE') }}</td>
+            </tr>
+            <tr>
+                <th>Текст кнопки</th>
+                <td>{{ constant('\\HB\\AdminBundle\\Entity\\SaleFunnel\\SalesFunnelOrganic::BLOCK4_BUTTON_TEXT') }}</td>
+            </tr>
+        </table>
+    </div>
+</div>

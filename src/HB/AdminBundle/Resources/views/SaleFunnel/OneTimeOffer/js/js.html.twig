@@ -1,0 +1,133 @@
+<script>
+    function uploadOtoImage(block, file_type) {
+        const min_width_crop = 700;
+        const min_width = min_width_crop / 10;
+        const min_height_crop = 470;
+        const min_height = min_height_crop / 10;
+
+        uploadcare.openDialog(null, {
+            imagesOnly: true,
+            tabs: '{{ upload_care_sources }}',
+            crop: min_width_crop + 'x' + min_height_crop + ' minimum',
+            validators: [
+                minDimensions(min_width, min_height)
+            ]
+        }).done(function (file) {
+            file.progress(function (uploadInfo) {
+                $('#progressbar').progressbar({value: uploadInfo.progress * 100});
+            });
+
+            file.promise()
+                .done(function (fileInfo) {
+                    updateOtoFile(fileInfo, file_type, block);
+                });
+        });
+    }
+
+    function uploadOtoFile(block, file_type) {
+        var validators = [];
+
+        if (file_type === '{{ constant("\\HB\\AdminBundle\\Entity\\SaleFunnel\\SalesFunnelOneTimeOffer::OTO_FILE_TYPE_OFFER") }}') {
+            validators = [
+                maxFileSize({{ max_file_size }}),
+                // fileExtension(['doc', 'docx', 'pdf'])
+            ];
+        } else {
+            validators = [
+                maxFileSize({{ max_file_size }})
+            ];
+        }
+
+        uploadcare.openDialog(null, {
+            tabs: '{{ upload_care_sources }}',
+            validators: validators
+        }).done(function (file) {
+
+            file
+                .progress(function (uploadInfo) {
+                    if (uploadInfo.state && uploadInfo.state === 'error') {
+                        //alert('error');
+                    } else {
+                        openHoldon('Загрузка файла');
+                        $('#progressbar').progressbar({value: uploadInfo.progress * 100});
+                    }
+                })
+
+                .promise()
+                .done(function (fileInfo) {
+
+                    updateOtoFile(fileInfo, file_type, block);
+
+                    closeHoldon();
+                });
+        });
+    }
+
+    function updateOtoFile(response, file_type, block) {
+        openHoldon('Сохранение в базу данных');
+        var uuid = response.uuid;
+        var cdn = response.cdnUrl;
+        var file_name = '';
+        if (response.sourceInfo.file) {
+            file_name = response.sourceInfo.file.name;
+        } else {
+            file_name = response.name;
+        }
+
+        var path = Routing.generate('hb.sale_funnel.one_time_offer.update.file', {id: {{ funnel.id }}});
+
+        $.post(path, {
+            uuid: uuid,
+            cdn: cdn,
+            file_name: file_name,
+            type: file_type,
+        }, function (response) {
+            if (response.status && response.status === 'error' && response.message) {
+                alert(response.message);
+            }
+            updateBlock(block);
+            updateErrors();
+            // document.location = document.location;
+        });
+    }
+
+    function updateBlock3()
+    {
+        var path = '{{ path('hb.sale_funnel.one_time_offer.blocks.block3_description', {id: funnel.id}) }}';
+        openHoldon();
+        $.get(path, function (response) {$('div.block3').html(response); closeHoldon();})
+    }
+
+    function updateBlock4()
+    {
+        var path = '{{ path('hb.sale_funnel.one_time_offer.blocks.block4_offer_link', {id: funnel.id}) }}';
+        openHoldon();
+        $.get(path, function (response) {$('div.block4').html(response); closeHoldon();})
+    }
+
+    function updateBlock(block)
+    {
+        if (block == '3') {
+            updateBlock3();
+        } else if (block == '4') {
+            updateBlock4();
+        }
+
+    }
+
+    $(function () {
+        $(document).on('click', 'button[id^=add_file_]', function () {
+            var type = $(this).data('file-type');
+            var block = $(this).data('block');
+
+            if (type === '{{ constant("\\HB\\AdminBundle\\Entity\\SaleFunnel\\SalesFunnelOneTimeOffer::OTO_FILE_TYPE_IMAGE") }}') {
+                uploadOtoImage(block, type);
+            } else {
+                uploadOtoFile(block, type)
+            }
+        })/*.on('click', 'a', function () {
+            openHoldon();
+        })*/;
+
+    });
+</script>

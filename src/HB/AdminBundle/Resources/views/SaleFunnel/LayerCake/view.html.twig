@@ -1,0 +1,19 @@
+{% if funnel.sections | length > 0 %}
+    <table class="table table-bordered table-responsive-sm table-sm">
+        <tr>
+            <th>Раздел</th>
+            <th>Урок</th>
+        </tr>
+        {% for section in sections %}
+            {% if funnel.hasSection(section) %}
+                <tr>
+                    <td>{{ section.title }}</td>
+                    <td></td>
+                </tr>
+            {% endif %}
+
+            {{ render(controller('hb.admin.controller.sale_funnel.layer_cake.lesson_view:handleAction', {funnel: funnel, section: section})) }}
+        {% endfor %}
+    </table>
+
+{% endif %}

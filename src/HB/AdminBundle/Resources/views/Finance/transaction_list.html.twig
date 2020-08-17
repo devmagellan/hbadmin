@@ -1,0 +1,266 @@
+{% extends "@HBAdmin/layout.html.twig" %}
+
+{% set published_btn %}<span class='btn btn-sm btn-pill btn-success'><i class='fa fa-check'></i></span>{% endset %}
+
+{% block css_head %}
+    <style>
+        table {
+            font-size: 12px;
+        }
+
+        table td {
+            padding: 0.1em !important;
+        }
+
+        .filters {
+            display: flex;
+        }
+
+        a[href='#'] {
+            color: black;
+        }
+
+        a[href='#']:hover {
+            text-decoration: none;
+            cursor: unset;
+        }
+    </style>
+{% endblock %}
+
+{% block js_footer %}
+    <script>
+        $(function () {
+            $('.navigation a').click(function () {
+                let page = $(this).text();
+                let input = $("<input>").attr("type", "hidden").attr("name", "page").val(page);
+                {% if use_filters == 1 %}
+                $('form[name=filters] input[type=text][name^="f"], select[name^="f"]').each(function () {
+                    if ($(this).val()) {
+                        $('form[name=filters]').append($(input)).submit();
+                    }
+                });
+                {% endif %}
+            });
+
+            {% if is_granted("ROLE_ADMIN") %}
+                $('input[type=file]').change(function () {
+                    openHoldon('Обработка транзакций');
+                    $('form[name=upload_csv]').submit();
+                });
+            {% endif %}
+        });
+    </script>
+{% endblock %}
+
+{% block body %}
+    <style>
+        .pb-0 {
+            padding: 0.5em !important;
+        }
+    </style>
+
+    <div class="row">
+        <div class="col-md-2">
+            <div class="card text-white bg-primary">
+                <div class="card-body pb-0">
+                    <div class="text-value">Продажи: {{ statistic.sales |cash }} $</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="card text-white bg-success">
+                <div class="card-body pb-0">
+                    <div class="text-value">Доход: {{ statistic.income |cash }} $</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="card text-white bg-warning">
+                <div class="card-body pb-0">
+                    <div class="text-value">Выплаты: {{ statistic.payments | cash }} $</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="card text-white bg-info">
+                <div class="card-body pb-0">
+                    <div class="text-value">Возвраты: {{ statistic.refunds |cash }} $</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="card text-white bg-danger">
+                <div class="card-body pb-0">
+                    <div class="text-value">Баланс: {{ statistic.balance | cash }} $</div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="card">
+        <div class="card-header">
+            Транзакции покупок
+
+            {% if is_granted("ROLE_ADMIN") %}
+                <div class="pull-right">
+                    <form action="{{ path('hb.finance.admin.upload_csv') }}" method="post" enctype="multipart/form-data" name="upload_csv">
+                        <label for="upload_file" style="font-weight: bold">Обработать CSV файл транзакций</label>
+                        <input type="file" name="transaction_file" required id="upload_file" accept=".csv">
+                    </form>
+                </div>
+            {% endif %}
+        </div>
+        <div class="card-body">
+
+            <form name="filters" method="get" action="{{ path('hb.finance.teachable_transaction') }}">
+                <div class="filters">
+
+                    <select name="f[courseName]" class="form-control">
+                        <option value="">[Курс]</option>
+                        {% for courseName in courses %}
+                            <option value="{{ courseName }}"
+                                    {% if filters and filters.courseName == courseName %}selected{% endif %}>
+                                {{ courseName }}
+                            </option>
+                        {% endfor %}
+                    </select>
+
+                    <select name="f[affiliate]" class="form-control">
+                        <option value="">[Партнер]</option>
+                        {% for affiliateName in affiliates %}
+                            <option value="{{ affiliateName }}"
+                                    {% if filters and filters.affiliate is defined and filters.affiliate == affiliateName %}selected{% endif %}>
+                                {{ affiliateName }}
+                            </option>
+                        {% endfor %}
+                    </select>
+
+                    <select name="f[plan]" class="form-control">
+                        <option value="">[Тариф]</option>
+                        {% for plan in plans %}
+                            <option value="{{ plan }}" {% if filters and filters.plan == plan %}selected{% endif %}>
+                                {{ plan }}
+                            </option>
+                        {% endfor %}
+                    </select>
+
+                    <select name="f[author]" class="form-control">
+                        <option value="">[Автор]</option>
+                        {% for id, author in authors %}
+                            <option value="{{ id }}"
+                                    {% if filters and filters.author == id %}selected{% endif %}>
+                                {{ author }}
+                            </option>
+                        {% endfor %}
+                    </select>
+
+
+                    <input type="text" class='datepicker' name="f[startDate]" placeholder="[Дата с]"
+                           {% if filters.startDate is defined %}value="{{ filters.startDate }}"{% endif %}>
+                    <input type="text" class='datepicker' name="f[endDate]" placeholder="[по]"
+                           {% if filters.endDate is defined %}value="{{ filters.endDate }}"{% endif %}>
+
+                    <button class="btn btn-success" type="submit">Применить фильтр</button>
+                    <a href="{{ path('hb.finance.teachable_transaction') }}" class="btn btn-warning">Сбросить</a>
+
+                </div>
+            </form>
+
+            <br>
+            <div class="navigation">
+                {{ knp_pagination_render(transactions) }}
+            </div>
+
+            <table class="table table-bordered table-condensed">
+                <tr>
+                    <th>{{ knp_pagination_sortable(transactions, 'id', 't.transactionId') }}</th>
+                    <th>{{ knp_pagination_sortable(transactions, 'Дата', 't.createdAt') }}</th>
+                    <th>{{ knp_pagination_sortable(transactions, 'Цена', 't.finalPrice') }}</th>
+                    <th>Комиссия за оплату</th>
+                    <th>Комиссия платформы</th>
+                    <th>{{ knp_pagination_sortable(transactions, 'Комиссия партнера', 't.affiliateFees') }}</th>
+                    <th>{{ knp_pagination_sortable(transactions, 'Студент', 't.studentName') }}</th>
+                    <th>{{ knp_pagination_sortable(transactions, 'Курс', 't.courseName') }}</th>
+                    <th>{{ knp_pagination_sortable(transactions, 'Тариф', 't.productPlan') }}</th>
+                    <th>{{ knp_pagination_sortable(transactions, 'Партнер', 't.affiliateName') }}</th>
+                    <th>Доход</th>
+                    <th>Статус платежа</th>
+                    {% if is_granted("ROLE_ADMIN") %}
+                        <th>id<br>(админка)</th>
+                        <th>id<br>(платформа)</th>
+                    {% endif %}
+                    <th>Автор</th>
+                </tr>
+                {% if transactions | length > 0 %}
+                    {% for transaction in transactions %}
+                        <tr {% if transaction.importedFromCsv and is_granted("ROLE_ADMIN") %} style="background: #75f2ff" title="Импорт из csv" {% endif %}>
+                            {% set cur = transaction.currency %}
+
+                            {% if cur == 'USD' %}
+                                {% set cur = '$' %}
+                            {% endif %}
+
+                            <td>{{ transaction.transactionId }}</td>
+                            <td>{{ transaction.createdAt.format('d.m.Y H:i:s') }}</td>
+                            <td>{{ transaction.finalPrice|cash }} {{ cur }}</td>
+                            <td>
+                                {{ transaction.paymentCommission |cash }} {{ cur }}
+                            </td>
+                            <td>
+                                {{ (transaction.platformCommission) | cash }} {{ cur }}
+                                ({{ transaction.platformCommissionPercent }} %)
+                            </td>
+                            <td>{{ transaction.affiliateFees |cash }} {{ cur }}</td>
+                            <td>{{ transaction.studentName }} ({{ transaction.studentEmail }})</td>
+                            <td>{{ transaction.courseName }}</td>
+                            <td>{{ transaction.productPlan | raw }}</td>
+                            <td>{% if transaction.affiliateName %} {{ transaction.affiliateName }} {% else %} - {% endif %}</td>
+                            <td>{{ transaction.income | cash }} $</td>
+                            <td>
+                                {% if transaction.refunded %}
+                                    <span style="color: red">{{ transaction.status | trans }}
+                                        {% if transaction.refundAmount %}
+                                            <br>{{ transaction.refundAmount | cash }} $
+                                        {% endif %}
+                                        </span>
+                                {% else %}
+                                    {{ transaction.status | trans }}
+                                {% endif %}
+
+                            </td>
+                            {% if is_granted("ROLE_ADMIN") %}
+                                <td>
+                                    {% if transaction.internalCourse %}
+                                        {{ transaction.internalCourse.id }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                                <td>{{ transaction.courseId }}</td>
+                            {% endif %}
+                            <td>{{ transaction.author }}</td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <th colspan="{% if is_granted("ROLE_ADMIN") %}13{% else %}11{% endif %}" class="text-center">
+                            Нет данных по транзакциям
+                        </th>
+                    </tr>
+                {% endif %}
+            </table>
+
+            <div class="navigation">
+                {{ knp_pagination_render(transactions) }}
+            </div>
+
+        </div>
+    </div>
+{% endblock %}

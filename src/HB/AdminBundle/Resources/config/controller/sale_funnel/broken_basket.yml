@@ -1,0 +1,10 @@
+services:
+    hb.admin.controller.sale_funnel.broken_basket.change_discount_percent:
+        class: HB\AdminBundle\Controller\SaleFunnel\BrokenBasket\ChangeDiscountPercentController
+        arguments:
+            - "@router"
+            - "@form.factory"
+            - "@twig"
+            - "@form.handler"
+            - "@access.service"
+            - "@doctrine.orm.entity_manager"

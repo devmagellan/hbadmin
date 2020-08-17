@@ -1,0 +1,88 @@
+<script>
+    function block12UploadPhotoSignature() {
+        const min_width_crop = 140;
+        const min_width = min_width_crop /10;
+        const min_height_crop = 140;
+        const min_height = min_height_crop /10;
+
+        uploadcare.openDialog(null, {
+            imagesOnly: true,
+            tabs: '{{ upload_care_sources }}',
+            crop: min_width_crop + 'x' + min_height_crop + ' minimum',
+            validators: [
+                minDimensions(min_width, min_height)
+            ]
+        }).done(function (file) {
+            file.progress(function(uploadInfo) {
+                $('#progressbar').progressbar({value: uploadInfo.progress * 100});
+            });
+
+            file.promise()
+                .done(function (fileInfo) {
+                    block12AddPhotoSignature(fileInfo);
+                });
+        });
+    }
+
+    function block12AddPhotoSignature(response) {
+        openHoldon();
+        var uuid = response.uuid;
+        var cdn = response.cdnUrl;
+        var file_name = '';
+        if (response.sourceInfo.file) {
+            file_name = response.sourceInfo.file.name;
+        } else {
+            file_name = response.name;
+        }
+
+        var path = Routing.generate('hb.sale_funnel.organic.block12photo_signature.add', {id: {{ funnel.id }}});
+
+        $.post(path, {uuid: uuid, cdn: cdn, file_name: file_name}, function (response) {
+            if (response.status && response.status === 'error' && response.message) {
+                alert(response.message);
+            } else {
+                updateBlock12();
+            }
+            closeHoldon();
+        });
+    }
+
+    function block12RemovePhotoSignature() {
+        openHoldon();
+
+        $.post(
+            Routing.generate('hb.sale_funnel.organic.block12photo_signature.remove', {id: {{ funnel.id }}}),
+            function (response) {
+                if (response.status && response.status === 'error' && response.message) {
+                    alert(response.message);
+                } else {
+                    updateBlock12();
+                }
+                closeHoldon();
+            });
+    }
+
+    function updateBlock12() {
+        $.get(
+            Routing.generate('hb.sale_funnel.organic.block12photo_signature', {id: {{ funnel.id }}}),
+            function (response) {
+                if (response.status && response.status === 'error' && response.message) {
+                    alert(response.message);
+                } else {
+                    $('div.block12').html(response);
+                }
+
+            }
+        );
+    }
+
+    $(function () {
+        $('div.block12').on('click', 'button[id=block12_upload_image]', function () {
+            block12UploadPhotoSignature()
+        }).on('click', 'button[id^=block12_remove_photo_signature_]', function () {
+            var id = $(this).data('funnel-id');
+            block12RemovePhotoSignature(id)
+        });
+
+    });
+</script>

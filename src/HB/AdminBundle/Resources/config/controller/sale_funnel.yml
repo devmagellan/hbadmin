@@ -1,0 +1,15 @@
+imports:
+    - { resource: sale_funnel/organic.yml}
+    - { resource: sale_funnel/lead_collection.yml}
+    - { resource: sale_funnel/broken_basket.yml}
+    - { resource: sale_funnel/post_sale.yml}
+    - { resource: sale_funnel/cross_sale.yml}
+    - { resource: sale_funnel/hot_leads.yml}
+    - { resource: sale_funnel/layer_cake.yml}
+    - { resource: sale_funnel/mini_course.yml}
+    - { resource: sale_funnel/webinar.yml}
+    - { resource: sale_funnel/down_sell.yml}
+    - { resource: sale_funnel/walker_start.yml}
+    - { resource: sale_funnel/author_club.yml}
+    - { resource: sale_funnel/educational.yml}
+    - { resource: sale_funnel/partner.yml}

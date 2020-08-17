@@ -1,0 +1,322 @@
+services:
+    hb.admin.controller.sale_funnel.organic.create:
+        class: HB\AdminBundle\Controller\SaleFunnel\Organic\CreateController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@router"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.organic.edit:
+        class: HB\AdminBundle\Controller\SaleFunnel\Organic\EditController
+        arguments:
+            - "@twig"
+            - "@access.service"
+            - "@session.flash_bag"
+
+    hb.admin.controller.sale_funnel.organic.price_blocks:
+        class: HB\AdminBundle\Controller\SaleFunnel\Organic\PriceBlocksController
+        arguments:
+            - "@twig"
+            - "@form.factory"
+            - "@form.handler"
+            - "@session.flash_bag"
+            - "@access.service"
+            - "@course.price_block.service"
+            - "@doctrine.orm.entity_manager"
+
+    hb.admin.controller.sale_funnel.organic.preview:
+        class: HB\AdminBundle\Controller\SaleFunnel\Organic\PreviewController
+        arguments:
+            - "@twig"
+            - "@doctrine.orm.entity_manager"
+
+    hb.admin.controller.sale_funnel.organic.preview_section:
+        class: HB\AdminBundle\Controller\SaleFunnel\Organic\PreviewSectionController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@twig"
+
+    # Block 1
+    hb.admin.controller.sale_funnel.organic.block1banner:
+        class: HB\AdminBundle\Controller\SaleFunnel\Organic\Blocks\Block1Banner\Block1Banner
+        arguments:
+            - "@twig"
+            - "@form.handler"
+            - "@form.factory"
+            - "@doctrine.orm.entity_manager"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.organic.block1banner.image.update:
+        class: HB\AdminBundle\Controller\SaleFunnel\Organic\Blocks\Block1Banner\Block1BannerUpdateImage
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@upload_care.service"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.organic.block1banner.video.update:
+        class: HB\AdminBundle\Controller\SaleFunnel\Organic\Blocks\Block1Banner\Block1BannerUpdateVideo
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@upload_care.service"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.organic.block1banner.image.remove:
+        class: HB\AdminBundle\Controller\SaleFunnel\Organic\Blocks\Block1Banner\Block1BannerRemoveImage
+        arguments:
+            - "@upload_care.service"
+            - "@doctrine.orm.entity_manager"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.organic.block1banner.video.remove:
+        class: HB\AdminBundle\Controller\SaleFunnel\Organic\Blocks\Block1Banner\Block1BannerRemoveVideo
+        arguments:
+            - "@upload_care.service"
+            - "@doctrine.orm.entity_manager"
+            - "@access.service"
+
+
+    # Block 2
+    hb.admin.controller.sale_funnel.organic.block2main_info:
+        class: HB\AdminBundle\Controller\SaleFunnel\Organic\Blocks\Block2MainInfo\Block2MainInfo
+        arguments:
+            - "@twig"
+            - "@form.handler"
+            - "@form.factory"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.organic.block2main_info.image.update:
+        class: HB\AdminBundle\Controller\SaleFunnel\Organic\Blocks\Block2MainInfo\Block2MainInfoUpdateImage
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@upload_care.service"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.organic.block2main_info.image.remove:
+        class: HB\AdminBundle\Controller\SaleFunnel\Organic\Blocks\Block2MainInfo\Block2MainInfoRemoveImage
+        arguments:
+            - "@upload_care.service"
+            - "@doctrine.orm.entity_manager"
+            - "@access.service"
+
+    # Block 3
+    hb.admin.controller.sale_funnel.organic.block3knowledge:
+        class: HB\AdminBundle\Controller\SaleFunnel\Organic\Blocks\Block3Knowledge\Block3Knowledge
+        arguments:
+            - "@twig"
+            - "@form.handler"
+            - "@form.factory"
+            - "@doctrine.orm.entity_manager"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.organic.block3knowledge.remove:
+        class: HB\AdminBundle\Controller\SaleFunnel\Organic\Blocks\Block3Knowledge\Block3SkillRemove
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@access.service"
+
+    # Block 4
+    hb.admin.controller.sale_funnel.organic.block4action_call_1:
+        class: HB\AdminBundle\Controller\SaleFunnel\Organic\Blocks\Block4ActionCall1\Block4ActionCall1
+        arguments:
+            - "@twig"
+            - "@form.handler"
+            - "@form.factory"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.organic.block4action_call_1.image.update:
+        class: HB\AdminBundle\Controller\SaleFunnel\Organic\Blocks\Block4ActionCall1\Block4ActionCall1UpdateImage
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@upload_care.service"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.organic.block4action_call_1.image.remove:
+        class: HB\AdminBundle\Controller\SaleFunnel\Organic\Blocks\Block4ActionCall1\Block4ActionCall1RemoveImage
+        arguments:
+            - "@upload_care.service"
+            - "@doctrine.orm.entity_manager"
+            - "@access.service"
+
+    # Block 5
+    hb.admin.controller.sale_funnel.organic.block5recommended:
+        class: HB\AdminBundle\Controller\SaleFunnel\Organic\Blocks\Block5Recommended\Block5Recommended
+        arguments:
+            - "@twig"
+            - "@form.handler"
+            - "@form.factory"
+            - "@access.service"
+
+    # Block 6
+    hb.admin.controller.sale_funnel.organic.block6author:
+        class: HB\AdminBundle\Controller\SaleFunnel\Organic\Blocks\Block6Author\Block6AuthorController
+        arguments:
+            - "@twig"
+            - "@form.handler"
+            - "@form.factory"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.organic.block6author.image.update:
+        class: HB\AdminBundle\Controller\SaleFunnel\Organic\Blocks\Block6Author\Block6UpdatePhotoController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@upload_care.service"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.organic.block6author.image.remove:
+        class: HB\AdminBundle\Controller\SaleFunnel\Organic\Blocks\Block6Author\Block6RemovePhotoController
+        arguments:
+            - "@upload_care.service"
+            - "@doctrine.orm.entity_manager"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.organic.block6author.video.update:
+        class: HB\AdminBundle\Controller\SaleFunnel\Organic\Blocks\Block6Author\Block6UpdateVideoController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@upload_care.service"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.organic.block6author.video.remove:
+        class: HB\AdminBundle\Controller\SaleFunnel\Organic\Blocks\Block6Author\Block6RemoveVideoController
+        arguments:
+            - "@upload_care.service"
+            - "@doctrine.orm.entity_manager"
+            - "@access.service"
+
+    # Block 7
+    hb.admin.controller.sale_funnel.organic.block7feedback:
+        class: HB\AdminBundle\Controller\SaleFunnel\Organic\Blocks\Block7FeedBacks\Block7FeedbackController
+        arguments:
+            - "@twig"
+            - "@doctrine.orm.entity_manager"
+            - "@form.handler"
+            - "@form.factory"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.organic.block7feedback.update.video:
+        class: HB\AdminBundle\Controller\SaleFunnel\Organic\Blocks\Block7FeedBacks\Block7UpdateFeedbackVideoController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@upload_care.service"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.organic.block7feedback.remove.video:
+        class: HB\AdminBundle\Controller\SaleFunnel\Organic\Blocks\Block7FeedBacks\Block7RemoveFeedbackVideo
+        arguments:
+            - "@upload_care.service"
+            - "@doctrine.orm.entity_manager"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.organic.block7feedback.remove:
+        class: HB\AdminBundle\Controller\SaleFunnel\Organic\Blocks\Block7FeedBacks\Block7RemoveFeedbackController
+        arguments:
+            - "@upload_care.service"
+            - "@doctrine.orm.entity_manager"
+            - "@access.service"
+
+    # Block 8
+    hb.admin.controller.sale_funnel.organic.block8action_call_2:
+        class: HB\AdminBundle\Controller\SaleFunnel\Organic\Blocks\Block8ActionCall2\Block8ActionCall2Controller
+        arguments:
+            - "@twig"
+            - "@form.handler"
+            - "@form.factory"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.organic.block8action_call_2.image.update:
+        class: HB\AdminBundle\Controller\SaleFunnel\Organic\Blocks\Block8ActionCall2\Block8ActionCall2UpdateImageController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@upload_care.service"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.organic.block8action_call_2.image.remove:
+        class: HB\AdminBundle\Controller\SaleFunnel\Organic\Blocks\Block8ActionCall2\Block8ActionCall2RemoveImageController
+        arguments:
+            - "@upload_care.service"
+            - "@doctrine.orm.entity_manager"
+            - "@access.service"
+
+    # Block 9
+    hb.admin.controller.sale_funnel.organic.block9companies:
+        class: HB\AdminBundle\Controller\SaleFunnel\Organic\Blocks\Block9Companies\Block9CompaniesController
+        arguments:
+            - "@twig"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.organic.block9companies.add.company.logo:
+        class: HB\AdminBundle\Controller\SaleFunnel\Organic\Blocks\Block9Companies\Block9CompaniesAddImageController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@upload_care.service"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.organic.block9companies.remove.company.logo:
+        class: HB\AdminBundle\Controller\SaleFunnel\Organic\Blocks\Block9Companies\Block9CompaniesRemoveImageController
+        arguments:
+            - "@upload_care.service"
+            - "@doctrine.orm.entity_manager"
+            - "@access.service"
+
+    # Block 10
+    hb.admin.controller.sale_funnel.organic.block10additional_blocks:
+        class: HB\AdminBundle\Controller\SaleFunnel\Organic\Blocks\Block10AdditionalBlock\Block10AdditionalBlocksController
+        arguments:
+            - "@twig"
+            - "@form.handler"
+            - "@form.factory"
+            - "@doctrine.orm.entity_manager"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.organic.block10additional_blocks.remove:
+        class: HB\AdminBundle\Controller\SaleFunnel\Organic\Blocks\Block10AdditionalBlock\Block10AdditionalBlockRemoveController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.organic.block10additional_blocks.edit:
+        class: HB\AdminBundle\Controller\SaleFunnel\Organic\Blocks\Block10AdditionalBlock\Block10EditAdditionalBlockController
+        arguments:
+            - "@twig"
+            - "@form.handler"
+            - "@form.factory"
+            - "@doctrine.orm.entity_manager"
+            - "@access.service"
+
+    # Block 11
+    hb.admin.controller.sale_funnel.organic.block11payment_text:
+        class: HB\AdminBundle\Controller\SaleFunnel\Organic\Blocks\Block11PaymentTexts\Block11PaymentTextController
+        arguments:
+            - "@twig"
+            - "@form.handler"
+            - "@form.factory"
+            - "@doctrine.orm.entity_manager"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.organic.block11payment_text.remove:
+        class: HB\AdminBundle\Controller\SaleFunnel\Organic\Blocks\Block11PaymentTexts\Block11PaymentTextRemoveController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@access.service"
+
+    # Block 12
+    hb.admin.controller.sale_funnel.organic.block12photo_signature:
+        class: HB\AdminBundle\Controller\SaleFunnel\Organic\Blocks\Block12PhotoSignature\Block12PhotoSignatureController
+        arguments:
+            - "@twig"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.organic.block12photo_signature.add:
+        class: HB\AdminBundle\Controller\SaleFunnel\Organic\Blocks\Block12PhotoSignature\Block12AddController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@upload_care.service"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.organic.block12photo_signature.remove:
+        class: HB\AdminBundle\Controller\SaleFunnel\Organic\Blocks\Block12PhotoSignature\Block12RemoveController
+        arguments:
+            - "@upload_care.service"
+            - "@doctrine.orm.entity_manager"
+            - "@access.service"
+

@@ -1,0 +1,34 @@
+<div class="text-center">
+    <h5>Горячие лиды</h5>
+</div>
+<form action="{{ path('hb.sale_funnel.hot_leads.create', {id: course.id}) }}" method="post">
+    <div class="modal-body">
+        <div>
+            Активация этой воронки повысит конверсию в покупку для <b>всей вашей базы</b> подписчиков.
+            <br>Вы получите последовательности из 20 готовых писем для 5 аудиторий, максимально заинтересованных в
+            покупке, и готовые сегменты для эффективного обзвона.
+            <br><br>
+            <b>Обязательно</b> прочитайте эту статью про
+            <a href="https://help.heartbeat.education/%D0%BB%D0%B8%D1%87%D0%BD%D1%8B%D0%B9-%D0%BA%D0%B0%D0%B1%D0%B8%D0%BD%D0%B5%D1%82-heartbeat-education/%D0%B8%D0%BD%D1%82%D0%B5%D0%BB%D0%BB%D0%B5%D0%BA%D1%82%D1%83%D0%B0%D0%BB%D1%8C%D0%BD%D0%B0%D1%8F-%D1%81%D0%B8%D0%BB%D0%B0-%D0%B3%D0%BE%D1%80%D1%8F%D1%87%D0%B8%D1%85-%D0%BB%D0%B8%D0%B4%D0%BE%D0%B2" target="_blank">
+                Интеллектуальную Силу Горячих Лидов.
+            </a>
+            <br><br>
+            После активации воронки, для ее усиления, вы сможете добавить истории успеха ваших студентов.
+
+            <br>Все остальное уже настроено, готово к работе и ждет вас.
+
+        </div>
+
+        <br>
+
+        <input type="checkbox" id="take_part" name="take_part" required="required">
+        <label for="take_part">Активация</label>
+
+    </div>
+    <div class="modal-footer">
+
+        <button type="submit" class="btn btn-success">Сохранить</button>
+
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+    </div>
+</form>

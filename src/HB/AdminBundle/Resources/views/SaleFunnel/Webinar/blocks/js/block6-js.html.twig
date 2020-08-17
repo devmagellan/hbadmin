@@ -1,0 +1,60 @@
+<script>
+
+    function updateBlock6() {
+        $.get(
+            '{{ path('hb.sale_funnel.webinar.block6.offer', {id: funnel.id}) }}',
+            function (response) {
+                $('div.block6').html(response);
+                closeHoldon();
+            }
+        );
+    }
+
+    $(function () {
+        $('div.block6').on('submit', 'form[name=block6_offer], form[name=block6_offer_block]', function (e) {
+            openHoldon();
+            e.preventDefault();
+
+            var formData = $(this).serialize();
+
+            $.ajax({
+                type: "POST",
+                url: '{{ path('hb.sale_funnel.webinar.block6.offer', {id: funnel.id}) }}',
+                data: formData,
+                dataType: "json",
+                success: function (response) {
+                    if (response.status === 'error') {
+                        alert(response.message);
+                        updateBlock6();
+                    } else {
+                        $('div.block6').html(response.responseText);
+                    }
+
+                    closeHoldon();
+                },
+                error: function (response) {
+                    $('div.block6').html(response.responseText);
+                    closeHoldon();
+                }
+            });
+            return false;
+        }).on('click', 'button[name=remove_offer]', function () {
+            openHoldon('Removing');
+            var offer_id = $(this).data('offer-id');
+
+            $.post(
+                Routing.generate('hb.sale_funnel.webinar.block6.offer.remove', {funnel: {{ funnel.id}}, offer: offer_id}),
+                function (response) {
+                    if (response.status === 'error') {
+                        alert(response.message);
+                        closeHoldon();
+                    } else {
+                        updateBlock6();
+                    }
+                }
+            )
+            //
+        });
+
+    });
+</script>

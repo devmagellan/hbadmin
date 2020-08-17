@@ -1,0 +1,69 @@
+{% extends "@HBAdmin/layout.html.twig" %}
+
+{% form_theme form with ['bootstrap_4_layout.html.twig', '@HBAdmin/form/fields.html.twig'] %}
+
+{% block body %}
+    <style>
+        table {
+            font-size: 16px;
+        }
+    </style>
+    <div class="card">
+        <div class="card-header">
+            Список платежей
+        </div>
+        <div class="card-body">
+
+            {{ form_start(form) }}
+            {{ form_widget(form) }}
+            <button type="submit" class="btn btn-success">Добавить платеж</button>
+            {{ form_end(form) }}
+
+            <br><br>
+
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>id</th>
+                    <th>Дата</th>
+                    <th>Пользователь</th>
+                    <th>Сумма</th>
+                    <th>Комментарий</th>
+                    <th>Период оплаты</th>
+                    <th>Действие</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% if payments | length > 0 %}
+                    {% for payment in payments %}
+                        <tr>
+                            <td>{{ payment.id }}</td>
+                            <td>{{ payment.paymentDate.format("d.m.Y") }}</td>
+                            <td>{{ payment.customer }} <small class="alert-gray-100">[{{ payment.customer.role }}]</small>
+                            <td>{{ payment.amount }} $</td>
+                            <td>{{ payment.details }}</td>
+                            <td>
+                                {% if payment.startDate %}{{ payment.startDate.format('d.m.Y') }}{% endif %}
+                                -
+                                {% if payment.endDate %}{{ payment.endDate.format('d.m.Y') }}{% endif %}
+                            </td>
+                            <td>
+                                <a href="{{ path('hb.finance.admin.payment.edit', {id: payment.id}) }}" class="btn btn-pill btn-sm btn-primary"><i class="fa fa-edit"></i> </a>
+                                {#<a onclick="return confirm('Подтверждаете удаление платежа?')"
+                                   href="{{ path('hb.finance.admin.payment.remove', {id: payment.id}) }}"
+                                   class="btn btn-pill btn-sm btn-danger"><i class="fa fa-remove"></i> </a>#}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="6" style="text-align: center">
+                            Нет данных
+                        </td>
+                    </tr>
+                {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

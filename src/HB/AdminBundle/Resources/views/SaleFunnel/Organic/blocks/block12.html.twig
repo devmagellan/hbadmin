@@ -1,0 +1,21 @@
+<div class="row">
+
+    <div class="col-md-4">
+        {% if funnel.block12PhotoSignature %}
+            <a href="{{ funnel.block12PhotoSignature.fileUrl }}" target="_blank">
+                <img src="{{ funnel.block12PhotoSignature.fileUrl }}" style="max-height: 200px;">
+            </a>
+
+            <button class="btn btn-pill btn-sm btn-outline-danger" id="block12_remove_photo_signature_{{ funnel.id }}"
+                    data-funnel-id= {{ funnel.id }}
+            ><i class="fa fa-remove"></i></button>
+        {% else %}
+            <span class="alert-gray-100">Можно сфотографировать на телефон</span><br>
+            <span class="alert-gray-100">Если нет подписи, то сертификат не выдается</span><br>
+            <button type="button" class="btn btn-orange" id="block12_upload_image"><i class="fa fa-photo"></i>
+                Добавить фото подписи (140x140 px)
+            </button>
+        {% endif %}
+    </div>
+
+</div>

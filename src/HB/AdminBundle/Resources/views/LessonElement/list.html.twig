@@ -1,0 +1,197 @@
+{% import '@HBAdmin/macros/tooltip.html.twig' as tooltip %}
+<style>
+    a[id^=consultation_time_]:after, a[id^=webinar_time_]:after {
+        font: normal normal normal 14px/1 FontAwesome;
+        content: "\f044";
+        padding-left: 10px;
+        color: green;
+    }
+</style>
+<div class="card">
+    <div class="card-header">
+        Содержание
+        урока {{ tooltip.render('Тут вы можете менять последовательность, перетягивая части урока и выставляя их в необходимой, логической последовательности') }}
+    </div>
+    <div>
+
+        <ul class="elementList">
+            {% for element in elements %}
+                <li data-element-id="{{ element.id }}">
+                    <div class="element">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <i class="fa fa-arrows element-drag"></i>
+                                <span class="element-type">
+                                    <i class="fa {{ element.type.iconName }}"></i>
+                                    {{ element.type.name }}
+                                </span>
+
+                            </div>
+
+                            <div class="col-md-9">
+                                {% if element.type.value == constant("\HB\\AdminBundle\\Entity\\Types\\LessonElementType::TEXT") %}
+                                    {{ element.text |raw }}
+                                {% elseif element.type.value == constant("\HB\\AdminBundle\\Entity\\Types\\LessonElementType::FILE") and element.file %}
+                                    <a href="{{ element.file.fileUrl }}" target="_blank">{{ element.file.fileName }}</a>
+                                {% elseif element.type.value == constant("\HB\\AdminBundle\\Entity\\Types\\LessonElementType::IFRAME") %}
+                                    {{ element.iframe |raw }}
+                                {% elseif element.type.value == constant("\HB\\AdminBundle\\Entity\\Types\\LessonElementType::QUESTION") %}
+                                    Вопросы: {{ element.questions | length }}
+
+                                    {% if hasQuestionsWithoutRightAnswer %}
+                                        <span class="badge badge-danger pull-right">Отсутствует правильный ответ!</span>
+                                    {% endif %}
+
+                                {% elseif element.type.value == constant("\HB\\AdminBundle\\Entity\\Types\\LessonElementType::WEBINAR") %}
+                                    <div style="display: flex">
+                                        Дата проведения:
+                                        <a href="#" id="webinar_time_{{ element.id }}" data-type="combodate"
+                                           data-pk="{{ element.id }}"
+                                           data-title="Дата проведения"
+                                           style="color: black"
+                                        > {{ element.webinarAt.format("d.m.Y H:i") }}</a>
+                                        <span style="margin-left: 20px;"></span>
+                                        Часовой пояс:
+                                        <a href="#" id="timezoneWebinar_{{ element.id }}" data-type="select"
+                                           data-pk="{{ element.id }}"
+                                           data-title="Часовой пояс"
+                                           style="color: black"
+                                        > {{ element.webinarTimezone }}</a>
+                                    </div>
+                                {% elseif element.type.value == constant("\HB\\AdminBundle\\Entity\\Types\\LessonElementType::CONSULTATION") %}
+                                    <div style="display: flex">
+                                        Дата проведения:
+                                        <a href="#" id="consultation_time_{{ element.id }}" data-type="combodate"
+                                           data-pk="{{ element.id }}"
+                                           data-title="Дата проведения"
+                                           style="color: black"
+                                        > {{ element.consultationAt.format("d.m.Y H:i") }}</a>
+                                        <span style="margin-left: 20px;"></span>
+                                        Часовой пояс:
+                                        <a href="#" id="timezoneConsultation_{{ element.id }}" data-type="select"
+                                           data-pk="{{ element.id }}"
+                                           data-title="Часовой пояс"
+                                           style="color: black"
+                                        > {{ element.consultationTimezone }}</a>
+
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="col-md-1">
+                                <a href="{{ path('hb.lesson_element.remove', {id: element.id}) }}"
+                                   class="btn btn-pill btn-sm btn-outline-danger"
+                                   onclick="return confirm('Удалить элемент?')">
+                                    <i class="fa fa-remove"></i>
+                                </a>
+                                {% if element.type.value == constant("\HB\\AdminBundle\\Entity\\Types\\LessonElementType::TEXT") %}
+                                    <a href="{{ path('hb.lesson_element.text.edit', {id: element.id}) }}"
+                                       class="btn btn-pill btn-sm btn-outline-success">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+                                {% elseif element.type.value == constant("\HB\\AdminBundle\\Entity\\Types\\LessonElementType::IFRAME") %}
+
+                                    <a href="{{ path('hb.lesson_element.iframe.edit', {id: element.id}) }}"
+                                       class="btn btn-pill btn-sm btn-outline-success">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+
+                                {% elseif element.type.value == constant("\HB\\AdminBundle\\Entity\\Types\\LessonElementType::QUESTION") %}
+                                    <button class="btn btn-pill btn-sm btn-outline-success" onclick="focusOnQuiz()"
+                                            type="button">
+                                        <i class="fa fa-edit"></i>
+                                    </button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+
+    </div>
+</div>
+<script src="{{ asset('bundles/hbadmin/js/Sortable.min.js') }}"></script>
+<script>
+    function lessonElementsPriorityUpdate() {
+        var ids = {};
+        var sections = $('ul.elementList li');
+
+        sections.each(function (idx, section) {
+            ids[$(section).data('element-id')] = idx;
+        });
+
+        $.post(
+            Routing.generate('hb.lesson_elements.update_priority'),
+            {ids: JSON.stringify(ids)}, function (response) {
+                if (response.status && response.status === 'error' && response.message) {
+                    alert(response.message);
+                }
+            }
+        );
+    }
+
+    $("ul.elementList").sortable({
+        handle: 'i.fa.fa-arrows.element-drag',
+        onDrop: function ($item, container) {
+            $item.removeClass(container.group.options.draggedClass).removeAttr("style");
+            $("body").removeClass(container.group.options.bodyClass);
+            lessonElementsPriorityUpdate();
+        }
+    });
+</script>
+
+
+<script src="{{ asset('bundles/hbadmin/bootstrap4-editable/additional/moment.js') }}"></script>
+<script src="{{ asset('bundles/hbadmin/bootstrap4-editable/additional/bootstrap-datetimepicker.js') }}"></script>
+<script src="{{ asset('bundles/hbadmin/bootstrap4-editable/js/bootstrap-editable.min.js') }}"></script>
+<script>
+    $(function () {
+        var path = Routing.generate('hb.lesson_element.update.inline.ajax');
+
+        var timezones = '{{ timezones | raw }}';
+
+        $("a[id^=webinar_time]").editable({
+            url: path,
+            template: 'DDMMYYYY HH:mm',
+            format: 'DD.MM.YYYY HH:mm',
+            viewformat: 'DD.MM.YYYY HH:mm',
+            mode: 'inline',
+            name: 'webinarAt',
+            combodate: {
+                showbuttons: true,
+                roundTime: false,
+                smartDays: true
+            }
+        });
+
+        $("a[id^=consultation_time]").editable({
+            url: path,
+            template: 'DDMMYYYY HH:mm',
+            format: 'DD.MM.YYYY HH:mm',
+            viewformat: 'DD.MM.YYYY HH:mm',
+            mode: 'inline',
+            name: 'consultationAt',
+            combodate: {
+                showbuttons: true,
+                roundTime: false,
+                smartDays: true
+            }
+        });
+
+        $('[id^=timezoneConsultation]').editable({
+            url: path,
+            mode: 'inline',
+            name: 'consultationTimezone',
+            source: timezones
+        });
+
+        $('[id^=timezoneWebinar]').editable({
+            url: path,
+            mode: 'inline',
+            name: 'webinarTimezone',
+            source: timezones
+        });
+
+    });
+</script>

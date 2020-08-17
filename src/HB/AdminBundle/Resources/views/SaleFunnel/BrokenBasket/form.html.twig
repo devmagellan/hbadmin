@@ -1,0 +1,43 @@
+<div class="text-center">
+    <h5>Брошенная корзина</h5>
+</div>
+<form action="{{ path('hb.sale_funnel.broken_basket.change_discount_percent', {id: course.id}) }}" method="post">
+<div class="modal-body">
+    <span>
+        Активация этой воронки позволит вам повысить конверсию на 10-15% среди тех подписчиков,
+        кто посетил страницу оплаты вашего продукта, но не совершил покупку.
+        <br>Наша платформа автоматически определит всех таких пользователей, и отправит им серию из 3 писем, мотивирующих к покупке.
+        <br>В третьем письме, на третий день, если подписчики не совершат покупку за 2 предыдущих дня, мы отправим им письмо
+        с предложением купить ваш продукт с указанной вами скидкой, действительной в течении 24 часов.
+        <br>Скидку вы можете указать(а можете и не указывать) сразу после активации воронки.
+        <br>Дополнительно мы рекомендуем вам настроить рекламный ретаргетинг на этих пользователей
+    </span>
+
+    <br><br>
+
+    <input type="checkbox" id="activate" name="activate" {% if course.salesFunnelBrokenBasket %}checked{% endif %}>
+
+    <label for="activate">Активация</label>
+
+    <div class="hidden-discount" {% if course.salesFunnelBrokenBasket == null %} style="display: none;"{% endif %}>
+        {{ form_widget(form) }}
+    </div>
+
+</div>
+<div class="modal-footer">
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+</div>
+</form>
+
+<script>
+    $(function () {
+        $('input[type=checkbox][id=activate]').change(function () {
+            if ($(this).prop('checked') === true) {
+                $('.hidden-discount').show();
+            } else {
+                $('.hidden-discount').hide();
+            }
+        });
+    });
+</script>

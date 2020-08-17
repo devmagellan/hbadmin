@@ -1,0 +1,10 @@
+{% macro render(text, direction) %}
+    {% if direction == null %}
+        {% set direction = 'top' %}
+    {% endif %}
+    <a class="btn btn-pill btn-sm btn-orange questionTrigger" data-toggle="tooltip"
+            data-placement="{{ direction }}" title=""
+            data-original-title="{{ text }}">
+        <i class="fa fa-question"></i>
+    </a>
+{% endmacro %}

@@ -1,0 +1,114 @@
+{% extends "@HBAdmin/layout.html.twig" %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="{{ path('hb.courses.list') }}">Продукты</a>
+        </li>
+        <li class="breadcrumb-item active">
+            <a href="{{ path('hb.course.edit', {id: funnel.course.id}) }}">{{ funnel.course.info.title }}</a>
+        </li>
+        <li class="breadcrumb-item">Воронки</li>
+        <li class="breadcrumb-item"><a href="{{ path('hb.sale_funnel.lead_collection.edit', {id: course.id}) }}">Сбор
+                лидов</a></li>
+        <li class="breadcrumb-item">Редактирование лид-магнита</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+
+    <div class="card">
+        <div class="card-header">
+            Редактирование Лид магнита
+        </div>
+        <div class="card-body">
+
+
+            <form name="lead_magnet"
+                  action="{{ path('hb.sale_funnel.lead_collection.edit.lead_magnet', {id: funnel.id}) }}" method="post">
+                <div class="row">
+                    <div class="col-md-4">
+
+                        {# check funnel depending of course creator packet #}
+                        {% if course.owner.packet and course.owner.packet.type == constant('\\HB\\AdminBundle\\Entity\\Types\\CustomerPacketType::PROFESSIONAL') %}
+                            {% set professional_packet = true %}
+                            {% set denied_html = '<small class=\'alert-gray-100\'>Доступно на пакете выше</small>' %}
+                        {% else %}
+                            {% set professional_packet = false %}
+                            {% set denied_html = '' %}
+                        {% endif %}
+                        {# check funnel depending of course creator packet #}
+
+
+                        {% if lead_magnets_violation == false %}
+                            <h5>Выберите лидформы</h5>
+                        {% else %}
+                            <span class="invalid-feedback d-block">
+                            <span class="d-block">
+                                <span class="form-error-icon badge badge-danger text-uppercase">Добавление не возможно</span>
+                                <span class="form-error-message">Нет свободных лид магнитов.</span>
+                            </span>
+                        </span>
+                        {% endif %}
+
+                        {# Check disctinct use lead magnets and resolve if can use the lead magnet #}
+                        {% if funnel.leadMagnetOrganic or (lead_magnets_use['leadMagnetOrganic'] == false and course.salesFunnelOrganic != null) %}
+                            {{ form_row(form.leadMagnetOrganic) }}
+                        {% endif %}
+
+                        {% if funnel.leadMagnetWebinar or (lead_magnets_use['leadMagnetWebinar'] == false and course.salesFunnelWebinar | length > 0) %}
+                            {{ form_row(form.leadMagnetWebinar) }}
+                        {% endif %}
+
+                        {% if funnel.leadMagnetEducation or (lead_magnets_use['leadMagnetEducation'] == false and course.salesFunnelEducational != null) %}
+                            {{ form_row(form.leadMagnetEducation) }}
+                        {% endif %}
+
+                        {% if funnel.leadMagnetDownSell or (lead_magnets_use['leadMagnetDownSell'] == false and course.salesFunnelDownSells | length > 0) %}
+                            {{ form_row(form.leadMagnetDownSell) }}
+                        {% endif %}
+
+                        {% if funnel.leadMagnetLayerCake or (lead_magnets_use['leadMagnetLayerCake'] == false and course.saleFunnelLayerCakes | length > 0) %}
+                            {% if professional_packet %}
+                                <input type="checkbox" disabled> Слоеный пирог ({{ denied_html|raw }})
+                            {% else %}
+                                {{ form_row(form.leadMagnetLayerCake) }}
+                            {% endif %}
+                        {% endif %}
+
+                    </div>
+
+                    <div class="col-md-6">
+                        {{ form_row(form.title) }}
+
+                        {{ form_row(form.description) }}
+
+                        {{ form_row(form.fullDescription) }}
+
+                        {{ form_row(form.buttonText) }}
+
+                        {% if lead_magnets_violation == false %}
+                            <button class="btn btn-success">Сохранить</button>
+
+                        {% endif %}
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        $(function () {
+            $('form[name=lead_magnet]').submit(function () {
+                var leads = $(this).find('input[type=checkbox]:checked');
+
+                if (leads.length > 0) {
+                } else {
+                    alert('Необходимо выбрать лид-магнит!');
+                    return false;
+                }
+            })
+        })
+    </script>
+
+{% endblock %}

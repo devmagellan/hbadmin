@@ -1,0 +1,43 @@
+# This file is a "template" of what your parameters.yml file should look like
+# Set parameters here that may be different on each deployment target of the app, e.g. development, staging, production.
+# https://symfony.com/doc/current/best_practices/configuration.html#infrastructure-related-configuration
+parameters:
+    locale: ru
+    database_driver: pdo_mysql
+    database_host: 127.0.0.1
+    database_port: ~
+    database_name: symfony
+    database_user: root
+    database_password: ~
+
+    images_dir: '%kernel.project_dir%/web/images/'
+
+    mailer_transport: smtp
+    mailer_host: smtp.mailgun.org
+    mailer_user: postmaster@heartbeat.education
+    mailer_password: afac956864e9cb35b1cb9576493f5678
+    mailer_port: null
+
+    # A secret key that's used to generate certain security-related tokens
+    secret: ThisTokenIsNotSoSecretChangeIt
+    upload_care_public: 53203edc4af7a9f2d472
+    upload_care_secret: caacf9e2c8bb30fa7066
+    sentry_dsn: "https://ee54f773968144ec8d371ca45fd09da1@sentry.io/1359792"
+
+    email_from: 'service@heartbeat.education'
+    emails_for_notification: 'dikovpak@gmail.com, service@heartbeat.education'
+
+    dropbox_app_key: ~
+    dropbox_app_secret: ~
+    dropbox_token: ~
+    intercom_app_id: ~
+    intercom_token: dG9rOjNhOWFjOGZkXzhiYjhfNDkwY19iMGQ2XzJkMmVmZGMyNDAzMjoxOjA=
+    intercom_secret: 65Rmr7SCI3bh9h1hUylIdjUZ5KdyLkfnlNEMmD8N=
+    segment_key: SjePzPAaAV4syhnMJLWEZu9PKrKicx6u
+
+    amqp_host: 127.0.0.1
+    amqp_port: 5672
+    amqp_user: webhook
+    amqp_pass: tM9K3tNZ2m9aA6Lz
+    amqp_queue_teachable_webhook: 'teachable_webhook'
+    amqp_exchange_name: 'webhook'

@@ -1,0 +1,115 @@
+services:
+    # Customer
+    hb.admin.controller.finance.payment.customer:
+        class: HB\AdminBundle\Controller\Finance\Payment\Customer\PaymentListController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@twig"
+            - "@security.token_storage"
+            - "@intercom.event_recorder"
+
+    hb.admin.controller.finance.report.customer:
+        class: HB\AdminBundle\Controller\Finance\Report\Customer\ReportListController
+        arguments:
+            - "@twig"
+            - "@doctrine.orm.entity_manager"
+            - "@security.token_storage"
+            - "@intercom.event_recorder"
+
+    # Admin
+    hb.admin.controller.finance.payment.list.admin:
+        class: HB\AdminBundle\Controller\Finance\Payment\Admin\PaymentListController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@twig"
+            - "@form.factory"
+            - "@router"
+            - "@form.handler"
+            - "@session.flash_bag"
+            - "@intercom.event_recorder"
+            - "@security.token_storage"
+
+    hb.admin.controller.finance.payment.remove:
+        class: HB\AdminBundle\Controller\Finance\Payment\Admin\PaymentRemoveController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@router"
+
+    hb.admin.controller.finance.payment.edit:
+        class: HB\AdminBundle\Controller\Finance\Payment\Admin\PaymentEditController
+        arguments:
+            - "@twig"
+            - "@form.factory"
+            - "@router"
+            - "@form.handler"
+            - "@session.flash_bag"
+
+    hb.admin.controller.finance.report.admin:
+        class: HB\AdminBundle\Controller\Finance\Report\Admin\ReportListController
+        arguments:
+            - "@twig"
+            - "@doctrine.orm.entity_manager"
+            - "@form.factory"
+            - "@session.flash_bag"
+            - "@router"
+            - "@form.handler"
+            - "@intercom.event_recorder"
+
+    hb.admin.controller.finance.report.edit:
+        class: HB\AdminBundle\Controller\Finance\Report\Admin\ReportEditController
+        arguments:
+            - "@twig"
+            - "@form.factory"
+            - "@router"
+            - "@form.handler"
+            - "@session.flash_bag"
+
+    hb.admin.controller.finance.report.remove:
+        class: HB\AdminBundle\Controller\Finance\Report\Admin\ReportRemoveController
+        arguments:
+            - "@upload_care.service"
+            - "@doctrine.orm.entity_manager"
+            - "@router"
+            - "@session.flash_bag"
+
+    hb.admin.controller.finance.report.update_file:
+        class: HB\AdminBundle\Controller\Finance\Report\Admin\UploadReportFileController
+        arguments:
+            - "@upload_care.service"
+            - "@doctrine.orm.entity_manager"
+            - "@intercom.event_recorder"
+
+    hb.admin.controller.finance.teachable_transaction:
+        class: HB\AdminBundle\Controller\Finance\TeachableTransactionController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@twig"
+            - "@knp_paginator"
+            - "@security.token_storage"
+            - "@statistic.collector"
+            - "@customer.access.service"
+
+    hb.admin.controller.finance.consolidate_report:
+        class: HB\AdminBundle\Controller\Finance\ConsolidateReportController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@twig"
+
+    hb.admin.controller.finance.transactions_without_relation:
+        class: HB\AdminBundle\Controller\Finance\WithoutRelationTransactionCountController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+
+    hb.admin.controller.finance.drip:
+        class: HB\AdminBundle\Controller\Finance\DripController
+        arguments:
+            - "@twig"
+
+    hb.admin.controller.finance.upload_csv:
+        class: HB\AdminBundle\Controller\Finance\CsvFileUploadController
+        arguments:
+            - "@router"
+            - "@session.flash_bag"
+            - "@doctrine.orm.entity_manager"
+            - "@teachable.webhooks_mapper"
+            - "@teachable.course_mapper"

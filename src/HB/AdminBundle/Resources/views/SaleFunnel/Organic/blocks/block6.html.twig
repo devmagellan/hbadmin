@@ -1,0 +1,78 @@
+{% if saved %}
+    <div class="alert alert-success" role="alert">Сохранено!</div>
+{% endif %}
+<div class="row">
+    <div class="col-md-6">
+        <form method="post" name="block6" data-funnel-id="{{ funnel.id }}">
+            {{ form_widget(form) }}
+            <button type="submit" class="btn btn-success">
+                Сохранить
+            </button>
+            <button type="button" class="btn btn-primary" id="use_from_profile">
+                Взять информацию с профиля
+            </button>
+        </form>
+    </div>
+
+    <div class="col-md-3 text-center">
+        <h4>Фотография автора</h4>
+        {% if funnel.block6AuthorPhoto %}
+
+            <a href="{{ funnel.block6AuthorPhoto.fileUrl }}" target="_blank">
+                <img src="{{ funnel.block6AuthorPhoto.fileUrl }}" style="max-height: 100px;">
+            </a>
+            <button class="btn btn-pill btn-sm btn-outline-danger" id="block6_remove_image"><i class="fa fa-remove"></i>
+            </button>
+            <br>
+            <br>
+        {% endif %}
+
+        <button type="button" class="btn btn-orange" id="block6_upload_photo"><i class="fa fa-photo"></i>
+            Загрузить фото (800x800 px)
+        </button>
+    </div>
+    <div class="col-md-3 text-center">
+        <h4>Видео "Презентация автора"</h4>
+        {% if funnel.block6AuthorVideo %}
+
+            <a href="{{ funnel.block6AuthorVideo.fileUrl }}" target="_blank">
+                {{ funnel.block6AuthorVideo.fileName }}
+            </a>
+            <button class="btn btn-pill btn-sm btn-outline-danger" id="block6_remove_video"><i class="fa fa-remove"></i>
+            </button>
+            <video width="320" height="240" controls>
+                <source src="{{ funnel.block6AuthorVideo.fileUrl }}">
+            </video>
+            <br>
+            <br>
+        {% endif %}
+
+        <button type="button" class="btn btn-indigo" id="block6_upload_video"><i class="fa fa-file-video-o"></i>
+            Загрузить видео (<1.5Gb)
+        </button>
+        <br>
+        <small class="alert-gray-100">Можно использовать видео с первого экрана</small>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('button[id=use_from_profile]').click(function () {
+            var who_are_you = '{{ funnel.course.owner.firstName }} ' + '{{ funnel.course.owner.surname }}';
+            var about_author = '{{ funnel.course.owner.aboutInfo }}';
+
+            $('input[id={{ form.block6AuthorInfo.vars.id }}]').val(who_are_you);
+            var instance = '{{ form.block6AuthorExperience.vars.id }}';
+
+            CKEDITOR.instances[instance].setData(htmlDecode(about_author));
+
+        });
+
+        function htmlDecode(input){
+            var e = document.createElement('textarea');
+            e.innerHTML = input;
+            return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+        }
+
+    });
+</script>

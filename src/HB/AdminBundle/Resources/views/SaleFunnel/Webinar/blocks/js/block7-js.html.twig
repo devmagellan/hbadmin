@@ -1,0 +1,28 @@
+<script>
+
+    $(function () {
+        $('div.block7').on('submit', 'form[name=block7_main], form[name=block7_price]', function (e) {
+            openHoldon();
+            e.preventDefault();
+
+            var formData = $(this).serialize();
+
+            $.ajax({
+                type: "POST",
+                url: '{{ path('hb.sale_funnel.webinar.block7.webinar.record', {id: funnel.id}) }}',
+                data: formData,
+                dataType: "json",
+                success: function (response) {
+                    $('div.block7').html(response.responseText);
+                    closeHoldon();
+                },
+                error: function (response) {
+                    $('div.block7').html(response.responseText);
+                    closeHoldon();
+                }
+            });
+            return false;
+        });
+
+    });
+</script>

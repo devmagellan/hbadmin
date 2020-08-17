@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <link rel="apple-touch-icon" sizes="57x57"
+          href="//webinar.heartbeat.education/app/themes/heartwebinars/assets/mid2018/img/favicon/apple-icon-57x57.png?v=1">
+    <link rel="apple-touch-icon" sizes="60x60"
+          href="//webinar.heartbeat.education/app/themes/heartwebinars/assets/mid2018/img/favicon/apple-icon-60x60.png?v=1">
+    <link rel="apple-touch-icon" sizes="72x72"
+          href="//webinar.heartbeat.education/app/themes/heartwebinars/assets/mid2018/img/favicon/apple-icon-72x72.png?v=1">
+    <link rel="apple-touch-icon" sizes="76x76"
+          href="//webinar.heartbeat.education/app/themes/heartwebinars/assets/mid2018/img/favicon/apple-icon-76x76.png?v=1">
+    <link rel="apple-touch-icon" sizes="114x114"
+          href="//webinar.heartbeat.education/app/themes/heartwebinars/assets/mid2018/img/favicon/apple-icon-114x114.png?v=1">
+    <link rel="apple-touch-icon" sizes="120x120"
+          href="//webinar.heartbeat.education/app/themes/heartwebinars/assets/mid2018/img/favicon/apple-icon-120x120.png?v=1">
+    <link rel="apple-touch-icon" sizes="144x144"
+          href="//webinar.heartbeat.education/app/themes/heartwebinars/assets/mid2018/img/favicon/apple-icon-144x144.png?v=1">
+    <link rel="apple-touch-icon" sizes="152x152"
+          href="//webinar.heartbeat.education/app/themes/heartwebinars/assets/mid2018/img/favicon/apple-icon-152x152.png?v=1">
+    <link rel="apple-touch-icon" sizes="180x180"
+          href="//webinar.heartbeat.education/app/themes/heartwebinars/assets/mid2018/img/favicon/apple-icon-180x180.png?v=1">
+    <link rel="icon" type="image/png" sizes="192x192"
+          href="//webinar.heartbeat.education/app/themes/heartwebinars/assets/mid2018/img/favicon/android-icon-192x192.png?v=1">
+    <link rel="icon" type="image/png" sizes="32x32"
+          href="//webinar.heartbeat.education/app/themes/heartwebinars/assets/mid2018/img/favicon/favicon-32x32.png?v=1">
+    <link rel="icon" type="image/png" sizes="96x96"
+          href="//webinar.heartbeat.education/app/themes/heartwebinars/assets/mid2018/img/favicon/favicon-96x96.png?v=1">
+    <link rel="icon" type="image/png" sizes="16x16"
+          href="//webinar.heartbeat.education/app/themes/heartwebinars/assets/mid2018/img/favicon/favicon-16x16.png?v=1">
+    <link rel="manifest"
+          href="//webinar.heartbeat.education/app/themes/heartwebinars/assets/mid2018/img/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage"
+          content="//webinar.heartbeat.education/app/themes/heartwebinars/assets/mid2018/img/favicon/ms-icon-144x144.png?v=1">
+    <meta name="theme-color" content="#FF6400">
+    <link rel="alternate" type="application/rss+xml" title="Вебинары Heartbeat"
+          href="//webinar.heartbeat.education/feed/"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <meta name="description" content="">
+    <meta name='robots' content='noindex,follow'/>
+    <title>Предпросмотр воронки Вебинарная для курса - {{ funnel.course.info.title }}</title>
+
+    <link rel='stylesheet' id='gfonts-css'
+          href='//fonts.googleapis.com/css?family=Lato%3A400%2C700%7COpen+Sans%3A300%2C400%2C700%7CPlayfair+Display%7CRoboto%3A400%2C700%7CLobster%7CRoboto+Condensed%3A400%2C700%7CUbuntu%7CSource+Sans+Pro&#038;subset=cyrillic%2Clatin%2Ccyrillic-ext'
+          media='all'/>
+    <link rel='stylesheet' id='mainstyle-css'
+          href='//webinar.heartbeat.education/app/themes/heartwebinars/assets/mid2018/dist/app.min.css' media='all'/>
+    <link rel='stylesheet' id='duplicate-post-css'
+          href='//webinar.heartbeat.education/app/plugins/duplicate-post/duplicate-post.css' media='all'/>
+    <script type='text/javascript'
+            src='//cdn.jsdelivr.net/combine/npm/jquery@3.3.1,npm/jquery-migrate@3.0.1,npm/blazy@1.8.2,npm/magnific-popup@1.1.0,npm/slick-carousel@1.8.1,npm/intl-tel-input@12.1.15/build/js/utils.min.js,npm/choices.js@3.0.4'></script>
+</head>
+
+<body>
+<div class="main-wrapper">
+    <main class="content content-full js-padboth">
+        <section id="block-accentHeader-1" class="block-accentHeader-section mstop js-padtop">
+            {% if funnel.imageBanner %}
+                    {% set image_url = funnel.imageBanner.fileUrl %}
+                {% else %}
+                    {% set image_url = asset('bundles/hbadmin/images/banner_default.jpg') %}
+            {% endif %}
+            <div class="mstop_img" data-dadd="{{ image_url }}">
+                <div class="mstop_grad"></div>
+                <img src="//via.placeholder.com/249x110.png" class="sample" alt="">
+            </div>
+            <div class="mstop_cont">
+                <div class="container">
+                    <div class="row row-va-middle">
+                        <div class="col-xs-12 hidden-sm hidden-xs col-md-4 col-lg-3">
+                            <p class="mstop_p text-right">{{ funnel.title }}</p>
+                        </div>
+                        <div class="col-xs-12 hidden-sm hidden-xs col-md-6 col-lg-6"></div>
+                        <div class="col-xs-12 hidden-sm hidden-xs col-md-2 col-lg-3">
+                            <p class="mstop_p">{{ funnel.course.owner.firstName }} {{ funnel.course.owner.surname }}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        {% if funnel.videoBanner %}
+                        <div class="col-xs-12 col-sm-6 col-sm-offset-3 col-md-2 col-md-offset-5 text-center">
+                            <button class="mstop_ibtn js-wistiaModal" href="
+                            {{ funnel.videoBanner.fileUrl }}/-/inline/yes/">
+                                <img src="//webinar.heartbeat.education/app/themes/heartwebinars/assets/mid2018/img/icon/icon_play-2.png"
+                                     alt="">
+                            </button>
+                        </div>
+                        {% endif %}
+                        <div class="col-xs-12 hidden-md hidden-lg text-center">
+                            <p class="mstop_p ">{{ funnel.title }}</p>
+                        </div>
+                        <div class="col-xs-12 hidden-md hidden-lg text-center">
+                            <p class="mstop_p">{{ funnel.course.owner.firstName }} {{ funnel.course.owner.surname }}</p>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-10 col-sm-offset-1">
+                            <p class="mstop_h1">{{ funnel.course.info.title }}</p>
+                        </div>
+                    </div>
+                    <div class="row text-center">
+                        <p class="mstop_begin">{% if funnel.time %}
+                                {{ funnel.time.format('d') }} {{ funnel.time.format('F') |trans }}
+                                <span class="sep"></span> {{ funnel.time.format('H:i') }} {{ funnel.timezone |trans}}
+                            {% endif %}</p>
+                        <button class="mstop_btn js-scrollToFirstForm">Зарегистрироваться</button>
+                        <br>
+                        <div class="msclock msclock-mrg js-contdown" data-dend="{{ funnel.time.timestamp }}">
+                            <p class="msclock_p">
+                                До начала осталось
+                            </p>
+                            <hr class="msclock_hr">
+                            <div class="msclock_holder">
+                                <span class="msclock_digit days false "></span>
+                                <div class="msclock_label">дней</div>
+                            </div>
+                            <div class="msclock_holder">
+                                <span class=" msclock_digit hours false "></span>
+                                <div class="msclock_label">часов</div>
+                            </div>
+                            <div class="msclock_holder">
+                                <span class=" msclock_digit minutes false "></span>
+                                <div class="msclock_label">минут</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12  col-lg-10 col-lg-offset-1">
+                            <div class="mstop_text">
+                                <p>{{ funnel.description |raw }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row ">
+                        <div class="col-xs-12">
+                            <p class="mstop_h2 text-center">Что вы узнаете на вебинаре?</p>
+                        </div>
+                        <div class="col-xs-12 col-lg-10 col-lg-offset-1">
+                            <hr class="mstop_hr">
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-lg-5 col-lg-offset-1">
+                            <div class="mstop_list">
+                                <ul>
+                                    {% for key, thesis in funnel.theses %}
+                                        {% if key < 3 %}
+                                            <li>{{ thesis.description }}</li>
+                                        {% endif %}
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-lg-5">
+                            <div class="mstop_list">
+                                <ul>
+                                    {% for key, thesis in funnel.theses %}
+                                        {% if key > 2 %}
+                                            <li>{{ thesis.description }}</li>
+                                        {% endif %}
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 text-center">
+                            <div class="msclock msclock-mrg js-contdown" data-dend="{{ funnel.time.timestamp }}">
+                                <p class="msclock_p">
+                                    До начала осталось
+                                </p>
+                                <hr class="msclock_hr">
+                                <div class="msclock_holder">
+                                    <span class="msclock_digit days false "></span>
+                                    <div class="msclock_label">дней</div>
+                                </div>
+                                <div class="msclock_holder">
+                                    <span class=" msclock_digit hours false "></span>
+                                    <div class="msclock_label">часов</div>
+                                </div>
+                                <div class="msclock_holder">
+                                    <span class=" msclock_digit minutes false "></span>
+                                    <div class="msclock_label">минут</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-lg-10 col-lg-offset-1">
+                            <div class="wind">
+
+                                <!-- HTML Forms v1.3.3 - https://wordpress.org/plugins/html-forms/ -->
+                                <form method="post" class="hf-form hf-form-247  wind_form js-wind_form" data-id="247"
+                                      data-title="Форма регистрации в 2 колонки (без маничата)"
+                                      data-slug="forma-registratsii-1"
+                                      data-message-success="Thank you! We will be in touch soon."
+                                      data-message-invalid-email="Sorry, that email address looks invalid."
+                                      data-message-required-field-missing="Please fill in the required fields."
+                                      data-message-error="Oops. An error occurred."><input type="hidden"
+                                                                                           name="_hf_form_id"
+                                                                                           value="247"/>
+                                    <div style="display: none;"><input type="text" name="_hf_h247" value=""/></div>
+                                    <div class="hf-fields-wrap"><input type="hidden" class="js-postId" name="postId"
+                                                                       value="">
+                                        <input type="hidden" name="time" value="0">
+                                        <input type="hidden" class="js-webinarId" name="webid" value="">
+                                        <input type="hidden" class="js-webinarName" name="webinarName" value="">
+                                        <input type="hidden" class="js-countryData" name="countryData" value="">
+                                        <input type="hidden" class="js-phonedata" name="phonedata" value="">
+                                        <div class="dfc">
+                                            <div class="wind_inpholder text-center">
+                                                <input type="text" class="wind_input" name="name" placeholder="Имя">
+                                            </div>
+                                        </div>
+                                        <div class="dfc">
+                                            <div class="wind_inpholder width-50">
+                                                <input type="text" class="wind_input js-phone" name="phone"
+                                                       placeholder="Телефон">
+                                            </div>
+                                            <div class="wind_inpholder width-50">
+                                                <input type="text" class="wind_input" name="email" placeholder="Email">
+                                            </div>
+                                        </div>
+                                        <!--<label class="wind_label">
+                                            <input type="checkbox" name="subs" id="" class="js-mcSubscribe">
+<span class="icon"><i class="icon-square"></i> <i class="icon-check-square"></i> </span>
+                                            Отметьте ниже галочку и мы напомним в мессенджере о мастер-классе, а также
+                                            вышлем вам сюрприз
+                                        </label>-->
+                                        <div class="mcSubscrWidget js-mcwidget">
+                                            <div class="mcwidget-checkbox" data-widget-id="3846582"></div>
+                                        </div>
+                                        <div class="mcSubscrWidget js-mcwidget">
+                                            <div class="mcwidget-embed" data-widget-id="3830812"></div>
+                                        </div>
+                                        <!--<button onclick="MC.getWidget(3846582).submit(); return false;">Confirm Opt-in</button>-->
+
+                                        <div>
+                                            <button class="mstop_btn js-mcSubmit">Занять место</button>
+                                        </div>
+                                        <noscript>Please enable JavaScript for this form to work.</noscript>
+                                    </div>
+                                </form><!-- / HTML Forms -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="block-share-3" class="block-share-section sect">
+            <div class="container text-center">
+                <p class="scl_p">
+                    Пригласить друзей
+                </p>
+                <ul class="scl">
+                    <li>
+                        <a href="https://twitter.com/intent/tweet?text=Я собираюсь пойти на Учиться Вредно. Это Снижает Риск Альцгеймера.&url=//webinar.heartbeat.education/alena/&hashtags=CoolestWebinarEver"
+                           target="_blank"><i class="icon-tw"></i></a>
+                    </li>
+                    <li>
+                        <a href="https://www.facebook.com/sharer/sharer.php?u=//webinar.heartbeat.education/alena/&t=Учиться Вредно. Это Снижает Риск Альцгеймера."
+                           target="_blank"><i class="icon-fb"></i></a>
+                    </li>
+                    <li>
+                        <a href="https://vk.com/share.php?url=http%3A%2F%2Fwebinar.heartbeat.education%2Falena%2F&title=Учиться Вредно. Это Снижает Риск Альцгеймера."
+                           target="_blank"><i class="icon-vk"></i></a>
+                    </li>
+                    <li>
+                        <a href="https://connect.ok.ru/offer?url=http%3A%2F%2Fwebinar.heartbeat.education%2Falena%2F&title=Учиться Вредно. Это Снижает Риск Альцгеймера."
+                           target="_blank"><i class="icon-odnoklassniki"></i></a>
+                    </li>
+                    <li>
+                        <a href="https://www.linkedin.com/shareArticle?mini=true&url=//webinar.heartbeat.education/alena/&title=Учиться Вредно. Это Снижает Риск Альцгеймера.&summary=Я собираюсь пойти на Учиться Вредно. Это Снижает Риск Альцгеймера.&source=Вебинары Heartbeat"
+                           target="_blank"><i class="icon-linkedin"></i></a>
+                    </li>
+                    <li>
+                        <a href="//www.pinterest.com/pin/create/button/?url=//webinar.heartbeat.education/alena/&amp;media=&amp;description=Учиться Вредно. Это Снижает Риск Альцгеймера."
+                           target="_blank"><i class="icon-pinterest-p"></i></a>
+                    </li>
+                    <li>
+                        <a href="https://telegram.me/share/url?url=http%3A%2F%2Fwebinar.heartbeat.education%2Falena%2F"
+                           target="_blank"><i class="icon-telegram"></i></a>
+                    </li>
+                    <li>
+                        <a href="mailto:?subject=Я собираюсь пойти на Учиться Вредно. Это Снижает Риск Альцгеймера.&amp;body=//webinar.heartbeat.education/alena/"
+                           target="_blank"><i class="icon-envelope"></i></a>
+                    </li>
+                </ul>
+            </div>
+        </section>
+        <div class="mcwidget-embed" data-widget-id="3830811"></div>
+        <script>hbApp = {segmentKey: "9gLabq64OdnTkwQkqTgA14gOHJkxNbU2"}</script>
+    </main>
+    <header>
+        <div class="container">
+            <div class="dfc aic">
+                <div class="col-xs-6 col-sm-5 col-sm-offset-1 col-md-offset-0 col-md-4 col-lg-3">
+                    <div class="logo-holder">
+                        <a class='logo-link' href="/">
+                            <div class="logo-large">
+                                <i class="logo_headicon icon-Logo-Znak"></i>
+                                <p class="logo-text"><b>HeartBeat</b><br> education</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-xs-6 col-sm-5 col-md-8 col-lg-9 poss text-right">
+                    <button class="package_btn hbtn js-callModal" data-mfp-src="#registerForm">Зарегистрироваться
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <footer id="footer">
+        <div class="container ta-center">
+            <div class="footer">
+                <div class="footer_logo">
+                    <i class="icon-Logo-Znak"></i>
+                </div>
+                <ul class="footer_links">
+                    <li class="footer_item">
+                        <a href="//heartbeat.education/p/about-us" target="_blank" class="footer_link">
+                            О нас
+                        </a>
+                    </li>
+                    <li class="footer_item">
+                        <a href="//heartbeat.education/p/authors" target="_blank" class="footer_link">
+                            Стать автором
+                        </a>
+                    </li>
+                    <li class="footer_item">
+                        <a href="//help.heartbeat.education" target="_blank" class="footer_link">
+                            Поддержка
+                        </a>
+                    </li>
+                </ul>
+                <ul class="footer_links footer_links-light">
+                    <li class="footer_item">
+                        <a href="//heartbeat.education/p/terms" target="_blank" class="footer_link footer_link-light">Условия
+                            использования</a>
+                    </li>
+                    <li class="footer_item">
+                        <a href="//heartbeat.education/p/privacy" target="_blank" class="footer_link footer_link-light">Политика
+                            конфиденциальности</a>
+                    </li>
+                    <li class="footer_item">
+                        <a href="//heartbeat.education/p/intellectual" target="_blank"
+                           class="footer_link footer_link-light">Интеллектуальная собственность</a>
+                    </li>
+                </ul>
+                <p class="footer_link footer_link-light">Copyright © 2017 - 2019 Heartbeat, Inc.</p>
+            </div>
+        </div>
+    </footer>
+</div>
+<div class="icon-load"></div>
+<div id="registerForm" class="mfp-hide registerForm mfp-medium js-registerForm">
+    <div class="modal-content ">
+        <div class="modal-header">
+            <h4 class="modal-title text-uppercase text-center">Регистрация на событие</h4>
+        </div>
+        <div class="modal-body">
+            <!-- HTML Forms v1.3.3 - https://wordpress.org/plugins/html-forms/ -->
+            <form method="post" class="hf-form hf-form-247  modal_form" data-id="247"
+                  data-title="Форма регистрации в 2 колонки (без маничата)" data-slug="forma-registratsii-1"
+                  data-message-success="Thank you! We will be in touch soon."
+                  data-message-invalid-email="Sorry, that email address looks invalid."
+                  data-message-required-field-missing="Please fill in the required fields."
+                  data-message-error="Oops. An error occurred."><input type="hidden" name="_hf_form_id" value="247"/>
+                <div style="display: none;"><input type="text" name="_hf_h247" value=""/></div>
+                <div class="hf-fields-wrap"><input type="hidden" class="js-postId" name="postId" value="">
+                    <input type="hidden" name="time" value="0">
+                    <input type="hidden" class="js-webinarId" name="webid" value="">
+                    <input type="hidden" class="js-webinarName" name="webinarName" value="">
+                    <input type="hidden" class="js-countryData" name="countryData" value="">
+                    <input type="hidden" class="js-phonedata" name="phonedata" value="">
+                    <div class="dfc">
+                        <div class="wind_inpholder text-center">
+                            <input type="text" class="wind_input" name="name" placeholder="Имя">
+                        </div>
+                    </div>
+                    <div class="dfc">
+                        <div class="wind_inpholder width-50">
+                            <input type="text" class="wind_input js-phone" name="phone" placeholder="Телефон">
+                        </div>
+                        <div class="wind_inpholder width-50">
+                            <input type="text" class="wind_input" name="email" placeholder="Email">
+                        </div>
+                    </div>
+                    <label class="wind_label">
+                        <!--<input type="checkbox" name="subs" id="" class="js-mcSubscribe">
+<span class="icon"><i class="icon-square"></i> <i class="icon-check-square"></i> </span>-->
+                        Отметьте ниже галочку и мы напомним в мессенджере о мастер-классе, а также вышлем вам сюрприз
+                    </label>
+                    <div class="mcSubscrWidget js-mcwidget">
+                        <div class="mcwidget-checkbox" data-widget-id="3846582"></div>
+                    </div>
+                    <div class="mcSubscrWidget js-mcwidget">
+                        <div class="mcwidget-embed" data-widget-id="3830812"></div>
+                    </div>
+                    <!--<button onclick="MC.getWidget(3846582).submit(); return false;">Confirm Opt-in</button>-->
+
+                    <div>
+                        <button class="mstop_btn js-mcSubmit">Занять место</button>
+                    </div>
+                    <noscript>Please enable JavaScript for this form to work.</noscript>
+                </div>
+            </form><!-- / HTML Forms -->
+        </div>
+    </div>
+</div>
+<script type='text/javascript' src='//webinar.heartbeat.education/wp/wp-includes/js/admin-bar.js'></script>
+<script type='text/javascript'>
+    /* <![CDATA[ */
+    var hf_js_vars = {
+        "ajax_url": "\/\/webinar.heartbeat.education\/wp\/wp-admin\/admin-ajax.php"
+    };
+    /* ]]> */
+</script>
+<script type='text/javascript' src='//webinar.heartbeat.education/app/plugins/html-forms/assets/js/public.js'></script>
+<script type='text/javascript'>
+    /* <![CDATA[ */
+    var ajax_func = {
+        "ajax_url": "\/\/webinar.heartbeat.education\/wp\/wp-admin\/admin-ajax.php",
+        "tpld": "\/\/webinar.heartbeat.education\/app\/themes\/heartwebinars"
+    };
+    /* ]]> */
+</script>
+<script type='text/javascript' src='//webinar.heartbeat.education/app/themes/heartwebinars/assets/mid2018/dist/app.min.js'></script>
+</body>
+
+</html>

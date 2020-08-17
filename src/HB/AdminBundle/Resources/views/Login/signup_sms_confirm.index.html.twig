@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>HBAdmin</title>
+    <link href="{{ asset('bundles/hbadmin/') }}vendors/css/font-awesome.min.css" rel="stylesheet">
+    <link href="{{ asset('bundles/hbadmin/') }}vendors/css/simple-line-icons.min.css" rel="stylesheet">
+    <link href="{{ asset('bundles/hbadmin/') }}css/style.css" rel="stylesheet">
+
+</head>
+
+<body class="app flex-row align-items-center">
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card-group">
+                <div class="card p-4">
+                    <div class="card-body">
+
+
+                        {% for message in app.flashes('success') %}
+                            <div class="alert alert-primary" role="alert">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+
+                        {% for message in app.flashes('error') %}
+                            <div class="alert alert-danger" role="alert">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+
+
+                        <h3>Подтверджение телефона</h3>
+                        <form method="post" action="{{ path('hb.customer.signup.confirm_sms', {hash: hash}) }}">
+                            {{ form_widget(form) }}
+                            <button type="submit" class="btn btn-success">Подтвердить</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{{ asset('bundles/hbadmin/') }}vendors/js/jquery.min.js"></script>
+<script src="{{ asset('bundles/hbadmin/') }}vendors/js/popper.min.js"></script>
+<script src="{{ asset('bundles/hbadmin/') }}vendors/js/bootstrap.min.js"></script>
+
+</body>
+</html>

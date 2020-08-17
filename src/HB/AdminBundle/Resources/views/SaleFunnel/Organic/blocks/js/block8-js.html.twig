@@ -1,0 +1,110 @@
+<script>
+    function block8UploadImage() {
+        const min_width_crop = 1920;
+        const min_width = min_width_crop /10;
+        const min_height_crop = 700;
+        const min_height = min_height_crop /10;
+
+        uploadcare.openDialog(null, {
+            imagesOnly: true,
+            tabs: '{{ upload_care_sources }}',
+            crop: min_width_crop + 'x' + min_height_crop + ' minimum',
+            validators: [
+                minDimensions(min_width, min_height)
+            ]
+        }).done(function (file) {
+            file.progress(function(uploadInfo) {
+                $('#progressbar').progressbar({value: uploadInfo.progress * 100});
+            });
+
+            file.promise()
+                .done(function (fileInfo) {
+                    block8UpdateImage(fileInfo);
+                });
+        });
+    }
+
+    function block8UpdateImage(response) {
+        openHoldon();
+        var uuid = response.uuid;
+        var cdn = response.cdnUrl;
+        var file_name = '';
+        if (response.sourceInfo.file) {
+            file_name = response.sourceInfo.file.name;
+        } else {
+            file_name = response.name;
+        }
+
+        var path = Routing.generate('hb.sale_funnel.organic.block8action_call_2.image.update', {id: {{ funnel.id }}});
+
+        $.post(path, {uuid: uuid, cdn: cdn, file_name: file_name}, function (response) {
+            if (response.status && response.status === 'error' && response.message) {
+                alert(response.message);
+            } else {
+                updateblock8();
+            }
+            closeHoldon();
+        });
+    }
+
+    function block8RemoveImage() {
+        openHoldon();
+
+        $.post(
+            Routing.generate('hb.sale_funnel.organic.block8action_call_2.image.remove', {id: {{ funnel.id }}}),
+            function (response) {
+                if (response.status && response.status === 'error' && response.message) {
+                    alert(response.message);
+                } else {
+                    updateblock8();
+                }
+
+                closeHoldon();
+            });
+    }
+
+    function updateblock8() {
+        $.get(
+            Routing.generate('hb.sale_funnel.organic.block8action_call_2', {id: {{ funnel.id }}}),
+            function (response) {
+                if (response.status && response.status === 'error' && response.message) {
+                    alert(response.message);
+                } else {
+                    $('div.block8').html(response);
+                }
+            }
+        );
+    }
+
+    $(function () {
+        $('div.block8').on('submit', 'form[name=block8]', function (e) {
+            openHoldon();
+            e.preventDefault();
+
+            var formData = $(this).serialize();
+            var id = $(this).data('funnel-id');
+
+            $.ajax({
+                type: "POST",
+                url: Routing.generate('hb.sale_funnel.organic.block8action_call_2', {id: id}),
+                data: formData,
+                dataType: "json",
+                success: function (response) {
+                    $('div.block8').html(response.responseText);
+                    closeHoldon();
+                },
+                error: function (response) {
+                    $('div.block8').html(response.responseText);
+                    closeHoldon();
+                }
+            });
+
+            return false;
+        }).on('click', 'button[id=block8_upload_image]', function () {
+            block8UploadImage()
+        }).on('click', 'button[id=block8_remove_image]', function () {
+            block8RemoveImage()
+        });
+
+    });
+</script>

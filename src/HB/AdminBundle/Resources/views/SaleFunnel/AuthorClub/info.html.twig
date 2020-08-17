@@ -1,0 +1,50 @@
+<div class="text-center">
+    <h5>Клуб Авторов</h5>
+</div>
+<form action="{{ path('hb.sale_funnel.author_club.create', {id: course.id}) }}" method="post">
+    <div class="modal-body">
+
+        <a href="https://docs.google.com/spreadsheets/d/1TbI07p0zG6f7W8jGGQ6wALGohNFpkGLffwfyNw29CBs/edit?usp=sharing" target="_blank">Текущие участники клуба авторов и их условия</a>
+
+        <br><br>
+
+        <span class="alert-gray-100">
+            Воронка Клуб Авторов позволяет вам увеличить свои продажи двумя способами:
+            <br>1. Вы можете продавать продукты других авторов, состоящих в клубе и получать комиссию 50%.
+            <br>2. Другие Авторы, состоящие в клубе, могут продавать ваши продукты, получая комиссию 50%.
+            <br><br>Если вы хотите увеличить вои продажи через эту воронку, вы можете предоставить дополнительную скидку, действительную только для Клуба Авторов.
+            Ваши индивидуальные реферральные ссылки на продукты других авторов вы получите после публикации вашего продукта на нашей платформе.
+            С текущим списком участников клуба, их продуктами и условиями вы можете ознакомиться по этой ссылке.
+        </span>
+
+        <br><br>
+
+        <input type="checkbox" id="take_part" name="take_part" {% if course.salesFunnelAuthorClub %}checked{% endif %}>
+
+        <label for="take_part">Участвовать</label>
+
+        <div class="hidden-discount" {% if course.salesFunnelAuthorClub == null %} style="display: none;"{% endif %}>
+            {{ form_widget(form) }}
+        </div>
+
+    </div>
+
+    <div class="modal-footer">
+
+        <button type="submit" class="btn btn-success">Сохранить</button>
+
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+    </div>
+</form>
+
+<script>
+    $(function () {
+        $('input[type=checkbox][id=take_part]').change(function () {
+            if ($(this).prop('checked') === true) {
+                $('.hidden-discount').show();
+            } else {
+                $('.hidden-discount').hide();
+            }
+        });
+    });
+</script>

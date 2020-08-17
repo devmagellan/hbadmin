@@ -1,0 +1,78 @@
+services:
+    hb.admin.controller.lesson.remove:
+        class: HB\AdminBundle\Controller\Lesson\RemoveController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@router"
+            - "@session.flash_bag"
+            - "@access.service"
+
+    hb.admin.controller.lesson.edit:
+        class: HB\AdminBundle\Controller\Lesson\EditController
+        arguments:
+            - "@twig"
+            - "@form.factory"
+            - "@router"
+            - "@form.handler"
+            - "@session.flash_bag"
+            - "@doctrine.orm.entity_manager"
+            - "@access.service"
+
+    hb.admin.controller.lesson.quiz.inline_edit:
+        class: HB\AdminBundle\Controller\Lesson\Quiz\InlineEditAjaxController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@access.service"
+
+    hb.admin.controller.lesson.quiz.change_answer_right:
+        class: HB\AdminBundle\Controller\Lesson\Quiz\ChangeAnswerRightController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@access.service"
+
+    hb.admin.controller.lesson.quiz.remove:
+        class: HB\AdminBundle\Controller\Lesson\Quiz\RemoveQuizQuestionController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@router"
+            - "@access.service"
+
+    hb.admin.controller.lesson.quiz.answer.remove:
+        class: HB\AdminBundle\Controller\Lesson\Quiz\RemoveQuizAnswerController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@router"
+            - "@access.service"
+
+    hb.admin.controller.lesson.quiz.answer.add:
+        class: HB\AdminBundle\Controller\Lesson\Quiz\AddNewAnswerController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@router"
+            - "@access.service"
+
+    hb.admin.controller.lesson.file.add:
+        class: HB\AdminBundle\Controller\Lesson\AddFileController
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@twig'
+            - '@upload_care.service'
+            - "@access.service"
+
+    hb.admin.controller.lesson.file.check.count:
+        class: HB\AdminBundle\Controller\Lesson\CheckFileCountController
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - "@access.service"
+
+    hb.admin.controller.lesson.switch.free_status:
+        class: HB\AdminBundle\Controller\Lesson\SwitchFreeStatusController
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - "@access.service"
+
+    hb.admin.controller.lesson.update.inline.ajax:
+        class: HB\AdminBundle\Controller\Lesson\UpdateInlineController
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - "@access.service"

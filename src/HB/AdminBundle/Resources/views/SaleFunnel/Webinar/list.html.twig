@@ -1,0 +1,88 @@
+{% extends "@HBAdmin/layout.html.twig" %}
+
+{% import '@HBAdmin/macros/view_link.html.twig' as demo_link %}
+{% import '@HBAdmin/macros/return_to_course.html.twig' as return %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="{{ path('hb.courses.list') }}">Продукты</a>
+        </li>
+        <li class="breadcrumb-item active">
+            <a href="{{ path('hb.course.edit', {id: course.id}) }}">{{ course.info.title }}</a>
+        </li>
+        <li class="breadcrumb-item">Воронки</li>
+        <li class="breadcrumb-item"><b>Вебинар</b></li>
+        <li class="breadcrumb-item"><b>Список</b></li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+
+    <div class="card">
+        <div class="card-header">
+            Список вебинаров {{ return.render(course.id) }}
+            <div class="pull-right">
+                {{ demo_link.render(asset('bundles/hbadmin/img/funnel_landing/webinar.png')) }}
+                <a href="{{ path('hb.sale_funnel.webinar.create', {id: course.id}) }}"
+                   class="btn btn-pill btn-sm btn-success">
+                    <i class="fa fa-plus"></i> Добавить
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+
+            {% if course.salesFunnelWebinar | length > 0 %}
+                <table class="table table-bordered">
+                    <tr>
+                        <th>id</th>
+                        <th>Название</th>
+                        <th>Дата проведения</th>
+                        <th></th>
+                    </tr>
+
+                    {% for funnel in course.salesFunnelWebinar %}
+                        <tr>
+                            <td>{{ funnel.id }}</td>
+                            <td>
+                                {% if funnel.title %}
+                                    {{ funnel.title }}
+                                {% else %}
+                                    <i>Нет названия</i>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if funnel.time %}
+                                    {{ funnel.time.format("d.m.Y H:s") }}
+                                    {% if funnel.timezone %}
+                                        {{ funnel.timezone }}
+                                    {% endif %}
+                                {% else %}
+                                    <i>Нет даты</i>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{{ path('hb.sale_funnel.webinar.preview', {id: funnel.id}) }}"
+                                   class="btn btn-pill btn-sm btn-outline-primary" target="_blank" title="Предпросмотр">
+                                    <i class="fa fa-eye"></i>
+                                </a>
+
+                                <a href="{{ path('hb.sale_funnel.webinar.edit', {id: funnel.id}) }}"
+                                   class="btn btn-pill btn-sm btn-primary">
+                                    <i class="fa fa-edit"></i>
+                                </a>
+
+                                <a href="{{ path('hb.sale_funnel.webinar.remove', {id: funnel.id}) }}"
+                                   class="btn btn-pill btn-sm btn-danger">
+                                    <i class="fa fa-remove"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+
+                </table>
+            {% endif %}
+        </div>
+    </div>
+
+{% endblock %}

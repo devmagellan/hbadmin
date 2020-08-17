@@ -1,0 +1,189 @@
+{% extends "@HBAdmin/layout.html.twig" %}
+
+{% import '@HBAdmin/macros/return_to_course.html.twig' as return %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="{{ path('hb.courses.list') }}">Продукты</a>
+        </li>
+        <li class="breadcrumb-item active">
+            <a href="{{ path('hb.course.edit', {id: funnel.course.id}) }}">{{ funnel.course.info.title }}</a>
+        </li>
+        <li class="breadcrumb-item">Воронки</li>
+        <li class="breadcrumb-item">Образовательная</li>
+    </ol>
+{% endblock %}
+
+{% block js_footer %}
+    {% include '@HBAdmin/SaleFunnel/Educational/js/edit-js.html.twig' %}
+{% endblock %}
+
+{% block body %}
+
+    {% if added %}
+        <div class="alert alert-success" role="alert">Письмо добавлено!</div>
+    {% endif %}
+
+    <div class="card">
+        <div class="card-header">
+            Редактирование Образовательной воронки {{ return.render(funnel.course.id) }}
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div>
+                        Активировав Образовательную Воронку в личном кабинете, вы получаете до 104 писем для ваших подписчиков и до 104 статей в блоге.
+                        Ровно по 2 штуки в неделю. От вас необходим только контент. Чем лучше контент - тем лучше результаты.
+                        <br><br><b>Обязательно</b> прочитайте эту статью про
+                        <a href="https://help.heartbeat.education/%D0%BB%D0%B8%D1%87%D0%BD%D1%8B%D0%B9-%D0%BA%D0%B0%D0%B1%D0%B8%D0%BD%D0%B5%D1%82-heartbeat-education/%D0%B2%D1%81%D1%8F-%D0%BC%D0%BE%D1%89%D1%8C-%D0%BE%D0%B1%D1%80%D0%B0%D0%B7%D0%BE%D0%B2%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D0%BE%D0%B9-%D0%B2%D0%BE%D1%80%D0%BE%D0%BD%D0%BA%D0%B8"
+                           target="_blank"
+                        >
+                            Мощь Образовательной Воронки
+                        </a>. <br><br>Ваши подписчики будут получать письма 2 раза в неделю, начиная с момента подписки в воронках Сбор Лидов или Вебинарная, в указанном вами порядке.
+                    </div>
+
+
+                    <form name="add_letter" method="post"
+                          action="{{ path('hb.sale_funnel.educational.edit', {id: funnel.id}) }}">
+                        <br>
+                        {{ form_widget(form) }}
+
+                        <a href="#" target="_blank">Пример оформление и содержания письма</a><br>
+                        <div class="letter_lesson_file"></div>
+                        <input type="hidden" name="letter_lesson_file">
+
+                        <button type="button" class="btn btn-orange" id="add_letter_lesson_file">
+                            <i class="fa fa-file"></i>
+                            Добавить письмо
+                        </button>
+
+                        <br><br>
+
+
+                        <a href="#" target="_blank">Правила оформления статей и требование к содержанию</a><br>
+                        <div class="letter_article_file"></div>
+                        <input type="hidden" name="letter_article_file">
+
+                        <button type="button" class="btn btn-orange" id="add_letter_article_file">
+                            <i class="fa fa-file"></i>
+                            Добавить связанную статью для блога
+                        </button>
+
+                        <br><br>
+                        <button type="submit" class="btn btn-sm btn-success">Добавить</button>
+
+                    </form>
+                </div>
+
+                <div class="col-md-6">
+
+                    <div class="packet_files">
+                        <h5>Пакетная загрузка</h5>
+                        <div class="alert-gray-100">
+                            При пакетной загрузке порядковые номера писем и статей должны соответсвовать друг другу
+                        </div>
+
+                        {% if funnel.lettersFile %}
+                            <br>
+                            <a href="{{ funnel.lettersFile.fileUrl }}" target="_blank">
+                                {{ funnel.lettersFile.fileName }}
+                            </a>
+                            <a href="{{ path('hb.sale_funnel.educational.remove.file', {id: funnel.id, type: constant('HB\\AdminBundle\\Entity\\SaleFunnel\\SalesFunnelEducational::LETTERS_FILE')}) }}"
+                                class="btn btn-sm btn-pill btn-danger"
+                            ><i class="fa fa-remove"></i></a>
+                        {% endif %}
+
+                        <br>
+
+                        <button type="button" class="btn btn-orange" id="add_letters_file">
+                            <i class="fa fa-file"></i> Добавить все письма
+                        </button>
+
+                        <br><br>
+
+                        {% if funnel.articlesFile %}
+                            <a href="{{ funnel.articlesFile.fileUrl }}"
+                               target="_blank">{{ funnel.articlesFile.fileName }}</a>
+
+                            <a href="{{ path('hb.sale_funnel.educational.remove.file', {id: funnel.id, type: constant('HB\\AdminBundle\\Entity\\SaleFunnel\\SalesFunnelEducational::ARTICLES_FILE')}) }}"
+                               class="btn btn-sm btn-pill btn-danger"
+                            ><i class="fa fa-remove"></i></a>
+                        {% endif %}
+
+                        <br>
+
+                        <button type="button" class="btn btn-orange" id="add_articles_file">
+                            <i class="fa fa-file"></i> Добавить все статьи
+                        </button>
+
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+
+    {% if funnel.letters | length > 0 %}
+        <div class="card">
+            <div class="card-header">
+                Письма воронки
+            </div>
+            <div class="card-body">
+                <div class="row">
+
+                    <table class="table table-bordered letters_table">
+                        <tr>
+                            <th>Название</th>
+                            <th>Письмо</th>
+                            <th>Связанная статья для блога</th>
+                            <th></th>
+                        </tr>
+                        {% for letter in funnel.letters %}
+                            <tr>
+                                <td>{{ letter.name }}</td>
+                                <td>
+                                    {% if letter.lessonFile %}
+                                        <a href="{{ letter.lessonFile.fileUrl }}"
+                                           target="_blank">{{ letter.lessonFile.fileName }}</a>
+                                        <a href="{{ path('hb.sale_funnel.educational.remove.letter.file', {funnel: funnel.id, letter: letter.id, type: constant('HB\\AdminBundle\\Entity\\SaleFunnel\\Educational\\Letter::LESSON_FILE')}) }}"
+                                           class="btn btn-sm btn-pill btn-danger"
+                                        ><i class="fa fa-remove"></i></a><br>
+                                    {% endif %}
+                                    <button type="button" class="btn btn-orange"
+                                            name="update_letter_file_{{ letter.id }}"
+                                            data-letter-id="{{ letter.id }}">
+                                        <i class="fa fa-file"></i> Загрузить файл
+                                    </button>
+                                </td>
+                                <td>
+                                    {% if letter.articleFile %}
+                                        <a href="{{ letter.articleFile.fileUrl }}"
+                                           target="_blank">{{ letter.articleFile.fileName }}</a>
+                                        <a href="{{ path('hb.sale_funnel.educational.remove.letter.file', {funnel: funnel.id, letter: letter.id, type: constant('HB\\AdminBundle\\Entity\\SaleFunnel\\Educational\\Letter::ARTICLE_FILE')}) }}"
+                                           class="btn btn-sm btn-pill btn-danger"
+                                        ><i class="fa fa-remove"></i></a><br>
+                                    {% endif %}
+                                    <button type="button" class="btn btn-orange"
+                                            name="update_articles_file_{{ letter.id }}"
+                                            data-letter-id="{{ letter.id }}">
+                                        <i class="fa fa-file"></i> Загрузить файл
+                                    </button>
+                                </td>
+                                <td>
+                                    <a href="{{ path('hb.sale_funnel.educational.edit.letter', {funnel: funnel.id, letter: letter.id}) }}"
+                                       class="btn btn-pill btm-sm btn-outline-info"><i class="fa fa-edit"></i> </a>
+                                    <a href="{{ path('hb.sale_funnel.educational.letter.remove', {funnel: funnel.id, letter: letter.id}) }}"
+                                       class="btn btn-pill btm-sm btn-outline-danger"><i class="fa fa-remove"></i> </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+{% endblock %}

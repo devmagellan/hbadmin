@@ -1,0 +1,100 @@
+{% extends "@HBAdmin/layout.html.twig" %}
+
+{% import '@HBAdmin/SaleFunnel/OneTimeOffer/macro/funnel_empty.html.twig' as funnel_empty %}
+
+{% import '@HBAdmin/macros/view_link.html.twig' as demo_link %}
+{% import '@HBAdmin/macros/return_to_course.html.twig' as return %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="{{ path('hb.courses.list') }}">Продукты</a>
+        </li>
+        <li class="breadcrumb-item active">
+            <a href="{{ path('hb.course.edit', {id: course.id}) }}">{{ course.info.title }}</a>
+        </li>
+        <li class="breadcrumb-item">Воронки</li>
+        <li class="breadcrumb-item">Единоразовое предложение</li>
+        <li class="breadcrumb-item"><b>Список</b></li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+
+    <div class="card">
+        <div class="card-header">
+            Список единоразовых предложений
+            {{ return.render(course.id) }}
+            <div class="pull-right">
+                {{ demo_link.render(asset('bundles/hbadmin/img/funnel_landing/onetimeoffer.jpg')) }}
+                <a href="{{ path('hb.sale_funnel.one_time_offer.create', {id: course.id}) }}" class="btn btn-success">Добавить</a>
+            </div>
+        </div>
+        <div class="card-body">
+
+
+            <table class="table table-bordered">
+                <tr>
+                    <th>id</th>
+                    <th>Описание</th>
+                    <th>Тип предложения</th>
+                    <th>Назначение</th>
+                    <th></th>
+                </tr>
+                {% if course.salesFunnelOneTimeOffer | length > 0 %}
+                    {% for funnel in course.salesFunnelOneTimeOffer %}
+                        <tr>
+                            <td>{{ funnel.id }}</td>
+                            <td>
+                                {% for offer in funnel.offers %}
+                                    {{ offer.description }} - <s>{{ offer.fullPrice }}</s> => <b>{{ offer.discountPrice }}</b>
+                                    <br>
+                                {% endfor %}
+                            </td>
+                            <td>
+                                {% if funnel.level == constant("HB\\AdminBundle\\Entity\\SaleFunnel\\SalesFunnelOneTimeOffer::ONE_STEP_LEVEL") %}
+                                    Одноступенчатое
+                                {% elseif funnel.level == constant("HB\\AdminBundle\\Entity\\SaleFunnel\\SalesFunnelOneTimeOffer::TWO_STEP_LEVEL") %}
+                                    Двухступенчатое
+                                {% else %}
+                                    Ошибка
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if funnel.purposes | length > 0 %}
+                                    {{ funnel.purposes | join (', ') }}
+                                {% else %}
+                                    <i>Нет</i>
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                                {% if funnel.isValid == false %}
+                                    <span class="badge badge-danger">Ошибки!<br> Активация невозможна</span><br>
+                                {% endif %}
+                                <a href="{{ path('hb.sale_funnel.one_time_offer.preview', {id: funnel.id}) }}"
+                                   class="btn btn-sm btn-pill btn-outline-primary" target="_blank" title="Предпросмотр">
+                                    <i class="fa fa-eye"></i>
+                                </a>
+                                <a href="{{ path('hb.sale_funnel.one_time_offer.edit', {id: funnel.id}) }}"
+                                   class="btn btn-pill btn-sm btn-primary">
+                                    <i class="fa fa-edit"></i>
+                                </a>
+
+                                <a href="{{ path('hb.sale_funnel.one_time_offer.remove', {id: funnel.id}) }}"
+                                   class="btn btn-pill btn-sm btn-danger">
+                                    <i class="fa fa-remove"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="5" style="text-align: center">Нет предложений</td>
+                    </tr>
+                {% endif %}
+
+            </table>
+        </div>
+    </div>
+
+{% endblock %}

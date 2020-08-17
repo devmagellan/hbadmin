@@ -1,0 +1,202 @@
+<script>
+
+    function block1UploadImageBanner() {
+        const min_width_crop = 1440;
+        const min_width = min_width_crop / 10;
+        const min_height_crop = 760;
+        const min_height = min_height_crop / 10;
+
+        uploadcare.openDialog(null, {
+            imagesOnly: true,
+            tabs: '{{ upload_care_sources }}',
+            crop: min_width_crop + 'x' + min_height_crop + ' minimum',
+            validators: [
+                minDimensions(min_width, min_height)
+            ]
+        }).done(function (file) {
+            openHoldon('Загрузка файла');
+
+            file.progress(function(uploadInfo) {
+                $('#progressbar').progressbar({value: uploadInfo.progress * 100});
+            });
+
+            file.promise()
+                .done(function (fileInfo) {
+                    block1UpdateImageBanner(fileInfo);
+                });
+        });
+    }
+
+    function block1UploadBannerVideo() {
+        uploadcare.openDialog(null, {
+            tabs: '{{ upload_care_sources }}',
+            validators: [
+                maxFileSize({{ max_file_size }})
+            ]
+        }).done(function (file) {
+            openHoldon('Загрузка файла');
+
+            file.progress(function(uploadInfo) {
+                $('#progressbar').progressbar({value: uploadInfo.progress * 100});
+            });
+
+            file.promise()
+                .done(function (fileInfo) {
+                    block1UpdateBannerVideo(fileInfo);
+                    closeHoldon();
+                });
+        });
+    }
+
+    function block1UpdateImageBanner(response) {
+        openHoldon('Сохранение в базу данных');
+        var uuid = response.uuid;
+        var cdn = response.cdnUrl;
+        var file_name = '';
+        if (response.sourceInfo.file) {
+            file_name = response.sourceInfo.file.name;
+        } else {
+            file_name = response.name;
+        }
+
+        var path = Routing.generate('hb.sale_funnel.webinar.block1.upload.image', {id: {{ funnel.id }}});
+        console.log(path);
+        $.post(path, {uuid: uuid, cdn: cdn, file_name: file_name}, function (response) {
+            if (response.status && response.status === 'error' && response.message) {
+                alert(response.message);
+            } else {
+                updateBlock1();
+            }
+
+            closeHoldon();
+        });
+    }
+
+    function block1UpdateBannerVideo(response) {
+        openHoldon('Сохранение в базу данных');
+        var uuid = response.uuid;
+        var cdn = response.cdnUrl;
+        var file_name = '';
+        if (response.sourceInfo.file) {
+            file_name = response.sourceInfo.file.name;
+        } else {
+            file_name = response.name;
+        }
+
+        var path = Routing.generate('hb.sale_funnel.webinar.block1.upload.video', {id: {{ funnel.id }}});
+
+        $.post(path, {uuid: uuid, cdn: cdn, file_name: file_name}, function (response) {
+            if (response.status && response.status === 'error' && response.message) {
+                alert(response.message);
+            } else {
+                updateBlock1();
+            }
+
+            closeHoldon();
+        });
+    }
+
+    function block1RemoveBannerImage() {
+        openHoldon("Удаление файла");
+
+        $.post(
+            Routing.generate('hb.sale_funnel.webinar.block1.remove.image', {id: {{ funnel.id }}}),
+            function (response) {
+                if (response.status && response.status === 'error' && response.message) {
+                    alert(response.message);
+                } else {
+                    updateBlock1();
+                }
+
+                closeHoldon();
+            });
+    }
+
+    function block1RemoveBannerVideo() {
+        openHoldon("Удаление файла");
+
+        $.post(
+            Routing.generate('hb.sale_funnel.webinar.block1.remove.video', {id: {{ funnel.id }}}),
+            function (response) {
+                if (response.status && response.status === 'error' && response.message) {
+                    alert(response.message);
+                } else {
+                    updateBlock1();
+                }
+
+                closeHoldon();
+            });
+    }
+
+    function removeThesis(thesis_id) {
+        openHoldon("Удаление файла");
+
+        $.post(
+            Routing.generate('hb.sale_funnel.webinar.block1.remove.thesis', {
+                funnel: {{ funnel.id }},
+                thesis: thesis_id
+            }),
+            function (response) {
+                if (response.status && response.status === 'error' && response.message) {
+                    alert(response.message);
+                } else {
+                    updateBlock1();
+                }
+
+                closeHoldon();
+            });
+    }
+
+
+    function updateBlock1() {
+        $.get(
+            Routing.generate('hb.sale_funnel.webinar.block1.edit', {id: {{ funnel.id }}}),
+            function (response) {
+                if (response.status && response.status === 'error' && response.message) {
+                    alert(response.message);
+                } else {
+                    $('div.block1').html(response);
+                }
+
+            }
+        );
+    }
+
+    $(function () {
+        $('div.block1').on('submit', 'form[name=block1], form[name=block1_thesis]', function (e) {
+            openHoldon();
+            e.preventDefault();
+
+            var formData = $(this).serialize();
+            var id = $(this).data('funnel-id');
+
+            $.ajax({
+                type: "POST",
+                url: Routing.generate('hb.sale_funnel.webinar.block1.edit', {id: id}),
+                data: formData,
+                dataType: "json",
+                success: function (response) {
+                    $('div.block1').html(response.responseText);
+                    closeHoldon();
+                },
+                error: function (response) {
+                    $('div.block1').html(response.responseText);
+                    closeHoldon();
+                }
+            });
+
+            return false;
+        }).on('click', 'button[id=block1_upload_banner]', function () {
+            block1UploadImageBanner()
+        }).on('click', 'button[id=block1_upload_video]', function () {
+            block1UploadBannerVideo()
+        }).on('click', 'button[id=block1_remove_video]', function () {
+            block1RemoveBannerVideo()
+        }).on('click', 'button[id=block1_remove_image]', function () {
+            block1RemoveBannerImage()
+        }).on('click', 'button[id^=remove_thesis]', function () {
+            removeThesis($(this).data('thesis-id'))
+        });
+
+    });
+</script>

@@ -1,0 +1,66 @@
+{% if saved %}
+    <div class="alert alert-success" role="alert">Сохранено!</div>
+{% endif %}
+{% if added %}
+    <div class="alert alert-success" role="alert">Добавлено!</div>
+{% endif %}
+{% if offerExistStatus %}
+    <div class="alert alert-red" role="alert">Тарифный план уже существует!</div>
+{% endif %}
+
+<div class="row">
+    <div class="col-md-3">
+        <small class="alert-gray-100">
+            Мы можем создать дополнительную копию вашей целевой страницы(лендинга) с тем выбором цен и пакетов,
+            которые вы создадите на этой странице (до 3 пакетов), на которую будет ссылаться оффер,
+            который вы будете делать на вебинаре. Либо вы можете использовать любую из имеющихся у вас страниц:
+            Органическая, Выгодная Формула, Слоеный Пирог
+        </small>
+
+        <form method="post" name="block6_offer">
+            {{ form_widget(formOfferDescription) }}
+            <button class="btn btn-sm btn-success">Сохранить</button>
+        </form>
+
+    </div>
+
+    <div class="col-md-3">
+        <form method="post" name="block6_offer_block">
+            {{ form_widget(formOffer) }}
+            <button class="btn btn-sm btn-outline-blue">Добавить</button>
+        </form>
+    </div>
+
+    <div class="col-md-3">
+        {% if funnel.offers | length > 0 %}
+            <table class="table">
+                <tr>
+                    <th>Название</th>
+                    <th>Цена</th>
+                    <th>Рассрочка</th>
+                    <th></th>
+                </tr>
+                {% for offer in funnel.offers %}
+                    <tr>
+                        <td>{{ offer.title }}</td>
+                        <td>{{ offer.price }}</td>
+                        <td>
+                            {% if offer.months %}
+                                {{ offer.months }} месяц (ев)
+                            {% endif %}
+                        </td>
+                        <td>
+                            <button type="button" name="remove_offer" data-offer-id="{{ offer.id }}"
+                                    class="btn btn-pill btn-sm btn-outline-danger">
+                                <i class="fa fa-remove"></i>
+                            </button>
+                        </td>
+                    </tr>
+                {% endfor %}
+
+            </table>
+        {% endif %}
+    </div>
+
+
+</div>

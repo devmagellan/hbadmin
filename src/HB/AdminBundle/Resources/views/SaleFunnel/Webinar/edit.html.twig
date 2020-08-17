@@ -1,0 +1,199 @@
+{% extends "@HBAdmin/layout.html.twig" %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="{{ path('hb.courses.list') }}">Продукты</a>
+        </li>
+        <li class="breadcrumb-item active">
+            <a href="{{ path('hb.course.edit', {id: funnel.course.id}) }}">{{ funnel.course.info.title }}</a>
+        </li>
+        <li class="breadcrumb-item">Воронки</li>
+        <li class="breadcrumb-item">Вебинарная</li>
+        <li class="breadcrumb-item">
+            <a href="{{ path('hb.sale_funnel.webinar.list', {id: funnel.course.id}) }}">
+                Список
+            </a>
+        </li>
+        <li class="breadcrumb-item"><b>Наполнение</b></li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+    {% set block_required = '<div class="pull-right"><span class="form-error-icon badge badge-danger text-uppercase">Обязательный</span></div>' %}
+
+    <div class="card">
+        <div class="card-header">
+            Блоки воронки
+
+            <div class="pull-right">
+                <a href="{{ path('hb.sale_funnel.webinar.preview', {id: funnel.id} ) }}" target="_blank" class="btn btn-link">
+                    <i class="fa fa-eye"></i> Предпросмотр вебинарной воронки
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            <h4>
+                <a href="https://docs.google.com/document/d/1FIMnecOtRjY1Ju2_IDUUsV3M6Yxb8_w2S5TTCius5Xc/edit"
+                   target="_blank"> Пример заполненной вебинарной воронки</a>
+            </h4>
+            <div id="accordion" role="tablist">
+
+                <div class="card">
+                    <div class="card-header" role="tab">
+                        {{ block_required | raw }}
+                        <h5 class="mb-0">
+                            <a data-toggle="collapse" href="#block_1" aria-expanded="true" aria-controls="collapseOne">
+                                Б1. Целевая страница вебинара
+                            </a>
+                        </h5>
+
+                    </div>
+                    <div class="collapse show" id="block_1" role="tabpanel" aria-labelledby="headingOne"
+                         data-parent="#accordion">
+                        <div class="card-body block1">
+
+                            {{ render(controller('hb.admin.controller.sale_funnel.webinar.edit.block1_target_page:handleAction', {id: funnel.id})) }}
+
+                        </div>
+
+                        {% include '@HBAdmin/SaleFunnel/Webinar/blocks/js/block1-js.html.twig' %}
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header" role="tab">
+                        <h5 class="mb-0">
+                            <a data-toggle="collapse" href="#block_2" aria-expanded="true" aria-controls="collapseOne">
+                                Б2. Подогревающие письма
+                            </a>
+                        </h5>
+
+                    </div>
+                    <div class="collapse" id="block_2" role="tabpanel" aria-labelledby="headingOne"
+                         data-parent="#accordion">
+                        <div class="card-body block2">
+                            {{ render(controller('hb.admin.controller.sale_funnel.webinar.edit.block2_warming_letter:handleAction', {id: funnel.id})) }}
+                        </div>
+
+                        {% include '@HBAdmin/SaleFunnel/Webinar/blocks/js/block2-js.html.twig' %}
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header" role="tab">
+                        <h5 class="mb-0">
+                            <a data-toggle="collapse" href="#block_3" aria-expanded="true" aria-controls="collapseOne">
+                                Б3. Бонусы
+                            </a>
+                        </h5>
+
+                    </div>
+                    <div class="collapse" id="block_3" role="tabpanel" aria-labelledby="headingOne"
+                         data-parent="#accordion">
+                        <div class="card-body block3">
+                            {{ render(controller('hb.admin.controller.sale_funnel.webinar.bonuses:handleAction', {id: funnel.id})) }}
+                        </div>
+
+                        {% include '@HBAdmin/SaleFunnel/Webinar/blocks/js/block3-js.html.twig' %}
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header" role="tab">
+                        <h5 class="mb-0">
+                            <a data-toggle="collapse" href="#block_4" aria-expanded="true" aria-controls="collapseOne">
+                                Б4. Стоимость вебинара
+                            </a>
+                        </h5>
+
+                    </div>
+                    <div class="collapse" id="block_4" role="tabpanel" aria-labelledby="headingOne"
+                         data-parent="#accordion">
+                        <div class="card-body block4">
+                            {{ render(controller('hb.admin.controller.sale_funnel.webinar.price.index:handleAction', {id: funnel.id})) }}
+                        </div>
+
+                        {% include '@HBAdmin/SaleFunnel/Webinar/blocks/js/block4-js.html.twig' %}
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header" role="tab">
+                        <h5 class="mb-0">
+                            <a data-toggle="collapse" href="#block_5" aria-expanded="true" aria-controls="collapseOne">
+                                Б5. Создать автовебинар из текущего вебинара
+                            </a>
+                        </h5>
+
+                    </div>
+                    <div class="collapse" id="block_5" role="tabpanel" aria-labelledby="headingOne"
+                         data-parent="#accordion">
+                        <div class="card-body block5">
+                            <div class="form-group">
+                                <div class="form-check">
+                                    <input type="checkbox" id="auto_webinar" class="form-check-input"
+                                           {% if funnel.autoWebinar %}checked="checked"{% endif %}">
+                                    <label class="form-check-label" for="auto_webinar">После проведения вебинара создать
+                                        запись вебинара для автовебинаров</label>
+                                </div>
+                            </div>
+                        </div>
+                        <script>
+                            $(function () {
+                                $('input[type=checkbox][id=auto_webinar]').change(function () {
+                                    $.post('{{ path('hb.sale_funnel.webinar.block5.auto_webinar.switch', {id: funnel.id}) }}');
+                                });
+                            });
+                        </script>
+
+                    </div>
+                </div>
+
+
+                <div class="card">
+                    <div class="card-header" role="tab">
+                        <h5 class="mb-0">
+                            <a data-toggle="collapse" href="#block_6" aria-expanded="true" aria-controls="collapseOne">
+                                Б6. Оффер
+                            </a>
+                        </h5>
+
+                    </div>
+                    <div class="collapse" id="block_6" role="tabpanel" aria-labelledby="headingOne"
+                         data-parent="#accordion">
+                        <div class="card-body block6">
+                            {{ render(controller('hb.admin.controller.sale_funnel.webinar.offer:handleAction', {id: funnel.id})) }}
+                        </div>
+
+                        {% include '@HBAdmin/SaleFunnel/Webinar/blocks/js/block6-js.html.twig' %}
+
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header" role="tab">
+                        <h5 class="mb-0">
+                            <a data-toggle="collapse" href="#block_7" aria-expanded="true" aria-controls="collapseOne">
+                                Б7. Запись вебинара
+                            </a>
+                        </h5>
+
+                    </div>
+                    <div class="collapse" id="block_7" role="tabpanel" aria-labelledby="headingOne"
+                         data-parent="#accordion">
+                        <div class="card-body block7">
+                            {{ render(controller('hb.admin.controller.sale_funnel.webinar.record:handleAction', {id: funnel.id})) }}
+                        </div>
+
+                        {% include '@HBAdmin/SaleFunnel/Webinar/blocks/js/block7-js.html.twig' %}
+
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

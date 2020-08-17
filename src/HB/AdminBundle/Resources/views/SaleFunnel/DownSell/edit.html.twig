@@ -1,0 +1,34 @@
+{% extends "@HBAdmin/layout.html.twig" %}
+
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="{{ path('hb.courses.list') }}">Продукты</a>
+        </li>
+        <li class="breadcrumb-item active">
+            <a href="{{ path('hb.course.edit', {id: course.id}) }}">{{ course.info.title }}</a>
+        </li>
+        <li class="breadcrumb-item">Воронки</li>
+        <li class="breadcrumb-item">Выгодная формула</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+
+    <div class="card">
+        <div class="card-header">
+            Редактировать воронку
+        </div>
+        <div class="card-body">
+
+            <div class="col-md-3">
+                {{ form_start(form) }}
+                {{ form_widget(form) }}
+                <input type="submit" value="Сохранить" class="btn btn-primary"/>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

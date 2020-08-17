@@ -1,0 +1,16 @@
+services:
+    hb.admin.controller.sale_funnel.author_club.create:
+        class: HB\AdminBundle\Controller\SaleFunnel\AuthorClub\UpdateController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@router"
+            - "@access.service"
+            - "@form.factory"
+            - "@form.handler"
+
+    hb.admin.controller.sale_funnel.author_club.info:
+        class: HB\AdminBundle\Controller\SaleFunnel\AuthorClub\InfoController
+        arguments:
+            - "@twig"
+            - "@intercom.event_recorder"
+            - "@form.factory"

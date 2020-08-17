@@ -1,0 +1,286 @@
+{% extends "@HBAdmin/layout.html.twig" %}
+
+{% block js_footer %}
+    <script>
+
+        $('.disabled_forms input').prop('readonly', true)
+        $('.disabled_forms select').prop('disabled', true)
+
+        function updatePhoto(response) {
+            openHoldon();
+            var uuid = response.uuid;
+            var cdn = response.cdnUrl;
+            var file_name = '';
+
+            if (response.sourceInfo.file) {
+                file_name = response.sourceInfo.file.name;
+            } else {
+                file_name = response.name;
+            }
+
+            var path = Routing.generate('hb.customer.update.photo', {id: {{ customer.id }}});
+
+            $.post(path, {uuid: uuid, cdn: cdn, file_name: file_name}, function () {
+                if (response.status && response.status === 'error' && response.message) {
+                    alert(response.message);
+                } else {
+                    $('img[name=customer_photo]').attr('src', cdn);
+                }
+
+                closeHoldon();
+            });
+        }
+
+        $('button[id=customer_photo]').on('click', function () {
+            const min_height_crop = $(this).data('min-height');
+            const min_height = min_height_crop / 10;
+            const min_width_crop = $(this).data('min-width');
+            const min_width = min_width_crop / 10;
+
+            uploadcare.openDialog(null, {
+                imagesOnly: true,
+                tabs: '{{ upload_care_sources }}',
+                crop: min_width_crop + 'x' + min_height_crop + ' minimum',
+                validators: [
+                    minDimensions(min_width, min_height)
+                ]
+            }).done(function (file) {
+                file.progress(function (uploadInfo) {
+                    $('#progressbar').progressbar({value: uploadInfo.progress * 100});
+                });
+
+                file.promise()
+                    .done(function (fileInfo) {
+                        updatePhoto(fileInfo);
+                    });
+            });
+        });
+
+        packetChange();
+        $('#{{ form.packet.vars.id }}').trigger('change');
+
+        function packetChange() {
+            const packets = [];
+            {% for packet in subscriptionPackets %}
+            packets.push({{ packet }});
+            {% endfor %}
+
+            $('#{{ form.packet.vars.id }}').change(function () {
+                var selectedPacket = parseInt($(this).val());
+                if (packets.indexOf(selectedPacket) >= 0) {
+                    $('#{{ form.packetSubscription.vars.id }}').attr('readonly', false);
+                } else {
+                    $('#{{ form.packetSubscription.vars.id }}').val(0).attr('readonly', true);
+                    $('#{{ form.packetUntilDate.vars.id }}').val(null).attr('readonly', true);
+                }
+            });
+
+            $('#{{ form.packetSubscription.vars.id }}').change(function () {
+                var selected = parseInt($(this).val());
+                if (selected === 0) {
+                    $('#{{ form.packetUntilDate.vars.id }}').val(null).attr('readonly', true);
+                } else {
+                    $('#{{ form.packetUntilDate.vars.id }}').attr('readonly', false);
+                }
+            });
+
+            $('#{{ form.packetSubscription.vars.id }}').trigger('change');
+
+            $('#{{ form.packetSubscription.vars.id }}, #{{ form.packetUntilDate.vars.id }}').change(function () {
+                var selectedPacket = parseInt($('#{{ form.packet.vars.id }}').val());
+                if (packets.indexOf(selectedPacket) < 0) {
+                    $('#{{ form.packetSubscription.vars.id }}').val(0);
+                    $('#{{ form.packetUntilDate.vars.id }}').val(null);
+                }
+            });
+        }
+
+
+        roleChange();
+
+        function roleChange() {
+            var role_manager = '{{ constant('\\HB\\AdminBundle\\Entity\\CustomerRole::ROLE_MANAGER') }}';
+            $('select[id=hb_adminbundle_customer_edit_role]').change(function () {
+                var role_id = $('select[id=hb_adminbundle_customer_edit_role] option:selected').val();
+
+                $.post(
+                    Routing.generate('hb.customer.role.check_type', {id: role_id, compareRole: role_manager}),
+                    function (response) {
+                        if (response.status !== 'success') {
+                            $('tr.authors').hide();
+                            $('tr input[type=checkbox]').prop('checked', false);
+                        } else {
+                            $('tr.authors').show();
+                        }
+                    }
+                );
+            });
+        }
+
+        $(function () {
+            $('select[id=hb_adminbundle_customer_edit_role]').trigger('change');
+        });
+    </script>
+{% endblock %}
+
+{% block body %}
+    <div class="card">
+        <div class="card-header">
+            Редактирование пользователя
+        </div>
+        <div class="card-body">
+
+            <div class="row">
+
+                <div class="col-md-5">
+                    <form enctype="multipart/form-data" method="post"
+                          action="{{ path('hb.customer.edit', {id:customer.id}) }}">
+                        {% if not form.vars.valid %}
+                            <div class="alert alert-error">
+                                {{ form_errors(form) }}
+                            </div>
+                        {% endif %}
+
+                        {% if customer.enabled %}
+                            <a href="{{ path('hb.customer.switch_status', {id: customer.id}) }}"
+                               class="btn btn-sm btn-success">Деактивировать пользователя</a>
+                            <br><br>
+                        {% else %}
+                            <a href="{{ path('hb.customer.switch_status', {id: customer.id}) }}"
+                               class="btn btn-sm btn-danger">Активировать пользователя</a>
+                            <br><br>
+                        {% endif %}
+
+                        <table>
+                            <tr>
+                                <td><b>Телефон:</b> {{ customer.phone }}</td>
+                                <td></td>
+                                <td><b>Email:</b> {{ customer.email }}</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    {{ form_row(form.firstName) }}
+                                    {{ form_row(form.surname) }}
+                                </td>
+                                <td style="width: 40px"></td>
+                                <td valign="top">
+                                    {{ form_row(form.plainPassword) }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    {{ form_row(form.role) }}
+                                </td>
+                                <td style="width: 40px"></td>
+                                <td>
+                                    <img style="width: 100px"
+                                         src="{% if customer.photo %}{{ customer.photo.fileUrl }}{% endif %}"
+                                         name="customer_photo"/>
+
+                                    <button type="button" class="btn btn-sm btn-success" id="customer_photo"
+                                            data-min-width="250" data-min-height="250">
+                                        <i class="fa fa-photo"></i> Фото (256x256 px)
+                                    </button>
+                                </td>
+                            </tr>
+
+                            {% if is_granted("ROLE_PRODUCER") %}
+                                <tr class="authors">
+                                    <td colspan="3">
+                                        {{ form_row(form.authors) }}
+                                    </td>
+                                </tr>
+                            {% endif %}
+                            {% if can_choose_customer_packet %}
+                                <tr>
+                                    <td colspan="2">
+                                        {{ form_row(form.packet) }}
+                                    </td>
+                                    <td>
+                                        {{ form_row(form.packetSubscription) }}
+                                    </td>
+                                </tr>
+                            {% endif %}
+                            <tr>
+                                <td colspan="2"></td>
+                                <td>
+                                    {{ form_row(form.packetUntilDate) }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">
+                                    {{ form_row(form.aboutInfo) }}
+                                </td>
+                            </tr>
+                        </table>
+                        {{ form_widget(form._token) }}
+                        <input type="submit" value="Сохранить" class="btn btn-primary"/>
+                    </form>
+                </div>
+
+                <div class="col-md-6 disabled_forms">
+                    <h4>Реквизиты пользоватля</h4>
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link show active" data-toggle="tab" href="#transferWise" role="tab">
+                                <img src="{{ asset('bundles/hbadmin/img/transferwise.png') }}" style="height: 20px">
+                                TransferWise</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link show" data-toggle="tab" href="#payoneer" role="tab">
+                                <i class="fa fa-credit-card"></i> Payoneer</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link show " data-toggle="tab" href="#paypal" role="tab">
+                                <i class="fa fa-paypal"></i> Paypal</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link show " data-toggle="tab" href="#bank" role="tab">
+                                <i class="fa fa-bank"></i> Банк</a>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <div class="tab-pane show active" id="transferWise" role="tabpanel">
+                            <div class="col-md-6">
+                                {% if customer.transferWiseAccount %}
+                                    {{ render(controller('hb.admin.controller.customer.transferwise.form:handleAction', {id: customer.id, forEdit: false})) }}
+                                {% else %}
+                                    Нет данных
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="tab-pane show" id="payoneer" role="tabpanel">
+                            <div class="col-md-6">
+                                <h4>Реквизиты Payoneer</h4>
+                                <form method="post" action="{{ path('hb.customer.self.edit') }}">
+                                    {{ form_widget(formAccountPayoneer) }}
+                                </form>
+                            </div>
+                        </div>
+                        <div class="tab-pane show " id="paypal" role="tabpanel">
+                            <div class="col-md-6">
+                                <h4>Реквизиты Paypal</h4>
+                                <form method="post" action="{{ path('hb.customer.self.edit') }}">
+                                    {{ form_widget(formAccountPaypal) }}
+                                </form>
+                            </div>
+                        </div>
+                        <div class="tab-pane show " id="bank" role="tabpanel">
+                            <div class="col-md-6">
+                                <h4>Реквизиты Банка</h4>
+                                <form method="post" action="{{ path('hb.customer.self.edit') }}">
+                                    {{ form_widget(formAccountBank) }}
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br><br>
+
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}

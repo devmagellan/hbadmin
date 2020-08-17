@@ -1,0 +1,40 @@
+<ul class="lessonList_{{ section.id }}" id="lessonList_{{ section.id }}" data-section-id="{{ section.id }}">
+    {% for lesson in lessons %}
+        <li data-lesson-id="{{ lesson.id }}" data-section-id="{{ section.id }}">
+            <div class="lesson" style="display: flex">
+
+                <div style="width: 85%; float: left" >
+                    <i class="fa fa-arrows lesson_drag"></i>
+                    <a href="#" id="lesson_title_{{ lesson.id }}" data-type="textarea"
+                       data-pk="{{ lesson.id }}"
+                       data-title="Название урока"
+                       style="color: black;"
+                    >{{ lesson.title }}</a>
+
+                </div>
+                <div class="pull-right" >
+                    {% if lesson.isFree %}
+                        <i class="fa fa-eye lesson-free functional-element" id="lesson_free_{{ lesson.id }}"
+                           data-toggle="tooltip" data-placement="left" title="" data-original-title="Урок доступен без регистрации"
+                        ></i>
+                    {% else %}
+                        <i class="fa fa-eye lesson-not-free functional-element"
+                           data-toggle="tooltip" data-placement="left" title="" data-original-title="Урок доступен только после регистрации и оплаты курса"
+                           id="lesson_free_{{ lesson.id }}"></i>
+                    {% endif %}
+
+                    <a href="{{ path('hb.lesson.edit', {id: lesson.id}) }}">
+                        <i class="fa fa-edit functional-element" style="color:#369858"></i>
+                    </a>
+
+                    <a href="{{ path('hb.lesson.remove', {id: lesson.id}) }}"
+                       onclick="return confirm('Удалить урок?')">
+                        <i class="fa fa-remove functional-element" style="color:lightcoral"></i>
+                    </a>
+                </div>
+
+
+            </div>
+        </li>
+    {% endfor %}
+</ul>

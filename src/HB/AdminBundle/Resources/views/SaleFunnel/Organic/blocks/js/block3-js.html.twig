@@ -1,0 +1,64 @@
+<script>
+
+    function updateBlock3() {
+        $.get(
+            Routing.generate('hb.sale_funnel.organic.block3knowledge', {id: {{ funnel.id }}}),
+            function (response) {
+                if (response.status && response.status === 'error' && response.message) {
+                    alert(response.message);
+                } else {
+                    $('div.block3').html(response);
+                }
+            }
+        );
+    }
+
+    function removeSkill(id)
+    {
+        openHoldon();
+        $.post(
+            Routing.generate('hb.sale_funnel.organic.block3knowledge.remove', {id: id, funnel: {{ funnel.id }} }),
+            function (response) {
+                if ('success' === response.status) {
+                    updateBlock3();
+                } else {
+                    if (response.status && response.status === 'error' && response.message) {
+                        alert(response.message);
+                    }
+                }
+                closeHoldon();
+            }
+        )
+    }
+
+    $(function () {
+        $('div.block3').on('submit', 'form[name=block3]', function (e) {
+            openHoldon();
+            e.preventDefault();
+
+            var formData = $(this).serialize();
+            var id = $(this).data('funnel-id');
+
+            $.ajax({
+                type: "POST",
+                url: Routing.generate('hb.sale_funnel.organic.block3knowledge', {id: id}),
+                data: formData,
+                dataType: "json",
+                success: function (response) {
+                    $('div.block3').html(response.responseText);
+                    closeHoldon();
+                },
+                error: function (response) {
+                    $('div.block3').html(response.responseText);
+                    closeHoldon();
+                }
+            });
+
+            return false;
+        }).on('click', 'button[id^=block3_remove_skill]', function () {
+            var id = $(this).data('skill-id');
+            removeSkill(id)
+        });
+
+    });
+</script>

@@ -1,0 +1,89 @@
+<script>
+    function block9UploadImage() {
+        const min_width_crop = 140;
+        const min_width = min_width_crop /10;
+        const min_height_crop = 140;
+        const min_height = min_height_crop/10;
+
+        uploadcare.openDialog(null, {
+            imagesOnly: true,
+            tabs: '{{ upload_care_sources }}',
+            crop: min_width_crop + 'x' + min_height_crop + ' minimum',
+            validators: [
+                minDimensions(min_width, min_height)
+            ]
+        }).done(function (file) {
+            file.progress(function(uploadInfo) {
+                $('#progressbar').progressbar({value: uploadInfo.progress * 100});
+            });
+
+            file.promise()
+                .done(function (fileInfo) {
+                    block9AddCompanyLogo(fileInfo);
+                });
+        });
+    }
+
+    function block9AddCompanyLogo(response) {
+        openHoldon();
+        var uuid = response.uuid;
+        var cdn = response.cdnUrl;
+        var file_name = '';
+        if (response.sourceInfo.file) {
+            file_name = response.sourceInfo.file.name;
+        } else {
+            file_name = response.name;
+        }
+
+        var path = Routing.generate('hb.sale_funnel.organic.block9company_logo.add', {id: {{ funnel.id }}});
+
+        $.post(path, {uuid: uuid, cdn: cdn, file_name: file_name}, function (response) {
+            if (response.status && response.status === 'error' && response.message) {
+                alert(response.message);
+            } else {
+                updateBlock9();
+            }
+            closeHoldon();
+        });
+    }
+
+    function block9RemoveCompanyLogo(id) {
+        openHoldon();
+
+        $.post(
+            Routing.generate('hb.sale_funnel.organic.block9company_logo.remove', {funnel: {{ funnel.id }}, id: id}),
+            function (response) {
+                if (response.status && response.status === 'error' && response.message) {
+                    alert(response.message);
+                } else {
+                    updateBlock9();
+                }
+                closeHoldon();
+            });
+    }
+
+    function updateBlock9() {
+        $.get(
+            Routing.generate('hb.sale_funnel.organic.block9company_logo', {id: {{ funnel.id }}}),
+            function (response) {
+                if (response.status && response.status === 'error' && response.message) {
+                    alert(response.message);
+                } else {
+                    $('div.block9').html(response);
+                }
+
+
+            }
+        );
+    }
+
+    $(function () {
+        $('div.block9').on('click', 'button[id=block9_upload_image]', function () {
+            block9UploadImage()
+        }).on('click', 'button[id^=block9_remove_company_logo_]', function () {
+            var id = $(this).data('company-id');
+            block9RemoveCompanyLogo(id)
+        });
+
+    });
+</script>

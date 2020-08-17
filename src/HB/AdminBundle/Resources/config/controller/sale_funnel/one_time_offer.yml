@@ -1,0 +1,104 @@
+services:
+
+    hb.admin.controller.sale_funnel.one_time_offer.list:
+        class: HB\AdminBundle\Controller\SaleFunnel\OneTimeOffer\ListController
+        arguments:
+            - "@twig"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.one_time_offer.remove:
+        class: HB\AdminBundle\Controller\SaleFunnel\OneTimeOffer\RemoveController
+        arguments:
+            - "@upload_care.service"
+            - "@doctrine.orm.entity_manager"
+            - "@router"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.one_time_offer.update.file:
+        class: HB\AdminBundle\Controller\SaleFunnel\OneTimeOffer\UpdateOtoFileController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@upload_care.service"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.one_time_offer.remove.file:
+        class: HB\AdminBundle\Controller\SaleFunnel\OneTimeOffer\RemoveOtoFileController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@upload_care.service"
+            - "@router"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.one_time_offer.preview:
+        class: HB\AdminBundle\Controller\SaleFunnel\OneTimeOffer\PreviewController
+        arguments:
+            - "@twig"
+
+    hb.admin.controller.sale_funnel.one_time_offer.create:
+        class: HB\AdminBundle\Controller\SaleFunnel\OneTimeOffer\CreateController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@router"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.one_time_offer.edit:
+        class: HB\AdminBundle\Controller\SaleFunnel\OneTimeOffer\EditController
+        arguments:
+            - "@twig"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.one_time_offer.blocks.block1_targeting:
+        class: HB\AdminBundle\Controller\SaleFunnel\OneTimeOffer\Blocks\Block1TargetingController
+        arguments:
+            - "@twig"
+            - "@doctrine.orm.entity_manager"
+            - "@form.factory"
+            - "@sale_funnel.one_time_offer"
+            - "@access.service"
+            - "@session.flash_bag"
+            - "@router"
+
+    hb.admin.controller.sale_funnel.one_time_offer.blocks.block2_offers:
+        class: HB\AdminBundle\Controller\SaleFunnel\OneTimeOffer\Blocks\Block2OffersController
+        arguments:
+            - "@form.handler"
+            - "@form.factory"
+            - "@doctrine.orm.entity_manager"
+            - "@twig"
+            - "@router"
+
+    hb.admin.controller.sale_funnel.one_time_offer.blocks.block2_offers.remove_offer:
+        class: HB\AdminBundle\Controller\SaleFunnel\OneTimeOffer\Blocks\Block2RemoveOfferController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.one_time_offer.blocks.block2_offers.edit_offer:
+        class: HB\AdminBundle\Controller\SaleFunnel\OneTimeOffer\Blocks\Block2OfferEditController
+        arguments:
+            - "@form.handler"
+            - "@router"
+            - "@twig"
+            - "@form.factory"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.one_time_offer.blocks.block3_description:
+        class: HB\AdminBundle\Controller\SaleFunnel\OneTimeOffer\Blocks\Block3DescriptionController
+        arguments:
+            - "@twig"
+            - "@form.handler"
+            - "@form.factory"
+            - "@router"
+
+    hb.admin.controller.sale_funnel.one_time_offer.blocks.block4_link_offer:
+        class: HB\AdminBundle\Controller\SaleFunnel\OneTimeOffer\Blocks\Block4OfferLinkController
+        arguments:
+            - "@form.factory"
+            - "@twig"
+            - "@form.handler"
+            - "@router"
+
+    hb.admin.controller.sale_funnel.one_time_offer.errors:
+        class: HB\AdminBundle\Controller\SaleFunnel\OneTimeOffer\FunnelErrorsController
+        arguments:
+            - "@twig"

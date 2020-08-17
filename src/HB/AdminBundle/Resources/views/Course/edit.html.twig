@@ -1,0 +1,1087 @@
+{% extends "@HBAdmin/layout.html.twig" %}
+
+{#{% macro popup(funnel, modal_id) %}
+    <sup>
+        <a
+                class="btn btn-pill btn-orange btn-sm questionTrigger js-funnelModal"
+                href="#{{ modal_id }}" style="line-height:1">
+            <i class="fa fa-question"></i>
+        </a>
+    </sup> {{ funnel }}
+
+{% endmacro %}#}
+
+{% macro popup(funnel, image_path) %}
+    <sup>
+        {#<a href="{{ image_path }}" target="_blank"
+                class="btn btn-pill btn-orange btn-sm"
+                style="line-height:1">
+            <i class="fa fa-question"></i>
+        </a>#}
+        <button data-image-path="{{ image_path }}" type="button" name="funnel_visualization"
+                class="btn btn-pill btn-orange btn-sm"
+                style="line-height:1">
+            <i class="fa fa-question"></i>
+        </button>
+    </sup> {{ funnel }}
+{% endmacro %}
+
+
+{% import _self as render %}
+
+{% block js_head %}
+    <script src='{{ asset('bundles/hbadmin/jquery.elevatezoom.js') }}'></script>
+{% endblock %}
+
+{% block css_head %}
+    <style>
+        .form-group {
+            margin-bottom: 0.5rem;
+        }
+
+        th, td {
+            padding: 0.3em !important;
+        }
+
+        .zoomContainer {
+            z-index: 1500;
+        }
+
+        .zoomLens {
+            z-index: 1600;
+        }
+    </style>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700,300i,400i,500i|Source+Sans+Pro:400,600,400i,600i"
+          media="all">
+    <link href="{{ asset('bundles/hbadmin/css/funnel_popup.css') }}" rel="stylesheet">
+    <style>
+        /* styles unrelated to zoom */
+        * {
+            border: 0;
+            margin: 0;
+            padding: 0;
+        }
+
+        p {
+            position: absolute;
+            top: 3px;
+            right: 28px;
+            color: #555;
+            font: bold 13px/1 sans-serif;
+        }
+
+        /* these styles are for the demo, but are not required for the plugin */
+        .zoom {
+            display: inline-block;
+            position: relative;
+        }
+
+
+        .zoom img {
+            display: block;
+        }
+
+        .zoom img::selection {
+            background-color: transparent;
+        }
+
+    </style>
+{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="{{ path('hb.courses.list') }}">Продукты</a>
+        </li>
+        <li class="breadcrumb-item"><b>{{ course.info.title }}</b></li>
+        <li class="breadcrumb-item">
+            <a href="{{ path('hb.sale_funnel.organic.price_blocks', {id: course.salesFunnelOrganic.id}) }}">Тарифные
+                планы</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="{{ path('hb.lesson_section.list', {id: course.id}) }}">
+                Разделы и уроки
+            </a>
+        </li>
+    </ol>
+{% endblock %}
+
+{% block js_footer %}
+    <script>
+
+        $(function () {
+
+
+            /*function popup_event() {
+                $(document).on('click', '.js-funnelModal', function (e) {
+                    e.preventDefault();
+                    var modal_id = $(this).attr('href');
+                    modal_id = modal_id.replace('#', '');
+
+                    var html = $('div.modals [id=' + modal_id + ']').html();
+
+                    if (html) {
+                        $('div.sale_funnel_modal_body').html('<div class=\'funnel_popup\'>' + html + '</div>');
+
+                        if (!$('div[id=sale_funnel_modal]').hasClass('show')) {
+                            $('button[id=modal_open]').trigger('click');
+                        } else {
+                            $('div[id=sale_funnel_modal]').scrollTop(0);
+                        }
+                    }
+
+                });
+            }*/
+
+            $('#sale_funnel_modal').on('hidden.bs.modal', function () {
+                $('.zoomContainer').remove();
+            });
+
+            popup_event();
+
+            function popup_event() {
+                $('button[name=funnel_visualization]').click(function () {
+                    var image_path = $(this).data('image-path');
+
+                    $('div.sale_funnel_modal_body').html("<div class='funnel_popup' align=center>" +
+                        "<a href='" + image_path + "' target='_blank'>Открыть в отдельном окне</a><br>" +
+                        "<img style='max-height: 800px;' src='" + image_path + "' id='funnel_image'>");
+
+                    /*$('#funnel_image').elevateZoom({
+                        zoomWindowWidth: 400,
+                        zoomWindowHeight: 400,
+                        zoomWindowOffetx: -300,
+                        zoomWindowOffety: 0,
+                    });*/
+                    $('#funnel_image').elevateZoom({
+                        zoomType: "inner",
+                        cursor: "crosshair",
+                        zoomWindowFadeIn: 500,
+                        zoomWindowFadeOut: 750
+                    });
+
+                    if (!$('div[id=sale_funnel_modal]').hasClass('show')) {
+                        $('button[id=modal_open]').trigger('click');
+                    }
+                });
+            }
+        });
+    </script>
+
+{% endblock %}
+
+{% block body %}
+
+    {% include "@HBAdmin/Course/funnels_popup/modals.html.twig" %}
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    Общая информация и уроки
+                    <a class="btn btn-pill btn-sm btn-orange questionTrigger" data-toggle="tooltip"
+                       data-placement="bottom" title=""
+                       data-original-title="Добавление и редактирование: разделов, уроков курса и тарифных планов.">
+                        <i class="fa fa-question"></i>
+                    </a>
+                    <div class="pull-right">
+                        <a href="{{ path('hb.course.stop_lessons', {id: course.id}) }}"
+                           class="btn btn-sm btn-warning">
+                            Стоп Уроки
+                        </a>
+                        <a href="{{ path('hb.sale_funnel.organic.price_blocks', {id: course.salesFunnelOrganic.id}) }}"
+                           class="btn btn-sm btn-danger">
+                            Тарифные планы
+                        </a>
+                        <a href="{{ path('hb.lesson_section.list', {id: course.id}) }}"
+                           class="btn btn-sm btn-indigo">Редактировать</a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="{{ path('hb.course.edit', {id: course.id}) }}">
+                        {{ form_widget(formMainInfo) }}
+                        <input type="submit" value="Сохранить" class="btn btn-primary"/>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    Настройки
+                </div>
+
+                <div class="card-body">
+                    <div id="accordion" role="tablist">
+
+                        {% if is_granted("ROLE_ADMIN") and course.isSandbox == false %}
+                            <div class="card">
+                                <div class="card-header" role="tab">
+                                    <h5 class="mb-0">
+                                        <a data-toggle="collapse" href="#teachable" aria-expanded="true"
+                                           aria-controls="collapseOne">
+                                            Teachable
+                                        </a>
+                                    </h5>
+
+                                </div>
+                                <div class="collapse show" id="teachable" role="tabpanel"
+                                     aria-labelledby="headingOne"
+                                     data-parent="#accordion">
+                                    <div class="card-body">
+                                        <form method="post" action="{{ path('hb.course.edit', {id: course.id}) }}">
+                                            {{ form_widget(formTeachable) }}
+                                            <input type="submit" value="Сохранить" class="btn btn-primary"/>
+                                        </form>
+
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        <div class="card">
+                            <div class="card-header" role="tab">
+                                <h5 class="mb-0">
+                                    <a data-toggle="collapse" href="#integrations" aria-expanded="true"
+                                       aria-controls="collapseOne">
+                                        Интеграции
+                                    </a>
+                                </h5>
+
+                            </div>
+                            <div class="collapse show" id="integrations" role="tabpanel" aria-labelledby="headingOne"
+                                 data-parent="#accordion">
+                                <div class="card-body">
+                                    <form method="post" action="{{ path('hb.course.edit', {id: course.id}) }}">
+                                        {{ form_widget(formIntegrations) }}
+                                        <input type="submit" value="Сохранить" class="btn btn-primary"/>
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header" role="tab">
+                                <h5 class="mb-0">
+                                    <a data-toggle="collapse" href="#external_links" aria-expanded="false"
+                                       aria-controls="collapseOne">
+                                        Публичные (внешние) ссылки
+                                    </a>
+                                </h5>
+
+                            </div>
+                            <div class="collapse" id="external_links" role="tabpanel" aria-labelledby="headingOne"
+                                 data-parent="#accordion">
+                                <div class="card-body external_links_form">
+
+                                    {{ render(controller('hb.admin.controller.course.external_links_form:handleAction', {course: course})) }}
+
+                                </div>
+                                <script>
+                                    $(function () {
+                                        $('div.external_links_form').on('click', 'button[id=external_link_submit]', function () {
+
+                                            var formData = $('form[name=hb_course_external_links]').serialize();
+
+                                            openHoldon();
+                                            $.ajax({
+                                                type: "POST",
+                                                url: Routing.generate('hb.course.external_links', {id: '{{ course.id }}'}),
+                                                data: formData,
+                                                dataType: "json",
+                                                success: function (response) {
+                                                    $('div.external_links_form').html(response.responseText);
+                                                    closeHoldon();
+                                                },
+                                                error: function (response) {
+                                                    $('div.external_links_form').html(response.responseText);
+                                                    closeHoldon();
+                                                }
+                                            });
+                                        });
+
+                                    });
+                                </script>
+
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header" role="tab">
+                                <h5 class="mb-0">
+                                    <a data-toggle="collapse" href="#email_import" aria-expanded="false"
+                                       aria-controls="collapseOne">
+                                        Импорт подписчиков (email)
+                                        <small class="alert-gray-100"> (в разработке)</small>
+                                    </a>
+                                </h5>
+
+                            </div>
+                            <div class="collapse" id="email_import" role="tabpanel" aria-labelledby="headingOne"
+                                 data-parent="#accordion">
+                                <div class="card-body">
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header" role="tab">
+                                <h5 class="mb-0">
+                                    <a data-toggle="collapse" href="#email_import" aria-expanded="false"
+                                       aria-controls="collapseOne">
+                                        Импорт отзывов
+                                        <small class="alert-gray-100"> (в разработке)</small>
+                                    </a>
+                                </h5>
+
+                            </div>
+                            <div class="collapse" id="email_import" role="tabpanel" aria-labelledby="headingOne"
+                                 data-parent="#accordion">
+                                <div class="card-body">
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            {% if course.owner.packet and
+                (course.owner.packet.type == constant('\\HB\\AdminBundle\\Entity\\Types\\CustomerPacketType::CUSTOM')
+                or course.owner.packet.type == constant('\\HB\\AdminBundle\\Entity\\Types\\CustomerPacketType::WEBINAR')
+                or course.owner.packet.type == constant('\\HB\\AdminBundle\\Entity\\Types\\CustomerPacketType::ONLINE_SCHOOL')
+                or course.owner.packet.type == constant('\\HB\\AdminBundle\\Entity\\Types\\CustomerPacketType::BASIC')
+                or course.owner.packet.type == constant('\\HB\\AdminBundle\\Entity\\Types\\CustomerPacketType::EXTENDED')
+                ) %}
+                {% set custom_packet = true %}
+            {% else %}
+                {% set custom_packet = false %}
+            {% endif %}
+
+            {% if showFunnels or custom_packet %}
+                {# check funnel depending of course creator packet #}
+                {% if course.owner.packet and course.owner.packet.type == constant('\\HB\\AdminBundle\\Entity\\Types\\CustomerPacketType::PROFESSIONAL') and course.sandbox == false %}
+                    {% set professional_packet = true %}
+                    {% set denied_html = '<small class=\'alert-gray-100\'>Доступно на пакете выше</small>' %}
+                {% elseif custom_packet %}
+                    {% set professional_packet = false %}
+                    {% set denied_html = '<small class=\'alert-gray-100\'>Сначала заполните органическую воронку</small>' %}
+                {% else %}
+                    {% set professional_packet = false %}
+                    {% set custom_packet = false %}
+                    {% set denied_html = '' %}
+                {% endif %}
+                {# check funnel depending of course creator packet #}
+
+
+                <div class="card">
+                    <div class="card-header">
+                        Воронки продаж
+                        <a class="btn btn-pill btn-sm btn-orange questionTrigger" data-toggle="tooltip"
+                           data-placement="bottom" title=""
+                           data-original-title="Добавление, редактирование, наполнение воронок продаж.">
+                            <i class="fa fa-question"></i>
+                        </a>
+
+                        <div class="pull-right">
+                            <a href="{{ path('hb.course.external.funnels.queue') }}" target="_blank">
+                                Последовательность воронок
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="col-md-12">
+                            <ul class="list-group">
+
+                                <li class="list-group-item d-flex list-group-item-action justify-content-between align-items-center">
+                                    <div class="pull-left">
+                                        {{ render.popup('Органическая воронка', asset('bundles/hbadmin/img/funnel_vizualization/organic.png')) }}
+                                    </div>
+
+                                    <div class="pill-right">
+                                        {% if course.salesFunnelOrganic %}
+                                            <a href="{{ path('hb.sale_funnel.organic.preview', {id: course.salesFunnelOrganic.id}) }}"
+                                               class="btn btn-sm btn-pill btn-outline-primary"
+                                               title="Предпросмотр"
+                                               target="_blank"
+                                            >
+                                                <i class="fa fa-eye"></i>
+                                            </a>
+                                            <a href="{{ path('hb.sale_funnel.organic.edit', {id: course.id}) }}"
+                                               class="btn btn-sm btn-primary">
+                                                {#<i class="fa fa-edit"></i>#}
+                                                Наполнение
+                                            </a>
+
+                                        {% else %}
+                                            <a href="{{ path('hb.sale_funnel.organic.create', {id: course.id}) }}"
+                                               class="btn btn-pill btn-sm btn-success">
+                                                <i class="fa fa-plus"></i>
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                </li>
+
+                                {% if saleFunnelOrganicErrors == false or custom_packet %}
+
+                                    {% if course.salesFunnelOrganic %}
+                                        <li class="list-group-item d-flex list-group-item-action justify-content-between align-items-center">
+                                            <div class="pull-left">
+                                                {{ render.popup('Сбор лидов', asset('bundles/hbadmin/img/funnel_vizualization/lead_collection.png')) }}
+                                            </div>
+
+                                            <div class="pull-right">
+                                                <a href="{{ path('hb.sale_funnel.lead_collection.edit', {id: course.id}) }}"
+                                                   class="btn btn-pill btn-sm btn-primary">
+                                                    <i class="fa fa-edit"></i>
+                                                </a>
+                                            </div>
+                                        </li>
+                                    {% endif %}
+
+                                    <li class="list-group-item d-flex list-group-item-action justify-content-between align-items-center">
+                                        <div class="pull-left">
+                                            {{ render.popup('Выгодная формула', asset('bundles/hbadmin/img/funnel_vizualization/downsell.png')) }}
+                                        </div>
+
+
+                                        <div class="pull-right">
+                                            {% if custom_packet and saleFunnelOrganicErrors == true %}
+                                                {{ denied_html|raw }}
+                                            {% else %}
+                                                <b>Кол-во:</b> {{ course.salesFunnelDownSells | length }}
+
+                                                <a href="{{ path('hb.sale_funnel.down_sell.list', {id: course.id}) }}"
+                                                   class="btn btn-pill btn-sm btn-primary">
+                                                    <i class="fa fa-edit"></i>
+                                                </a>
+                                            {% endif %}
+                                        </div>
+                                    </li>
+
+                                    <li class="list-group-item d-flex list-group-item-action justify-content-between align-items-center">
+                                        <div class="pull-left">
+                                            {{ render.popup('Вебинарная', asset('bundles/hbadmin/img/funnel_vizualization/webinar.png')) }}
+                                        </div>
+
+                                        <div class="pull-right">
+
+                                            <b>Кол-во:</b> {{ course.salesFunnelWebinar | length }}
+
+                                            <a href="{{ path('hb.sale_funnel.webinar.list', {id: course.id}) }}"
+                                               class="btn btn-pill btn-sm btn-primary">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+                                        </div>
+                                    </li>
+
+                                    <li class="list-group-item d-flex list-group-item-action justify-content-between align-items-center">
+                                        <div class="pull-left">
+                                            {{ render.popup('Единоразовое Предложение', asset('bundles/hbadmin/img/funnel_vizualization/one_time_offer.png')) }}
+                                        </div>
+
+                                        <div class="pull-right">
+
+                                            <b>Кол-во:</b> {{ course.salesFunnelOneTimeOffer | length }}
+
+                                            <a href="{{ path('hb.sale_funnel.one_time_offer.list', {id: course.id}) }}"
+                                               class="btn btn-pill btn-sm btn-primary">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+                                        </div>
+                                    </li>
+
+                                    <li class="list-group-item d-flex list-group-item-action justify-content-between align-items-center">
+                                        <div class="pull-left">
+                                            {{ render.popup('Образовательная', asset('bundles/hbadmin/img/funnel_vizualization/educational.png')) }}
+                                        </div>
+
+                                        <div class="pull-right">
+                                            {% if custom_packet and saleFunnelOrganicErrors == true %}
+                                                {{ denied_html|raw }}
+                                            {% else %}
+                                                {% if course.salesFunnelEducational %}
+                                                    <a href="{{ path('hb.sale_funnel.educational.edit', {id: course.salesFunnelEducational.id}) }}"
+                                                       class="btn btn-pill btn-sm btn-primary">
+                                                        <i class="fa fa-edit"></i>
+                                                    </a>
+
+                                                    <a href="{{ path('hb.sale_funnel.educational.remove', {id: course.salesFunnelEducational.id}) }}"
+                                                       class="btn btn-pill btn-sm btn-danger">
+                                                        <i class="fa fa-remove"></i>
+                                                    </a>
+
+                                                {% else %}
+                                                    <a href="{{ path('hb.sale_funnel.educational.create', {id: course.id}) }}"
+                                                       class="btn btn-pill btn-sm btn-success">
+                                                        <i class="fa fa-plus"></i>
+                                                    </a>
+                                                {% endif %}
+                                            {% endif %}
+                                        </div>
+                                    </li>
+
+                                    {#
+                                    Temporary hide
+                                    <li class="list-group-item d-flex list-group-item-action justify-content-between align-items-center">
+                                        <div class="pull-left">
+                                            {{ render.popup('Запуск по волкеру', 'walker_popup') }}
+                                        </div>
+
+                                        <div class="pull-right">
+                                            <button id="walker_start_info" class="btn btn-pill btn-sm btn-warning">
+                                                <i class="fa fa-question"></i>
+                                            </button>
+
+                                            <script>
+                                                $(function () {
+                                                    $('button[id=walker_start_info]').click(function () {
+                                                        openHoldon();
+
+                                                        $.post(
+                                                            '{{ path('hb.sale_funnel.walker_start.info') }}',
+                                                            function (response) {
+                                                                $('div.sale_funnel_modal_body').html(response);
+                                                                $('button[id=modal_open]').trigger('click');
+                                                                closeHoldon();
+                                                            }
+                                                        )
+                                                    });
+                                                });
+                                            </script>
+
+                                            {% if course.salesFunnelWalkerStart %}
+                                                <a href="{{ path('hb.sale_funnel.walker_start.remove', {id: course.salesFunnelWalkerStart.id}) }}"
+                                                   class="btn btn-pill btn-sm btn-danger">
+                                                    <i class="fa fa-remove"></i>
+                                                </a>
+
+                                            {% else %}
+                                                <a href="{{ path('hb.sale_funnel.walker_start.create', {id: course.id}) }}"
+                                                   class="btn btn-pill btn-sm btn-success">
+                                                    <i class="fa fa-plus"></i>
+                                                </a>
+                                            {% endif %}
+                                        </div>
+                                    </li>#}
+
+                                    <li class="list-group-item d-flex list-group-item-action justify-content-between align-items-center">
+                                        <div class="pull-left">
+                                            {{ render.popup('Клуб авторов', asset('bundles/hbadmin/img/funnel_vizualization/author_club.png')) }}
+                                        </div>
+
+                                        <div class="pull-right">
+                                            {% if custom_packet and saleFunnelOrganicErrors == true %}
+                                                {{ denied_html | raw }}
+                                            {% else %}
+
+                                                {% if course.salesFunnelAuthorClub %}
+                                                <i class="fa fa-check"></i>
+                                            {% else %}
+                                                <i class="fa fa-remove"></i>
+                                            {% endif %}
+
+                                                <button id="author_club_info" class="btn btn-pill btn-sm btn-primary">
+                                                    <i class="fa fa-edit"></i>
+                                                </button>
+
+                                                <script>
+                                                    $(function () {
+                                                        $('button[id=author_club_info]').click(function () {
+                                                            openHoldon();
+
+                                                            $.post(
+                                                                '{{ path('hb.sale_funnel.author_club.info', {id: course.id } ) }}',
+                                                                function (response) {
+                                                                    $('div.sale_funnel_modal_body').html(response);
+                                                                    $('button[id=modal_open]').trigger('click');
+                                                                    closeHoldon();
+                                                                }
+                                                            )
+                                                        });
+                                                    });
+                                                </script>
+                                            {% endif %}
+                                        </div>
+                                    </li>
+
+                                    <li class="list-group-item d-flex list-group-item-action justify-content-between align-items-center">
+                                        <div class="pull-left">
+                                            {{ render.popup('Партнерская программа', '#') }}
+                                        </div>
+
+                                        <div class="pull-right">
+                                            {% if custom_packet and saleFunnelOrganicErrors == true %}
+                                                {{ denied_html|raw }}
+                                            {% else %}
+                                                Партнеров: {{ course.saleFunnelPartners |length }}
+
+                                                <a href="{{ path('hb.sale_funnel.partner.list', {id: course.id}) }}"
+                                                   class="btn btn-pill btn-sm btn-primary">
+                                                    <i class="fa fa-edit"></i>
+                                                </a>
+                                            {% endif %}
+
+                                        </div>
+                                    </li>
+
+                                    <li class="list-group-item d-flex list-group-item-action justify-content-between align-items-center">
+                                        <div class="pull-left">
+                                            {{ render.popup('Допродажа', asset('bundles/hbadmin/img/funnel_vizualization/post_sale.png')) }}
+                                        </div>
+
+                                        {% if professional_packet or (custom_packet and saleFunnelOrganicErrors == true ) %}
+                                            {{ denied_html |raw }}
+                                        {% else %}
+
+                                            <div class="pull-right">
+                                                {% if course.salesFunnelPostSale %}
+                                                    <b>Скидка: </b> {{ course.salesFunnelPostSale.discountPercent }} %
+                                                {% endif %}
+
+                                                {% if course.salesFunnelPostSale %}
+                                                    <i class="fa fa-check"></i>
+                                                {% else %}
+                                                    <i class="fa fa-remove"></i>
+                                                {% endif %}
+
+                                                <button id="edit_post_sale" data-id="{{ course.id }}"
+                                                        class="btn btn-pill btn-sm btn-primary">
+                                                    <i class="fa fa-edit"></i>
+                                                </button>
+
+                                            </div>
+
+                                            <script>
+                                                $(function () {
+                                                    $('button[id=edit_post_sale]').click(function () {
+                                                        var id = $(this).data('id');
+
+                                                        openHoldon();
+
+                                                        $.post(
+                                                            Routing.generate('hb.sale_funnel.post_sale.edit', {id: id}),
+                                                            function (response) {
+                                                                if (response.status && response.status === 'error' && response.message) {
+                                                                    alert(response.message);
+                                                                } else {
+                                                                    $('div.sale_funnel_modal_body').html(response);
+                                                                    $('button[id=modal_open]').trigger('click')
+                                                                }
+                                                                closeHoldon();
+                                                            }
+                                                        )
+                                                    });
+                                                });
+                                            </script>
+
+                                        {% endif %}
+                                    </li>
+
+                                    <li class="list-group-item d-flex list-group-item-action justify-content-between align-items-center">
+                                        <div class="pull-left">
+                                            {{ render.popup('Кросс продажа', asset('bundles/hbadmin/img/funnel_vizualization/cross_sale.png')) }}
+                                        </div>
+
+                                        {% if professional_packet or (custom_packet and saleFunnelOrganicErrors == true ) %}
+                                            {{ denied_html|raw }}
+                                        {% else %}
+                                            {% if course.salesFunnelCrossSale %}
+                                                <div class="pull-right">
+                                                    {#<b>Доп. курсов:</b>
+                                                    {{ course.salesFunnelCrossSale.discountCourses | length }}#}
+
+                                                    <a href="{{ path('hb.sale_funnel.cross_sale.edit', {id: course.id}) }}"
+                                                       class="btn btn-pill btn-sm btn-primary">
+                                                        <i class="fa fa-edit"></i>
+                                                    </a>
+
+                                                    <a href="{{ path('hb.sale_funnel.cross_sale.remove', {id: course.id}) }}"
+                                                       class="btn btn-pill btn-sm btn-danger">
+                                                        <i class="fa fa-remove"></i>
+                                                    </a>
+                                                </div>
+                                            {% else %}
+                                                <a href="{{ path('hb.sale_funnel.cross_sale.create', {id: course.id}) }}"
+                                                   class="btn btn-pill btn-sm btn-success">
+                                                    <i class="fa fa-plus"></i>
+                                                </a>
+                                            {% endif %}
+                                        {% endif %}
+                                    </li>
+
+                                    <li class="list-group-item d-flex list-group-item-action justify-content-between align-items-center">
+                                        <div class="pull-left">
+                                            {{ render.popup('Брошенная корзина', asset('bundles/hbadmin/img/funnel_vizualization/broken_basket.png')) }}
+                                        </div>
+
+                                        {% if professional_packet or (custom_packet and saleFunnelOrganicErrors == true ) %}
+                                            {{ denied_html|raw }}
+                                        {% else %}
+                                            {% set funnel = course.salesFunnelBrokenBasket %}
+
+                                            <div class="pull-right">
+
+                                                {% if course.salesFunnelBrokenBasket %}
+                                                    <b>Скидка:</b>&nbsp;{{ course.salesFunnelBrokenBasket.discountPercent }}&nbsp;%
+                                                    <button id="broken-basket-edit" data-id="{{ course.id }}"
+                                                            class="btn btn-pill btn-sm btn-primary">
+                                                        <i class="fa fa-edit"></i>
+                                                    </button>
+                                                {% else %}
+                                                    <i class="fa fa-remove"></i>
+
+                                                    <button id="broken-basket-edit" data-id="{{ course.id }}"
+                                                            class="btn btn-pill btn-sm btn-primary">
+                                                        <i class="fa fa-edit"></i>
+                                                    </button>
+                                                {% endif %}
+                                            </div>
+
+                                            <script>
+                                                $(function () {
+                                                    $('button[id=broken-basket-edit]').click(function () {
+                                                        var id = $(this).data('id');
+
+                                                        openHoldon();
+
+                                                        $.get(
+                                                            Routing.generate('hb.sale_funnel.broken_basket.change_discount_percent', {id: id}),
+                                                            function (response) {
+                                                                if (response.status && response.status === 'error' && response.message) {
+                                                                    alert(response.message);
+                                                                } else {
+                                                                    $('div.sale_funnel_modal_body').html(response);
+                                                                    $('button[id=modal_open]').trigger('click');
+                                                                }
+                                                                closeHoldon();
+                                                            }
+                                                        )
+                                                    });
+                                                });
+                                            </script>
+                                        {% endif %}
+                                    </li>
+
+                                    <li class="list-group-item d-flex list-group-item-action justify-content-between align-items-center">
+                                        <div class="pull-left">
+                                            {{ render.popup('Мини курс', asset('bundles/hbadmin/img/funnel_vizualization/mini_course.png')) }}
+                                        </div>
+
+                                        {% if professional_packet or (custom_packet and saleFunnelOrganicErrors == true ) %}
+                                            {{ denied_html|raw }}
+                                        {% else %}
+                                            {% if course.salesFunnelMiniCourse %}
+                                                <div class="pull-right">
+
+                                                    <a href="{{ path('hb.sale_funnel.mini_course.edit', {id: course.id}) }}"
+                                                       class="btn btn-pill btn-sm btn-primary">
+                                                        <i class="fa fa-edit"></i>
+                                                    </a>
+
+                                                    <a href="{{ path('hb.sale_funnel.mini_course.remove', {id: course.salesFunnelMiniCourse.id}) }}"
+                                                       class="btn btn-pill btn-sm btn-danger">
+                                                        <i class="fa fa-remove"></i>
+                                                    </a>
+                                                </div>
+                                            {% else %}
+                                                <a href="{{ path('hb.sale_funnel.mini_course.create', {id: course.id}) }}"
+                                                   class="btn btn-pill btn-sm btn-success">
+                                                    <i class="fa fa-plus"></i>
+                                                </a>
+                                            {% endif %}
+                                        {% endif %}
+                                    </li>
+
+                                    <li class="list-group-item d-flex list-group-item-action justify-content-between align-items-center">
+                                        <div class="pull-left">
+                                            {{ render.popup('Горячие лиды', asset('bundles/hbadmin/img/funnel_vizualization/hot_leads.png')) }}
+                                        </div>
+
+                                        {% if professional_packet or (custom_packet and saleFunnelOrganicErrors == true ) %}
+                                            {{ denied_html|raw }}
+                                        {% else %}
+                                            {% if course.salesFunnelHotLeads %}
+                                                <div class="pull-right">
+
+                                                    <a href="{{ path('hb.sale_funnel.hot_leads.edit', {id: course.salesFunnelHotLeads.id}) }}"
+                                                       class="btn btn-pill btn-sm btn-primary">
+                                                        <i class="fa fa-edit"></i>
+                                                    </a>
+
+                                                    <a href="{{ path('hb.sale_funnel.hot_leads.remove', {id: course.id}) }}"
+                                                       class="btn btn-pill btn-sm btn-danger">
+                                                        <i class="fa fa-remove"></i>
+                                                    </a>
+                                                </div>
+                                            {% else %}
+
+                                                {#popup#}
+                                                <button id="add_hot_leads_funnel"
+                                                        class="btn btn-pill btn-sm btn-success">
+                                                    <i class="fa fa-plus"></i>
+                                                </button>
+
+                                                <script>
+                                                    $(function () {
+                                                        $('button[id=add_hot_leads_funnel]').click(function () {
+                                                            openHoldon();
+
+                                                            var path = Routing.generate('hb.sale_funnel.hot_leads.create', {id: {{ course.id }} });
+
+                                                            $.get(path, function (response) {
+                                                                $('div.sale_funnel_modal_body').html(response);
+                                                                $('button[id=modal_open]').trigger('click');
+                                                                closeHoldon();
+                                                            });
+                                                        });
+                                                    });
+                                                </script>
+                                            {% endif %}
+                                        {% endif %}
+                                    </li>
+
+                                    <li class="list-group-item d-flex list-group-item-action justify-content-between align-items-center">
+                                        <div class="pull-left">
+                                            {{ render.popup('Слоеный пирог', asset('bundles/hbadmin/img/funnel_vizualization/layer_cake.png')) }}
+                                        </div>
+
+                                        {% if professional_packet or (custom_packet and saleFunnelOrganicErrors == true ) %}
+                                            {{ denied_html|raw }}
+                                        {% else %}
+                                            <div class="pull-right">
+                                                <b>Кол-во:</b> {{ course.saleFunnelLayerCakes | length }}
+
+                                                <a href="{{ path('hb.sale_funnel.layer_cake.list', {id: course.id}) }}"
+                                                   class="btn btn-pill btn-sm btn-primary">
+                                                    <i class="fa fa-edit"></i>
+                                                </a>
+                                            </div>
+                                        {% endif %}
+                                    </li>
+                                {% else %}
+                                    {% set correct_organic_funnel %}
+                                        <div class="pull-right">
+                                            <small class="alert-gray-100">Сначала заполните органическую воронку</small>
+                                        </div>
+                                    {% endset %}
+
+                                    {% if course.salesFunnelOrganic %}
+                                        <li class="list-group-item d-flex list-group-item-action justify-content-between align-items-center">
+                                            <div class="pull-left">
+                                                {{ render.popup('Сбор лидов', asset('bundles/hbadmin/img/funnel_vizualization/lead_collection.png')) }}
+                                            </div>
+
+                                            {{ correct_organic_funnel }}
+                                        </li>
+                                    {% endif %}
+
+                                    <li class="list-group-item d-flex list-group-item-action justify-content-between align-items-center">
+                                        <div class="pull-left">
+                                            {{ render.popup('Выгодная формула', asset('bundles/hbadmin/img/funnel_vizualization/downsell.png')) }}
+                                        </div>
+
+                                        {{ correct_organic_funnel }}
+                                    </li>
+
+                                    <li class="list-group-item d-flex list-group-item-action justify-content-between align-items-center">
+                                        <div class="pull-left">
+                                            {{ render.popup('Вебинарная', asset('bundles/hbadmin/img/funnel_vizualization/webinar.png')) }}
+                                        </div>
+
+                                        {{ correct_organic_funnel }}
+                                    </li>
+
+                                    <li class="list-group-item d-flex list-group-item-action justify-content-between align-items-center">
+                                        <div class="pull-left">
+                                            {{ render.popup('Единоразовое Предложение', asset('bundles/hbadmin/img/funnel_vizualization/one_time_offer.png')) }}
+                                        </div>
+
+                                        {{ correct_organic_funnel }}
+                                    </li>
+
+                                    <li class="list-group-item d-flex list-group-item-action justify-content-between align-items-center">
+                                        <div class="pull-left">
+                                            {{ render.popup('Образовательная', asset('bundles/hbadmin/img/funnel_vizualization/educational.png')) }}
+                                        </div>
+
+                                        {{ correct_organic_funnel }}
+                                    </li>
+
+                                    {#
+                                    Temporary hide
+                                    <li class="list-group-item d-flex list-group-item-action justify-content-between align-items-center">
+                                        <div class="pull-left">
+                                            {{ render.popup('Запуск по волкеру', 'walker_popup') }}
+                                        </div>
+
+                                        {{ correct_organic_funnel }}
+                                    </li>#}
+
+                                    <li class="list-group-item d-flex list-group-item-action justify-content-between align-items-center">
+                                        <div class="pull-left">
+                                            {{ render.popup('Клуб авторов', asset('bundles/hbadmin/img/funnel_vizualization/author_club.png')) }}
+                                        </div>
+
+                                        {{ correct_organic_funnel }}
+                                    </li>
+
+                                    <li class="list-group-item d-flex list-group-item-action justify-content-between align-items-center">
+                                        <div class="pull-left">
+                                            {{ render.popup('Партнерская программа', '#') }}
+                                        </div>
+
+                                        {{ correct_organic_funnel }}
+                                    </li>
+
+                                    <li class="list-group-item d-flex list-group-item-action justify-content-between align-items-center">
+                                        <div class="pull-left">
+                                            {{ render.popup('Допродажа', asset('bundles/hbadmin/img/funnel_vizualization/post_sale.png')) }}
+                                        </div>
+
+                                        {% if professional_packet %}
+                                            {{ denied_html |raw }}
+                                        {% else %}
+                                            {{ correct_organic_funnel }}
+                                        {% endif %}
+                                    </li>
+
+                                    <li class="list-group-item d-flex list-group-item-action justify-content-between align-items-center">
+                                        <div class="pull-left">
+                                            {{ render.popup('Кросс продажа', asset('bundles/hbadmin/img/funnel_vizualization/cross_sale.png')) }}
+                                        </div>
+
+                                        {% if professional_packet %}
+                                            {{ denied_html|raw }}
+                                        {% else %}
+                                            {{ correct_organic_funnel }}
+                                        {% endif %}
+                                    </li>
+
+                                    <li class="list-group-item d-flex list-group-item-action justify-content-between align-items-center">
+                                        <div class="pull-left">
+                                            {{ render.popup('Брошенная корзина', asset('bundles/hbadmin/img/funnel_vizualization/broken_basket.png')) }}
+                                        </div>
+
+                                        {% if professional_packet %}
+                                            {{ denied_html|raw }}
+                                        {% else %}
+                                            {{ correct_organic_funnel }}
+                                        {% endif %}
+                                    </li>
+
+                                    <li class="list-group-item d-flex list-group-item-action justify-content-between align-items-center">
+                                        <div class="pull-left">
+                                            {{ render.popup('Мини курс', asset('bundles/hbadmin/img/funnel_vizualization/mini_course.png')) }}
+                                        </div>
+
+                                        {% if professional_packet %}
+                                            {{ denied_html|raw }}
+                                        {% else %}
+                                            {{ correct_organic_funnel }}
+                                        {% endif %}
+                                    </li>
+
+                                    <li class="list-group-item d-flex list-group-item-action justify-content-between align-items-center">
+                                        <div class="pull-left">
+                                            {{ render.popup('Горячие лиды', asset('bundles/hbadmin/img/funnel_vizualization/hot_leads.png')) }}
+                                        </div>
+
+                                        {% if professional_packet %}
+                                            {{ denied_html|raw }}
+                                        {% else %}
+                                            {{ correct_organic_funnel }}
+                                        {% endif %}
+                                    </li>
+
+                                    <li class="list-group-item d-flex list-group-item-action justify-content-between align-items-center">
+                                        <div class="pull-left">
+                                            {{ render.popup('Слоеный пирог', asset('bundles/hbadmin/img/funnel_vizualization/layer_cake.png')) }}
+                                        </div>
+
+                                        {% if professional_packet %}
+                                            {{ denied_html|raw }}
+                                        {% else %}
+                                            {{ correct_organic_funnel }}
+                                        {% endif %}
+                                    </li>
+
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="modal" tabindex="-1" role="dialog" id="sale_funnel_modal">
+                    <div class="modal-dialog" role="document" style="max-width: 70%">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Редактировать / Инфо</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="sale_funnel_modal_body">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#sale_funnel_modal"
+                        style="display: none;" id="modal_open">
+                </button>
+            {% else %}
+                <div class="card">
+                    <div class="card-header">
+                        Воронки продаж
+                        <div class="pull-right">
+                            <a href="{{ path('hb.lesson_section.list', {id: course.id}) }}"
+                               class="btn btn-sm btn-indigo">Наполните разделы для работы с воронками</a>
+                        </div>
+                    </div>
+                </div>
+
+
+            {% endif %}
+
+            {% if is_granted('ROLE_ADMIN') %}
+                <div class="card">
+                    <div class="card-header">
+                        Чатботы
+                    </div>
+                    <div class="card-body">
+                        <a href="https://heartbeateducation.typeform.com/to/Itihww?email={{ app.user.email }}&name={{ app.user.firstName }}"
+                           class="btn btn-success" target="_blank">Активировать</a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+
+    </div>
+
+
+
+
+    {#<div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    Здесь будет ссылка на приоритет воронок
+                </div>
+            </div>
+
+            {{ render(controller('hb.admin.controller.funnel_priority.index:handleAction', {course: course})) }}
+        </div>
+    </div>#}
+
+{% endblock %}

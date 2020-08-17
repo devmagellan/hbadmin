@@ -1,0 +1,127 @@
+{% extends "@HBAdmin/layout.html.twig" %}
+
+{% block body %}
+    <div class="card">
+        <div class="card-header">
+            Список пользователей
+        </div>
+        <div class="card-body">
+            {% if is_granted('ROLE_MANAGER') == false %}
+                <a href="{{ path('hb.customer.create') }}" class="btn btn-success">
+                    <i class="fa fa-plus"></i> Добавить
+                </a>
+            {% endif %}
+            <br><br>
+
+            <div class="navigation">
+                {{ knp_pagination_render(customers) }}
+            </div>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>id</th>
+                    <th style="width: 50px">Фото</th>
+                    <th>Дата создания</th>
+                    <th>Email</th>
+                    <th>Имя / Фамилия</th>
+                    <th>Статус</th>
+                    <th>Пакет</th>
+                    <th>Роль</th>
+                    <th>Создатель</th>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <th>Продюсер</th>
+                    {% endif %}
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for customer in customers %}
+                    <tr>
+                        <th>{{ customer.id }}</th>
+                        <th>
+                            {% if customer.photo is not null %}
+                                <img style="width: 50px" src="{{ customer.photo.fileUrl }}"/>
+                            {% endif %}
+                        </th>
+                        <td>
+                            {{ customer.dateCreatedAt.format('d.m.Y H:i') }}
+                        </td>
+                        <td>{{ customer.email }}
+                            {% if customer.hasRole('ROLE_MANAGER') and customer.authors | length > 0 %}
+                                <small class="alert-gray-100">
+                                    <br>Закреплен за:<br>
+                                    {{ customer.authors |join("<br>")|raw }}
+                                </small>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {{ customer.firstname }}
+                            {{ customer.surname }}
+                        </td>
+                        <td>
+                            {% if customer.enabled %}
+                                {% if app.user.id == customer.id %}
+                                    <span class="badge badge-success">Активен</span>
+                                {% else %}
+                                    <a href="{{ path('hb.customer.switch_status', {id: customer.id}) }}"
+                                       class="badge badge-success">Деактивировать пользователя</a>
+                                {% endif %}
+                            {% else %}
+                                <a href="{{ path('hb.customer.switch_status', {id: customer.id}) }}"
+                                   class="badge badge-danger">Активировать пользователя</a>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if customer.packet %}
+                                {{ customer.packet }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {{ customer.rolesForView|join(', ') }}
+                        </td>
+                        <td>
+                            {% if customer.owner %}
+                                {{ customer.owner.email }}<br>
+                                <small class="alert-gray-100">[{{ customer.owner.rolesForView|join(', ') }}]</small>
+                            {% endif %}
+                        </td>
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <td>
+                                {% if customer.producer %}
+                                    {{ customer.owner.email }}<br>
+                                    <small class="alert-gray-100">[{{ customer.owner.rolesForView|join(', ') }}]</small>
+                                {% endif %}
+                            </td>
+                        {% endif %}
+                        <td>
+                            {% if is_granted('ROLE_MANAGER') == false %}
+
+                                {% if app.user.id == customer.id %}
+                                    <span class="btn btn-pill btn-outline-success"><i class="fa fa-user"></i> </span>
+
+                                    <a href="{{ path('hb.customer.self.edit') }}"
+                                       class="btn btn-pill btn-outline-info" title="Редактировать">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+                                {% else %}
+                                    {#<a href="{{ path('hb.customer.remove', {id: customer.id}) }}"
+                                       class="btn btn-pill btn-outline-danger" title="Удалить"
+                                       onclick="return confirm('Удалить пользователя ?')"
+                                    ><i class="fa fa-remove"></i> </a>#}
+                                    <a href="{{ path('hb.customer.edit', {id:customer.id}) }}"
+                                       class="btn btn-pill btn-outline-info" title="Редактировать">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+                                {% endif %}
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <div class="navigation">
+                {{ knp_pagination_render(customers) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

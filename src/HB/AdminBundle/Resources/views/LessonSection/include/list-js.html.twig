@@ -1,0 +1,205 @@
+<script src="{{ asset('bundles/hbadmin/js/Sortable.min.js') }}"></script>
+
+<script>
+    $(function () {
+        function sectionsPriorityUpdate() {
+            var ids = {};
+            var sections = $('ul.sectionList li');
+
+            sections.each(function (idx, section) {
+                ids[$(section).data('section-id')] = idx;
+            });
+
+            $.post(
+                Routing.generate('hb.lesson_sections.update_priority'),
+                {ids: JSON.stringify(ids)}, function (response) {
+                    if (response.status && response.status === 'error' && response.message) {
+                        alert(response.message);
+                    }
+                }
+            );
+        }
+
+        function lessonPriorityUpdate(section_id) {
+            var ids = {};
+            var lessons = $('ul[id=lessonList_' + section_id + '] li');
+
+            lessons.each(function (idx, lesson) {
+                ids[$(lesson).data('lesson-id')] = idx;
+            });
+
+            $.post(
+                Routing.generate('hb.lesson_sections.update_priority.lessons'),
+                {ids: JSON.stringify(ids)}, function (response) {
+                    if (response.status && response.status === 'error' && response.message) {
+                        alert(response.message);
+                    }
+                }
+            );
+        }
+
+        $("ul.sectionList").sortable({
+            handle: 'i.fa.fa-arrows.section_drag',
+            onDrop: function ($item, container) {
+                $item.removeClass(container.group.options.draggedClass).removeAttr("style");
+                $("body").removeClass(container.group.options.bodyClass);
+                sectionsPriorityUpdate();
+            }
+        });
+
+        var oldContainer;
+        $("ul[class^=lessonList_]").sortable({
+            handle: 'i.fa.fa-arrows.lesson_drag',
+            group: 'nested',
+            afterMove: function (placeholder, container) {
+                if(oldContainer != container){
+                    if(oldContainer)
+                        oldContainer.el.removeClass("active");
+                    container.el.addClass("active");
+
+                    oldContainer = container;
+                }
+            },
+            onDrop: function ($item, container, _super) {
+                $item.removeClass(container.group.options.draggedClass).removeAttr("style");
+                $("body").removeClass(container.group.options.bodyClass);
+
+                _super($item, container);
+
+                var section_id = $item.data('section-id');
+                var lesson_section_current_id = $item.parent().data('section-id');
+
+                if (section_id !== lesson_section_current_id) {
+                    $item.data('section-id', lesson_section_current_id);
+                    var lesson_id = $item.data('lesson-id');
+                    var moveLessonPath = Routing.generate('hb.lesson_section.move_into_lesson', {section: lesson_section_current_id, lesson: lesson_id})
+                    $.post(moveLessonPath, function (response) {
+                        if (response.status && response.status === 'error' && response.message) {
+                            alert(response.message);
+                        } else {
+                            lessonPriorityUpdate(lesson_section_current_id);
+                        }
+                    })
+                } else {
+                    lessonPriorityUpdate(section_id);
+                }
+            }
+        });
+    });
+</script>
+
+<script>
+    $(function () {
+        $('i[id^=lesson_free_]').click(function () {
+            var id = $(this).attr('id').split('_')[2];
+
+            $this = $(this);
+
+            var path = Routing.generate('hb.lesson.switch.free.status', {id: id});
+            $.post(path, function (answer) {
+                if (answer.status === 'success') {
+                    if ($this.hasClass('lesson-free')) {
+
+                        $this.removeClass('lesson-free').addClass('lesson-not-free').attr('data-original-title', 'Урок доступен только после регистрации и оплаты курса');
+                    } else {
+
+                        $this.removeClass('lesson-not-free').addClass('lesson-free').attr('data-original-title', 'Урок доступен без регистрации');
+                    }
+
+                } else if (response.status && response.status === 'error' && response.message) {
+                    alert(response.message);
+                }
+            });
+
+        });
+    });
+</script>
+
+<script src="{{ asset('bundles/hbadmin/bootstrap4-editable/js/bootstrap-editable.min.js') }}"></script>
+<script>
+    $(function () {
+        var pathLesson = Routing.generate("hb.lesson.update.inline.ajax");
+
+        $('a[id^=lesson_title]').editable({
+            url: pathLesson,
+            mode: 'popup',
+            name: 'title',
+            emptytext: '---'
+        });
+
+        var pathLessonSection = Routing.generate("hb.lesson_section.update.inline.ajax");
+
+        $('a[id^=lesson_section_title]').editable({
+            url: pathLessonSection,
+            mode: 'popup',
+            name: 'title',
+            emptytext: '---'
+        });
+    });
+</script>
+
+<script>
+    $(function () {
+        $('select[id=hb_adminbundle_lessonsection_type]').change(function () {
+            var val = $(this).val();
+
+            if ('{{ constant("\HB\\AdminBundle\\Entity\\LessonSection::TYPE_BY_DATE") }}' === val) {
+                $('div.byDate').show();
+                $('div.afterDays').hide().find('input').val('');
+            } else if ('{{ constant("\HB\\AdminBundle\\Entity\\LessonSection::TYPE_AFTER_DAYS") }}' === val) {
+                $('div.afterDays').show();
+                $('div.byDate').hide().find('input').val('');
+            } else {
+                $('div.afterDays').hide().find('input').val('');
+                $('div.byDate').hide().find('input').val('');
+            }
+        });
+
+        $('button[id^=section_edit_]').click(function () {
+           var id = $(this).attr('id').split("_")[2];
+
+           var path = Routing.generate('hb.lesson_section.update', {id: id});
+
+           $.get(path, function (response) {
+               if (response.status && response.status === 'error' && response.message) {
+                   alert(response.message);
+               } else {
+                   $('div.section_modal_body').html(response);
+                   $('button[id=section_modal_open]').trigger('click');
+               }
+           })
+        });
+
+
+    });
+</script>
+<script>
+    $(function () {
+        $('input[id^=block_]').change(function () {
+            $this = $(this);
+            var ajax_loader = "<img src='{{ asset('bundles/hbadmin/ajax-loader.gif') }}' id='ajax_loader'>";
+            var section = $(this).data('section-id');
+            var block = $(this).data('block-id');
+            var url = Routing.generate('hb.lesson_section.update.price_block', {section: section, block: block});
+
+            $this.hide().after(ajax_loader);
+
+            $.post(url, function (response) {
+                $('#ajax_loader').remove();
+                $this.show();
+
+                if (response.status && response.status === 'error' && response.message) {
+                    alert(response.message);
+                } else {
+                    if ('success' !== response.status) {
+                        if ($this.prop('checked') === 'checked') {
+                            $this.prop('checked', false);
+                        } else {
+                            $this.prop('checked', true);
+                        }
+                    }
+                }
+            });
+        });
+    });
+</script>

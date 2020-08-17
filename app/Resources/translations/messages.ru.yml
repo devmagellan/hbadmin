@@ -1,0 +1,121 @@
+January: Январь
+February: Февраль
+March: Март
+April: Апрель
+May: Май
+June: Июнь
+July: Июль
+August: Август
+September: Сентябрь
+October: Октябрь
+November: Ноябрь
+December: Декабрь
+
+Jan: Январь
+Feb: Февраль
+Mar: Март
+Apr: Апрель
+#May: Май
+Jun: Июнь
+Jul: Июль
+Aug: Август
+Sep: Сентябрь
+Oct: Октябрь
+Nov: Ноябрь
+Dec: Декабрь
+
+
+Course: Курс
+SalesFunnelOrganic: Органическая воронка
+SalesFunnelLeadCollection: Сбор лидов
+SalesFunnelPostSale: Допродажа
+SalesFunnelOneTimeOffer: Единоразовое предложение
+SalesFunnelEducational: Образовательная воронка
+SalesFunnelHotLeads: Горячие лиды
+SalesFunnelLayerCake: Слоеный пирог
+SalesFunnelCrossSale: Кросс продажа
+SalesFunnelMiniCourse: Мини курс
+MiniLesson: Мини курс
+SalesFunnelBrokenBasket: Брошенная корзина
+DiscountCourse: Кросс продажа. Курс со скидкой
+SalesFunnelPartner: Партнерская программа
+SalesFunnelAuthorClub: Клуб авторов
+WebinarOffer: Оффер вебинара
+WebinarBonus: Бонус вебинара
+SalesFunnelDownSell: Выгодная формула
+SaleFunnelOrganicPriceBlockSetting: Тарифный план курса
+CoursePriceBlock: Тарифный план
+
+salesFunnelCrossSale: Кросс продажа
+salesFunnelEducational: Образовательная
+salesFunnelHotLeads: Горячие лиды
+salesFunnelPostSale: Допродажа
+salesFunnelMiniCourse: Мини курс
+salesFunnelAuthorClub: Клуб авторов
+salesFunnelBrokenBasket: Брошенная корзина
+installmentPlan: Рассрочка
+installmentPlanMonths: Время рассрочки
+articleFile: Файл статьи
+isFree: Бесплатный
+section: Секция/Раздел
+file: файл
+image: картинка
+oto1Offer: OTO 1 предложение
+participateAuthorClub: Участие в клубе авторов
+lessonFile: Файл урока
+block5Type: Блок 5 тип
+block5Text: Блок 5 текст
+lessonText: Текст урока
+homeworkText: Текст домашнего задания
+discountPercent: Процент скидки
+awardPercent: Вознаграждение, %
+discount: Скидка
+articlesFile: Файл статьи
+offerFile: Файл предложения
+forWebinar: для Вебинара
+forLeadMagnet: для Лид магнитов
+webinarRecordPrice: Цена записи вебинара
+webinarRecordAccessDays: Кол-во дней доступа к записи вебинара
+autoWebinar: Cоздать запись вебинара
+block2HomeworkDescription: Блок 2. Информация для "Рабочей тетради"
+imageBanner: Баннер вебинара
+integrations.vk: Интеграции Вконтакте
+integrations.googleAnalytics: Интеграции Google Analytics
+integrations.facebookPixel: Интеграции Facebook Pixel
+integrations.yandexMetrics: Интеграции Яндекс метрика
+block2CourseImage: Блок 2. Фото курса
+block6AuthorInfo: Блок 6. Информация об авторе
+block6AuthorExperience: Блок 6. Опыт автора
+block6AuthorPhoto: Блок 6. Фото автора
+price: цена
+stopLessons.previousLessonsMark: Стоп уроки. Просмотрел все предыдущие уроки
+stopLessons.viewedVideosMark: Стоп уроки. Просмотрел не менее 90% всех пройденных видео
+block1ButtonText: Блок 1. Текст кнопки
+leadMagnetOrganic: 'Сбор лидов назначение: Целевая страница'
+leadMagnetWebinar : 'Сбор лидов назначение: Вебинар'
+block2CourseInfo: Блок 2. Описание курса
+
+
+
+SuccessHistory: История успеха
+WebinarThesis: Тезис вебинара
+KnowledgeSkills: Чему научитесь
+UploadCareFile: Файл
+SalesFunnelWebinar: Вебинарная воронка
+Lesson: Урок
+LessonSection: Секция/Раздел
+LessonElement: Элемент урока
+QuizQuestion: Вопрос опроса
+QuizQuestionAnswer: Ответ опроса
+Letter: Письмо
+
+
+#fields
+info.title: Заголовок курса
+info.subTitle: Подзаголовок курса
+title: Заголовок
+Europe/Kiev: Европа/Киев
+
+# transaction statuses
+paid: Оплачено
+refunded: Возврат

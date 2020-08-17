@@ -1,0 +1,27 @@
+services:
+    hb.admin.controller.sale_funnel.partner.list:
+        class: HB\AdminBundle\Controller\SaleFunnel\Partners\ListController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@twig"
+            - "@form.factory"
+            - "@router"
+            - "@form.handler"
+            - "@session.flash_bag"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.partner.edit:
+        class: HB\AdminBundle\Controller\SaleFunnel\Partners\EditController
+        arguments:
+            - "@access.service"
+            - "@router"
+            - "@form.handler"
+            - "@form.factory"
+            - "@session.flash_bag"
+            - "@twig"
+
+    hb.admin.controller.sale_funnel.partner.remove:
+        class: HB\AdminBundle\Controller\SaleFunnel\Partners\RemoveController
+        arguments:
+            - "@router"
+            - "@doctrine.orm.entity_manager"

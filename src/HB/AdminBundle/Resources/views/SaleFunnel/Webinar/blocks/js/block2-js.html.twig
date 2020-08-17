@@ -1,0 +1,149 @@
+<script>
+
+    function block2UploadHomeworkFile() {
+        uploadcare.openDialog(null, {
+            tabs: '{{ upload_care_sources }}',
+            validators: [
+                maxFileSize({{ max_file_size }})
+            ]
+        }).done(function (file) {
+            openHoldon('Загрузка файла');
+            file.progress(function(uploadInfo) {
+                $('#progressbar').progressbar({value: uploadInfo.progress * 100});
+            });
+
+            file.promise()
+                .done(function (fileInfo) {
+                    block2UpdateHomeworkFile(fileInfo);
+                    closeHoldon();
+                });
+        });
+    }
+
+    function block2UpdateHomeworkFile(response) {
+        openHoldon('Сохранение в базу данных');
+        var uuid = response.uuid;
+        var cdn = response.cdnUrl;
+        var file_name = '';
+        if (response.sourceInfo.file) {
+            file_name = response.sourceInfo.file.name;
+        } else {
+            file_name = response.name;
+        }
+
+        $.post(
+            '{{ path('hb.sale_funnel.webinar.block2.update.homework.file', {id: funnel.id}) }}'
+            , {uuid: uuid, cdn: cdn, file_name: file_name}, function () {
+                updateBlock2();
+                closeHoldon();
+            });
+    }
+
+    function block2UploadWorkBookFile() {
+        uploadcare.openDialog(null, {
+            tabs: '{{ upload_care_sources }}',
+            validators: [
+                maxFileSize({{ max_file_size }})
+            ]
+        }).done(function (file) {
+            openHoldon('Загрузка файла');
+
+            file.progress(function(uploadInfo) {
+                $('#progressbar').progressbar({value: uploadInfo.progress * 100});
+            });
+
+            file.promise()
+                .done(function (fileInfo) {
+                    block2UpdateWorkBookFile(fileInfo);
+                    closeHoldon();
+                });
+        });
+    }
+
+    function block2UpdateWorkBookFile(response) {
+        openHoldon('Сохранение в базу данных');
+        var uuid = response.uuid;
+        var cdn = response.cdnUrl;
+        var file_name = '';
+        if (response.sourceInfo.file) {
+            file_name = response.sourceInfo.file.name;
+        } else {
+            file_name = response.name;
+        }
+
+        $.post(
+            '{{ path('hb.sale_funnel.webinar.block2.update.workbook.file', {id: funnel.id}) }}'
+            , {uuid: uuid, cdn: cdn, file_name: file_name},
+            function () {
+                updateBlock2();
+                closeHoldon();
+            });
+    }
+
+    function block2RemoveHomeworkFile() {
+        openHoldon("Удаление файла");
+
+        $.post(
+            '{{ path('hb.sale_funnel.webinar.block2.remove.homework.file', {id: funnel.id } ) }}',
+            function () {
+                updateBlock2();
+                closeHoldon();
+            });
+    }
+
+
+    function block2RemoveWorkbookFile() {
+        openHoldon("Удаление файла");
+
+        $.post(
+            '{{ path('hb.sale_funnel.webinar.block2.remove.workbook.file', {id: funnel.id}) }}',
+            function () {
+                updateBlock2();
+                closeHoldon();
+            });
+    }
+
+    function updateBlock2() {
+        $.get(
+            '{{ path('hb.sale_funnel.webinar.block2.edit', {id: funnel.id}) }}',
+            function (response) {
+                $('div.block2').html(response);
+            }
+        );
+    }
+
+    $(function () {
+        $('div.block2').on('submit', 'form[name=block2_homework], form[name=block2_workbook]', function (e) {
+            openHoldon();
+            e.preventDefault();
+
+            var formData = $(this).serialize();
+
+            $.ajax({
+                type: "POST",
+                url: '{{ path('hb.sale_funnel.webinar.block2.edit', {id: funnel.id}) }}',
+                data: formData,
+                dataType: "json",
+                success: function (response) {
+                    $('div.block2').html(response.responseText);
+                    closeHoldon();
+                },
+                error: function (response) {
+                    $('div.block2').html(response.responseText);
+                    closeHoldon();
+                }
+            });
+
+            return false;
+        }).on('click', 'button[id=block2_upload_homework_file]', function () {
+            block2UploadHomeworkFile()
+        }).on('click', 'button[id=block2_upload_workbook_file]', function () {
+            block2UploadWorkBookFile()
+        }).on('click', 'button[id=block2_remove_homework_file]', function () {
+            block2RemoveHomeworkFile()
+        }).on('click', 'button[id=block2_remove_workbook_file]', function () {
+            block2RemoveWorkbookFile()
+        });
+
+    });
+</script>

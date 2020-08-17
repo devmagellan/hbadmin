@@ -1,0 +1,77 @@
+services:
+    hb.admin.controller.lesson_section.remove:
+        class: HB\AdminBundle\Controller\LessonSection\RemoveController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@router"
+            - "@session.flash_bag"
+            - "@upload_care.service"
+            - "@access.service"
+
+    hb.admin.controller.lesson_section.list:
+        class: HB\AdminBundle\Controller\LessonSection\ListController
+        arguments:
+            - "@twig"
+            - "@doctrine.orm.entity_manager"
+            - "@form.factory"
+            - "@form.handler"
+            - "@session.flash_bag"
+            - "@router"
+            - "@access.service"
+
+    hb.admin.controller.lesson_section.edit:
+        class: HB\AdminBundle\Controller\LessonSection\EditController
+        arguments:
+            - "@twig"
+            - "@form.factory"
+            - "@router"
+            - "@form.handler"
+            - "@session.flash_bag"
+            - "@access.service"
+
+    hb.admin.controller.lesson_sections.update_priority:
+        class: HB\AdminBundle\Controller\LessonSection\UpdatePriorityController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@access.service"
+
+    hb.admin.controller.lesson_sections.lessons.update_priority:
+        class: HB\AdminBundle\Controller\LessonSection\UpdatePriorityLessonsController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@access.service"
+
+    hb.admin.controller.lesson_section.lesson.list:
+        class: HB\AdminBundle\Controller\LessonSection\LessonListController
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@twig'
+            - "@access.service"
+
+    hb.admin.controller.lesson_section.update.inline.ajax:
+        class: HB\AdminBundle\Controller\LessonSection\UpdateInlineController
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - "@access.service"
+
+    hb.admin.controller.lesson_section.move_lesson_into:
+        class: HB\AdminBundle\Controller\LessonSection\MoveLessonToSectionController
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - "@access.service"
+
+    hb.admin.controller.lesson_section.inline_edit_form:
+        class: HB\AdminBundle\Controller\LessonSection\UpdateController
+        arguments:
+            - '@form.factory'
+            - '@twig'
+            - '@form.handler'
+            - '@router'
+            - '@session.flash_bag'
+            - "@access.service"
+
+    hb.admin.controller.lesson_section.update.price_block:
+        class: HB\AdminBundle\Controller\LessonSection\UpdatePriceBlockController
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - "@access.service"

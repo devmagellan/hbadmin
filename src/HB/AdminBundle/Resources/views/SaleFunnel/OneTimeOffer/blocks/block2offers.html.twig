@@ -1,0 +1,46 @@
+<div class="col-md-8">
+    {% if added %}
+        <div class="alert alert-success" role="alert">Добавлено!</div>
+    {% endif %}
+
+    {{ form_start(form) }}
+
+    {{ form_widget(form) }}
+    <button class="btn btn-success" type="button" id="form_submit_offer">Добавить</button>
+    {{ form_end(form) }}
+
+</div>
+
+{% if funnel.offers | length > 0 %}
+    <br>
+    <div class="col-md-12">
+
+
+        <table class="table table-bordered">
+            <tr>
+                <th>Описание</th>
+                <th>Обычная цена</th>
+                <th>Специальная цена</th>
+                <th></th>
+            </tr>
+            {% for offer in funnel.offers %}
+                <tr>
+                    <td>{{ offer.description }}</td>
+                    <td><s>{{ offer.fullPrice }}</s></td>
+                    <td>{{ offer.discountPrice }}</td>
+                    <td>
+                        <a href="{{ path('hb.sale_funnel.one_time_offer.blocks.block2_offers.edit_offer', {id: offer.id}) }}"
+                           class="btn btn-sm btn-pill btn-primary">
+                            <i class="fa fa-edit"></i>
+                        </a>
+                        <button class="btn btn-sm btn-pill btn-danger" data-offer-id="{{ offer.id }}"
+                                id="remove_offer_{{ offer.id }}">
+                            <i class="fa fa-remove"></i>
+                        </button>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+
+    </div>
+{% endif %}

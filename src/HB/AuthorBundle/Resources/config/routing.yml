@@ -1,0 +1,11 @@
+author_homepage:
+    path:     /
+    defaults: { _controller: 'hb.author.controller.index.view:handleAction' }
+author_terms:
+    path:     /terms
+    defaults: { _controller: 'hb.author.controller.terms.view:handleAction' }
+
+hb.author.sign_up:
+    path:     /sign_up
+    defaults: { _controller: 'hb.author.controller.index.sign_up_form:handleAction' }
+    methods: [POST]

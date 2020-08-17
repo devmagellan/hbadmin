@@ -1,0 +1,28 @@
+{% extends "@HBAdmin/layout.html.twig" %}
+
+{% block body %}
+    <div class="card">
+        <div class="card-header">
+            <a href="{{ path('hb.course.edit', {id: section.course.id}) }}" >
+                <i class="fa fa-arrow-left"> {{ section.course.info.title }}</i></a>
+            {{ section.title }}.
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+
+                    <h4>Редактировать раздел</h4>
+                    <form method="post" action="{{ path('hb.lesson_section.edit', {id: section.id}) }}">
+                        {{ form_widget(form) }}
+                        <input type="submit" value="Сохранить" class="btn btn-success"/>
+                    </form>
+
+                </div>
+
+                <div class="col-md-8">
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

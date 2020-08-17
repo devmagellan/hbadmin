@@ -1,0 +1,14 @@
+{{ customer.firstName }}, Ваш продукт {{ course.info.title }} успешно опубликован на нашей платформе.
+<br><br>
+{% if externalLinks | length > 0 %}
+    Перейдите по этим ссылкам, для того, чтобы просмотреть ваш продукт:<br>
+    {% for link in externalLinks %}
+        <a href="{{ link.url }}" target="_blank">{{ link.title }}</a><br>
+    {% endfor %}
+{% endif %}
+<br>
+если вам необходимо внести изменения, перейдите в ваш <a href="{{ link }}" target="_blank">личный кабинет</a>
+<br><br>
+Отличных вам продаж,
+<br><br>
+Ваша команда Heartbeat Education

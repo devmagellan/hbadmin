@@ -1,0 +1,122 @@
+{% extends "@HBAdmin/layout.html.twig" %}
+
+{% block css_head %}
+    <style>
+        .filters {
+            display: flex;
+        }
+    </style>
+{% endblock %}
+
+
+{% block js_footer %}
+    <script>
+        $(function () {
+            $('.navigation a').click(function () {
+                let page = $(this).text();
+                let input = $("<input>").attr("type", "hidden").attr("name", "page").val(page);
+                {% if use_filters == 1 %}
+                $('form[name=filters] input[type=text][name^="f"], select[name^="f"]').each(function () {
+                    if ($(this).val()) {
+                        $('form[name=filters]').append($(input)).submit();
+                    }
+                });
+                {% endif %}
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block body %}
+
+    <div class="card">
+        <div class="card-header">
+            Комментарии студентов
+        </div>
+        <div class="card-body">
+
+            <form name="filters" method="get" action="{{ path('hb.teachable_student.comments_list') }}">
+                <div class="filters">
+
+                    <select name="f[studentName]" class="form-control">
+                        <option value="">[Студент]</option>
+                        {% for studentName in studentNames %}
+                            <option value="{{ studentName }}"
+                                    {% if filters and filters.studentName == studentName %}selected{% endif %}>
+                                {{ studentName }}
+                            </option>
+                        {% endfor %}
+                    </select>
+
+
+                    <button class="btn btn-success" type="submit">Применить фильтр</button>
+                    <a href="{{ path('hb.teachable_student.progress_list') }}" class="btn btn-warning">Сбросить</a>
+
+                </div>
+            </form>
+
+            <div class="navigation">
+                {{ knp_pagination_render(comments) }}
+            </div>
+
+            <table class="table table-bordered table-condensed">
+                <tr>
+                    <th>ФИО</th>
+                    <th>Дата</th>
+                    <th>Оценка комментария</th>
+                    <th></th>
+                </tr>
+
+                {% if comments | length > 0 %}
+                    {% for row in comments %}
+                        <tr>
+                            <td>{{ row.studentName }} ({{ row.studentEmail }})</td>
+                            <td>{{ row.dateIntervalText }}</td>
+                            <td>
+                                <select name="comment_rating" data-comment-id="{{ row.id }}">
+                                    <option value="">[Оценить]</option>
+                                    {% for i in 1..5 %}
+                                        <option value="{{ i }}" {% if i == row.rating %}selected{% endif %} >
+                                            {{ i }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td>
+                                <a href="{{ row.replyUrl }}" class="btn btn-info" target="_blank">
+                                    <i class="fa fa-reply"></i>Ответить
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <th colspan="8" class="text-center">
+                            Нет данных по студентам
+                        </th>
+                    </tr>
+                {% endif %}
+            </table>
+
+            <div class="navigation">
+                {{ knp_pagination_render(comments) }}
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        $(function () {
+            $('select[name=comment_rating]').change(function () {
+                var comment_id = $(this).data('comment-id');
+                var value = $(this).val();
+
+                openHoldon();
+                var path = Routing.generate('hb.teachable_student.comment_rating', {id: comment_id});
+                $.post(path, {rating: value}, function () {
+                    closeHoldon();
+                });
+            });
+        });
+    </script>
+{% endblock %}

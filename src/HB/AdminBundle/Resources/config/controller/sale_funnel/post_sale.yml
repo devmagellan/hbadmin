@@ -1,0 +1,10 @@
+services:
+    hb.admin.controller.sale_funnel.post_sale.edit:
+        class: HB\AdminBundle\Controller\SaleFunnel\PostSale\EditController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@router"
+            - "@form.factory"
+            - "@form.handler"
+            - "@twig"
+            - "@access.service"

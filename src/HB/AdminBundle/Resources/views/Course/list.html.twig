@@ -1,0 +1,197 @@
+{% extends "@HBAdmin/layout.html.twig" %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item active">Продукты</li>
+    </ol>
+{% endblock %}
+
+{% block css_head %}
+    <style>
+        .filters {
+            display: flex;
+        }
+    </style>
+{% endblock %}
+
+{% block js_footer %}
+    <script>
+        $(function () {
+            $('.navigation a').click(function () {
+                let page = $(this).text();
+                let input = $("<input>").attr("type", "hidden").attr("name", "page").val(page);
+                {% if use_filters == 1 %}
+                $('form[name=filters] input[type=text][name^="f"], select[name^="f"]').each(function () {
+                    if ($(this).val()) {
+                        $('form[name=filters]').append($(input)).submit();
+                    }
+                });
+                {% endif %}
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block body %}
+
+    {% set status_in_progress = constant('\\HB\\AdminBundle\\Entity\\Types\\CourseStatusType::STATUS_IN_PROGRESS') %}
+    {% set status_wait_publish = constant('\\HB\\AdminBundle\\Entity\\Types\\CourseStatusType::STATUS_WAIT_PUBLISH') %}
+    {% set status_published = constant('\\HB\\AdminBundle\\Entity\\Types\\CourseStatusType::STATUS_PUBLISHED') %}
+
+    <div class="card">
+        <div class="card-header">
+            Курсы
+
+            <div class="pull-right">
+                {% if has_sandbox == false and (is_granted("ROLE_AUTHOR") or is_granted("ROLE_PRODUCER") or is_granted("ROLE_ADMIN")) %}
+                    <a href="{{ path('hb.course.create_sandbox') }}" class="btn btn-pill btn-outline-info">Создать
+                        тренировочный курс</a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="card-body">
+
+            <form name="filters" method="get" action="{{ path('hb.courses.list') }}">
+                <div class="filters">
+
+                    <select name="f[status]" class="form-control">
+                        <option value="">[Статус]</option>
+                        <option value="{{ constant('HB\\AdminBundle\\Entity\\Types\\CourseStatusType::STATUS_PUBLISHED') }}"
+                                {% if filters and filters.status == constant('HB\\AdminBundle\\Entity\\Types\\CourseStatusType::STATUS_PUBLISHED') %}selected{% endif %}>
+                            Опубликован
+                        </option>
+                        <option value="{{ constant('HB\\AdminBundle\\Entity\\Types\\CourseStatusType::STATUS_WAIT_PUBLISH') }}"
+                                {% if filters and filters.status == constant('HB\\AdminBundle\\Entity\\Types\\CourseStatusType::STATUS_WAIT_PUBLISH') %}selected{% endif %}>
+                            Публикуется
+                        </option>
+                        <option value="{{ constant('HB\\AdminBundle\\Entity\\Types\\CourseStatusType::STATUS_IN_PROGRESS') }}"
+                                {% if filters and filters.status == constant('HB\\AdminBundle\\Entity\\Types\\CourseStatusType::STATUS_IN_PROGRESS') %}selected{% endif %}>
+                            Наполнение
+                        </option>
+                        <option value="{{ constant('HB\\AdminBundle\\Entity\\Types\\CourseStatusType::SANDBOX') }}"
+                                {% if filters and filters.status == constant('HB\\AdminBundle\\Entity\\Types\\CourseStatusType::SANDBOX') %}selected{% endif %}>
+                            Учебный
+                        </option>
+                    </select>
+
+                    {% if is_granted("ROLE_ADMIN") %}
+                        <input type="text" name="f[course_id]" placeholder="Внутр. id" {% if filters and filters.course_id is defined %}value="{{ filters.course_id }}"{% endif %}>
+                        <input type="text" name="f[external_id]" placeholder="Внешн. id" {% if filters and filters.external_id is defined %}value="{{ filters.external_id }}"{% endif %}>
+                        <input type="text" name="f[course_name]" placeholder="Курс" {% if filters and filters.course_name is defined %}value="{{ filters.course_name }}"{% endif %}>
+                        <input type="text" name="f[author]" placeholder="Автор (ФИО/email)" {% if filters and filters.author is defined %}value="{{ filters.author }}"{% endif %}>
+                    {% endif %}
+
+                    <button class="btn btn-success" type="submit">Применить фильтр</button>
+                </div>
+            </form>
+            <br>
+
+            <div class="navigation">
+                {{ knp_pagination_render(courses) }}
+            </div>
+            {% if courses|length > 0 %}
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>id</th>
+                        <th style="width: 140px">Создан</th>
+                        <th>Название</th>
+                        <th style="width: 230px" class="text-center">Статус</th>
+                        <th>Создатель</th>
+                        <th style="width: 310px"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for course in courses %}
+                        {% if course.status.value == status_in_progress %}
+                            {% set current_status_class = 'info' %}
+                        {% elseif course.status.value == status_wait_publish %}
+                            {% set current_status_class = 'secondary' %}
+                        {% elseif course.status.value == status_published %}
+                            {% set current_status_class = 'success' %}
+                        {% endif %}
+
+                        <tr>
+                            <td>{{ course.id }}</td>
+                            <td>
+                                {{ course.dateCreatedAt.format('d.m.Y H:i') }}
+                            </td>
+                            <td>
+                                {{ course.info.title }}
+                            </td>
+                            <td class="text-center">
+                                {% if course.sandBox == true %}
+                                    <div>
+                                        <span class="badge badge-pill badge-success">УЧЕБНЫЙ</span>
+                                    </div>
+                                {% else %}
+
+                                    {% if is_granted("ROLE_ADMIN") %}
+                                        <div class="btn-group">
+                                            <button class="btn btn-{{ current_status_class }} btn-pill btn-sm dropdown-toggle"
+                                                    type="button"
+                                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                {{ course.status.name }}
+                                            </button>
+
+                                            <div class="dropdown-menu" x-placement="bottom-start"
+                                                 style="position: absolute; transform: translate3d(0px, 34px, 0px); top: 0px; left: 0px; will-change: transform;">
+
+                                                {% if course.status.value != status_in_progress %}
+                                                    <a class="dropdown-item badge-primary"
+                                                       href="{{ path('hb.course.change_status', {id: course.id, status: status_in_progress}) }}"
+                                                    >Наполнение</a>
+                                                {% endif %}
+
+                                                {% if course.status.value != status_wait_publish %}
+                                                    <a class="dropdown-item badge-secondary"
+                                                       href="{{ path('hb.course.change_status', {id: course.id, status: status_wait_publish}) }}"
+                                                    >Публикуется</a>
+                                                {% endif %}
+
+                                                {% if course.status.value != status_published %}
+                                                    <a class="dropdown-item badge-success"
+                                                       href="{{ path('hb.course.change_status', {id: course.id, status: status_published}) }}"
+                                                    >Опубликован</a>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    {% else %}
+                                        <div style="text-align: center;">
+
+                                            <span class="badge badge-pill badge-{{ current_status_class }}">{{ course.status.name }}</span>
+
+                                            {% if course.status.value == status_in_progress %}
+                                                <a href="{{ path('hb.course.request_moderate', {id: course.id}) }}"
+                                                   class="btn btn-sm btn-pill btn-warning">Опубликовать</a>
+                                            {% endif %}
+
+
+                                        </div>
+
+                                    {% endif %}
+                                {% endif %}
+                            </td>
+                            <td>{{ course.owner }}</td>
+
+                            <td align="right">
+                                <a href="{{ path('hb.course.edit', {id: course.id}) }}" class="btn btn-outline-info">Редактировать</a>
+                                <a href="{{ path('hb.course.remove', {id: course.id}) }}" class="btn btn-outline-danger"
+                                   onclick="return confirm('Удалить курс?');"
+                                >Удалить</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div style="text-align: center">Не найдено ни одного курса. Вы можете <a
+                            href="{{ path('hb.course.create') }}">создать</a> курс.
+                </div>
+            {% endif %}
+            <div class="navigation">
+                {{ knp_pagination_render(courses) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

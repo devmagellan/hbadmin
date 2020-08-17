@@ -1,0 +1,119 @@
+<?php
+
+namespace HB\AdminBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * CourseTemplate
+ *
+ * @ORM\Table(name="course_template")
+ * @ORM\Entity(repositoryClass="HB\AdminBundle\Repository\CourseTemplateRepository")
+ */
+class CourseTemplate
+{
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="template_key", type="string", length=255, unique=true)
+     */
+    private $key;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="title", type="string", length=255)
+     */
+    private $title;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="description", type="text", nullable=true)
+     */
+    private $description;
+
+
+    /**
+     * Get id.
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getKey()
+    {
+        return $this->key;
+    }
+
+    /**
+     * @param string $key
+     */
+    public function setKey($key)
+    {
+        $this->key = $key;
+    }
+
+    /**
+     * Set title.
+     *
+     * @param string $title
+     *
+     * @return CourseTemplate
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    /**
+     * Get title.
+     *
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * Set description.
+     *
+     * @param string|null $description
+     *
+     * @return CourseTemplate
+     */
+    public function setDescription($description = null)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get description.
+     *
+     * @return string|null
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+}

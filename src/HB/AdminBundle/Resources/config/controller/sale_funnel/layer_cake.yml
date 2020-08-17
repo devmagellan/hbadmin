@@ -1,0 +1,61 @@
+services:
+    hb.admin.controller.sale_funnel.layer_cake.list:
+        class: HB\AdminBundle\Controller\SaleFunnel\LayerCake\ListController
+        arguments:
+            - "@form.handler"
+            - "@router"
+            - "@form.factory"
+            - "@twig"
+            - "@access.service"
+            - "@session.flash_bag"
+
+    hb.admin.controller.sale_funnel.layer_cake.edit:
+        class: HB\AdminBundle\Controller\SaleFunnel\LayerCake\EditController
+        arguments:
+            - "@form.handler"
+            - "@router"
+            - "@form.factory"
+            - "@twig"
+            - "@session.flash_bag"
+            - "@doctrine.orm.entity_manager"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.layer_cake.lessons:
+        class: HB\AdminBundle\Controller\SaleFunnel\LayerCake\LessonsListController
+        arguments:
+            - "@twig"
+            - "@doctrine.orm.entity_manager"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.layer_cake.switch_lesson_relation:
+        class: HB\AdminBundle\Controller\SaleFunnel\LayerCake\SwitchLessonRelationController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.layer_cake.switch_lesson_section_relation:
+        class: HB\AdminBundle\Controller\SaleFunnel\LayerCake\SwitchSectionRelationController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.layer_cake.view:
+        class: HB\AdminBundle\Controller\SaleFunnel\LayerCake\ViewController
+        arguments:
+            - "@twig"
+            - "@doctrine.orm.entity_manager"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.layer_cake.lesson_view:
+        class: HB\AdminBundle\Controller\SaleFunnel\LayerCake\LessonViewController
+        arguments:
+            - "@twig"
+            - "@doctrine.orm.entity_manager"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.layer_cake.remove:
+        class: HB\AdminBundle\Controller\SaleFunnel\LayerCake\RemoveController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@router"
+            - "@access.service"

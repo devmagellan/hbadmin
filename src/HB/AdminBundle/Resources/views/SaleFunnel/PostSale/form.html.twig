@@ -1,0 +1,37 @@
+<div class="text-center">
+    <br><h5>Допродажа</h5>
+</div>
+{{ form_start(form) }}
+<div class="modal-body post-sale-form">
+    <span>
+        Активация этой воронки позволит вам увеличить средний чек за счет того, что клиенты, купившие ваш продукт
+        на базовом (самом дешевом) тарифном плане, получат серию писем. Спустя 3 дня после покупки, когда они уже
+        ознакомятся с вашим продуктом, они получат письмо с предложением доплатить разницу до следующего ценового
+        пакета с указанной вами скидкой(поле появится после активации) и окном оплаты в 2 дня.
+    </span>
+
+    <br><br>
+
+    {{ form_row(form.activateAfterDays) }}
+
+    <div class="post-sale-percent" {% if funnel.activateAfterDays == false %}style="display: none"{% endif %}>
+        {{ form_widget(form.discountPercent) }}
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+</div>
+{{ form_end(form) }}
+<script>
+    $(function () {
+        $('.post-sale-form input[type=checkbox]').change(function () {
+            if ($(this).prop('checked') === true) {
+                $('.post-sale-percent').show();
+            } else {
+                $('.post-sale-percent select').val(5); // for access form submit
+                $('.post-sale-percent').hide();
+            }
+        });
+    });
+</script>

@@ -1,0 +1,22 @@
+{% if saved %}
+    <div class="alert alert-success" role="alert">Сохранено!</div>
+{% endif %}
+
+
+<h5>{{ label }}
+    {% if customer.transferWiseAccount and customer.transferWiseAccount.id and (is_granted('ROLE_AUTHOR') or is_granted("ROLE_PRODUCER")) %}
+        <a href="{{ path('hb.customer.transferwise.remove', {id: customer.transferWiseAccount.id} ) }}"
+           class="btn btn-sm btn-pill btn-danger">
+            <i class="fa fa-remove"></i> Удалить аккаунт
+        </a>
+    {% endif %}
+</h5>
+
+
+<form action="{{ path('hb.customer.transferwise.form', {id:customer.id, type: type}) }}">
+    {{ form_widget(form) }}
+    {% if forEdit %}
+        <button class="btn btn-success">Сохранить</button>
+    {% endif %}
+</form>
+

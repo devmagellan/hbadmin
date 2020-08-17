@@ -1,0 +1,126 @@
+{% extends "@HBAdmin/layout.html.twig" %}
+
+{% block js_footer %}
+    <script>
+        $(function () {
+            $('input[id^=switch_lesson_for_funnel_]').change(function (e) {
+                var checkbox = $(this);
+                var section_id = $(checkbox).data('section-id');
+                openHoldon();
+                $.post(
+                    Routing.generate('hb.sale_funnel.layer_cake.switch.relation.lesson', {
+                        lesson: $(checkbox).data('lesson-id'),
+                        funnel: $(checkbox).data('funnel-id')
+                    }),
+                    function (response) {
+
+                        if ('success' !== response.status) {
+                            if (response.status && response.status === 'error' && response.message) {
+                                alert(response.message);
+                            }
+                            e.preventDefault();
+                        }
+                        if ('remove' === response.action) {
+                            $('input[type=checkbox][id=switch_section_for_funnel_' + section_id + ']').prop('checked', false)
+                        } else {
+                            $('input[type=checkbox][id=switch_section_for_funnel_' + section_id + ']').prop('checked', true)
+                        }
+                        closeHoldon();
+                    }
+                );
+            });
+
+            $('input[id^=switch_section_for_funnel_]').change(function () {
+                var checkbox = $(this);
+                var section_id = $(checkbox).data('section-id');
+                openHoldon();
+                $.post(
+                    Routing.generate('hb.sale_funnel.layer_cake.switch.relation.section', {
+                        section: section_id,
+                        funnel: $(checkbox).data('funnel-id')
+                    }),
+                    function (response) {
+                        if (response.status && response.status === 'error' && response.message) {
+                            alert(response.message);
+                        } else {
+                            if ('added' === response.action) {
+                                $('input[type=checkbox][data-section-id=' + section_id + '][id^=switch_lesson_for_funnel_]').prop('checked', true);
+                            } else {
+                                $('input[type=checkbox][data-section-id=' + section_id + '][id^=switch_lesson_for_funnel_]').prop('checked', false);
+                            }
+                        }
+
+                        closeHoldon();
+                    }
+                );
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="{{ path('hb.courses.list') }}">Продукты</a>
+        </li>
+        <li class="breadcrumb-item active">
+            <a href="{{ path('hb.course.edit', {id: funnel.course.id}) }}">{{ funnel.course.info.title }}</a>
+        </li>
+        <li class="breadcrumb-item">Воронки</li>
+        <li class="breadcrumb-item"><a href="{{ path('hb.sale_funnel.layer_cake.list', {id: funnel.course.id}) }}">Слоеный
+                пирог</a></li>
+        <li class="breadcrumb-item"><b>{{ funnel.title }}</b></li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+
+    <a href="{{ path('hb.sale_funnel.layer_cake.list', {id: funnel.course.id}) }}" class="btn btn-link">
+        <i class="fa fa-arrow-left"></i> Назад
+    </a>
+
+    <div class="card">
+        <div class="card-header">
+            Изменить информацию
+        </div>
+        <div class="card-body">
+            <div class="col-md-3">
+                {{ form_start(form) }}
+                {{ form_widget(form) }}
+                <input type="submit" value="Сохранить" class="btn btn-primary"/>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            Перечень разделов и уроков
+        </div>
+        <div class="card-body">
+            <span class="alert-gray-100">Отметьте галочками разделы и уроки, которые попадут в слоеный пирог</span>
+
+            <table class="table table-bordered auto-width">
+                <tr>
+                    <th>Раздел</th>
+                    <th>Урок</th>
+                    <th></th>
+                </tr>
+                {% for section in sections %}
+                    <tr>
+                        <th>{{ section.title }}</th>
+                        <th></th>
+                        <th>
+                            <input type="checkbox" class="form-control"
+                                   {% if funnel.section(section) %}checked{% endif %}
+                                   id="switch_section_for_funnel_{{ section.id }}" data-section-id="{{ section.id }}"
+                                   data-funnel-id="{{ funnel.id }}">
+                        </th>
+                    </tr>
+                    {{ render(controller('hb.admin.controller.sale_funnel.layer_cake.lessons:handleAction',{funnel: funnel, section: section})) }}
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+
+{% endblock %}

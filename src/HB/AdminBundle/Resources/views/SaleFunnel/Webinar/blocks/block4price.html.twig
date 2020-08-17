@@ -1,0 +1,50 @@
+{% if added %}
+    <div class="alert alert-success" role="alert">Добавлено!</div>
+{% endif %}
+{% if saved %}
+    <div class="alert alert-success" role="alert">Сохранено!</div>
+{% endif %}
+<div class="row">
+
+    <div class="col-md-3">
+        <form method="post" name="block4_price">
+            {{ form_widget(formPrice) }}
+            <button class="btn btn-sm btn-success">Сохранить</button>
+        </form>
+    </div>
+
+    {#
+    Temporary hide
+    <div class="col-md-3">
+        <form method="post" name="block4_promocode">
+            {{ form_widget(formPromocode) }}
+            <button class="btn btn-sm btn-outline-blue">Добавить</button>
+        </form>
+    </div>
+    #}
+
+
+    {% if funnel.promoCodes | length > 0 %}
+        <div class="col-md-4">
+            <table class="table table-responsive">
+                <tr>
+                    <th>Код</th>
+                    <th>Цена</th>
+                    <th></th>
+                </tr>
+                {% for code in funnel.promoCodes %}
+                    <tr>
+                        <td>{{ code.code }}</td>
+                        <td>{{ code.price }}</td>
+                        <td>
+                            <button class="btn btn-sm btn-pill btn-danger" name="promocode_remove"
+                                    data-promocode-id="{{ code.id }}"><i class="fa fa-remove"></i></button>
+                        </td>
+                    </tr>
+
+                {% endfor %}
+            </table>
+        </div>
+    {% endif %}
+
+</div>

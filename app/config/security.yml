@@ -1,0 +1,40 @@
+# To get started with security, check out the documentation:
+# https://symfony.com/doc/current/security.html
+security:
+
+    encoders:
+        HB\AdminBundle\Entity\Customer: bcrypt
+
+    # https://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
+    providers:
+        db_provider:
+            entity:
+                class: HB\AdminBundle\Entity\Customer
+                property: email
+
+    firewalls:
+        # disables authentication for assets and the profiler, adapt it according to your needs
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        main:
+            pattern: ^/
+            provider: db_provider
+            anonymous: ~
+            form_login:
+                login_path: login
+                check_path: login
+                default_target_path: hb.login_router
+                always_use_default_target_path: true
+            logout:
+                path:   logout
+                target: login
+                invalidate_session: false
+
+    access_control:
+        - { path: /login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: /api, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: /confirm, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: /crm, roles: IS_AUTHENTICATED_FULLY }
+        - { path: /, roles: IS_AUTHENTICATED_ANONYMOUSLY }

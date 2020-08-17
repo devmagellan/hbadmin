@@ -1,0 +1,31 @@
+services:
+    hb.admin.controller.sale_funnel.cross_sale.create:
+        class: HB\AdminBundle\Controller\SaleFunnel\CrossSale\CreateController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@router"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.cross_sale.remove:
+        class: HB\AdminBundle\Controller\SaleFunnel\CrossSale\RemoveController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@router"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.cross_sale.edit:
+        class: HB\AdminBundle\Controller\SaleFunnel\CrossSale\EditController
+        arguments:
+            - "@twig"
+            - "@form.factory"
+            - "@form.handler"
+            - "@session.flash_bag"
+            - "@router"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.cross_sale.remove.discount_course:
+        class: HB\AdminBundle\Controller\SaleFunnel\CrossSale\RemoveDiscountCourseController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@router"
+            - "@access.service"

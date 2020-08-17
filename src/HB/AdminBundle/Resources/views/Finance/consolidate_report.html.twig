@@ -1,0 +1,73 @@
+{% extends "@HBAdmin/layout.html.twig" %}
+
+{% set published_btn %}<span class='btn btn-sm btn-pill btn-success'><i class='fa fa-check'></i></span>{% endset %}
+
+{% block css_head %}
+    <style>
+        table {
+            font-size: 12px;
+        }
+
+        table td {
+            padding: 0.1em !important;
+        }
+
+        .filters {
+            display: flex;
+        }
+
+        a[href='#'] {
+            color: black;
+        }
+
+        a[href='#']:hover {
+            text-decoration: none;
+            cursor: unset;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="card">
+        <div class="card-header">
+            Сводный отчет
+        </div>
+        <div class="card-body">
+
+            <table class="table table-bordered table-condensed">
+                <tr>
+                    <th>Автор</th>
+                    <th>Доход</th>
+                    <th>Выплачено</th>
+                    <th>Баланс</th>
+                    <th></th>
+                </tr>
+                {% if customerStats | length > 0 %}
+                    {% for stats in customerStats %}
+                        <tr>
+
+                            <td>{{ stats.customer.firstName }} {{ stats.customer.surname }}
+                                <small> [{{ stats.customer.role }}, id: {{ stats.customer.id }}]</small>
+                            </td>
+                            <td>{{ stats.income }} $</td>
+                            <td>{{ stats.paid }} $</td>
+                            <td>{{ stats.balance }} $</td>
+                            <td>
+                                <a href="{{ path('hb.finance.admin.payments', {id: stats.customer.id}) }}" class="btn btn-sm btn-success">
+                                    Добавить выплату
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <th colspan="4" class="text-center">
+                            Нет данных
+                        </th>
+                    </tr>
+                {% endif %}
+            </table>
+
+        </div>
+    </div>
+{% endblock %}

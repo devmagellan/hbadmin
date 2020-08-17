@@ -1,0 +1,263 @@
+{% extends "@HBAdmin/layout.html.twig" %}
+
+{% block js_footer %}
+    {% include '@HBAdmin/Lesson/include/edit-js.html.twig' %}
+
+{% endblock %}
+
+{% block css_head %}
+    {% include '@HBAdmin/Lesson/include/edit-css.html.twig' %}
+{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="{{ path('hb.courses.list') }}">Продукты</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="{{ path('hb.course.edit', {id: lesson.section.course.id}) }}">
+                {{ lesson.section.course.info.title }}
+            </a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="{{ path('hb.lesson_section.list', {id: lesson.section.course.id}) }}">
+                Разделы
+            </a>
+        </li>
+        <li class="breadcrumb-item active">
+            {{ lesson.title }}
+        </li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+
+    {% if app.request.get('tab') == 'quiz' %}
+        {% set first_tab_class = '' %}
+        {% set webinar_tab_class = '' %}
+        {% set quiz_tab_class = 'active show' %}
+        {% set consultation_tab_class = '' %}
+    {% elseif app.request.get('tab') == 'webinar' %}
+        {% set first_tab_class = '' %}
+        {% set webinar_tab_class = 'active show' %}
+        {% set quiz_tab_class = '' %}
+        {% set consultation_tab_class = '' %}
+    {% elseif app.request.get('tab') == 'consultation' %}
+        {% set first_tab_class = '' %}
+        {% set webinar_tab_class = '' %}
+        {% set quiz_tab_class = '' %}
+        {% set consultation_tab_class = 'active show' %}
+    {% else %}
+        {% set first_tab_class = 'active show' %}
+        {% set quiz_tab_class = '' %}
+        {% set webinar_tab_class = '' %}
+        {% set consultation_tab_class = '' %}
+    {% endif %}
+
+    <div class="row">
+        <div class="col-md-12">
+            <a href="{{ path('hb.lesson_section.list', {id:  lesson.section.course.id}) }}" class="btn btn-success">Добавить
+                урок</a><br><br>
+
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link {{ first_tab_class }}" data-toggle="tab" href="#add_file" role="tab" aria-controls="messages"
+                       aria-selected="false">
+                        <i class="fa fa-file"></i> Файл/Видео</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link " data-toggle="tab" href="#add_text" role="tab"
+                       aria-controls="home"
+                       aria-selected="true">
+                        <i class="fa fa-file-text-o"></i> Текст</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ quiz_tab_class }}" data-toggle="tab" href="#add_question" id="quiz_tab"
+                       role="tab" aria-controls="profile"
+                       aria-selected="false">
+                        <i class="fa fa-question"></i> Опрос</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#add_iframe" role="tab" aria-controls="messages"
+                       aria-selected="false">
+                        <i class="fa fa-html5"></i> IFrame</a>
+                </li>
+
+
+
+                <li class="nav-item">
+                    <a class="nav-link {{ webinar_tab_class }}" data-toggle="tab" href="#add_webinar" role="tab"
+                       aria-controls="messages"
+                       aria-selected="false">
+                        <i class="fa fa-rss"></i> Вебинар</a>
+                </li>
+
+                <li class="nav-item {{ consultation_tab_class }}">
+                    <a class="nav-link" data-toggle="tab" href="#add_consultation" role="tab" aria-controls="messages"
+                       aria-selected="false">
+                        <i class="fa fa-users"></i> Консультация</a>
+                </li>
+
+
+            </ul>
+            <div class="tab-content">
+
+                <div class="tab-pane {{ first_tab_class }}" id="add_file" role="tabpanel">
+                    <h5>Добавляйте любые файлы для вашего урока, размером до 1.5GB</h5>
+                    <button onclick="uploadFileToLesson()" class="btn btn-success"><i class="fa fa-plus"></i> Добавить
+                        файл
+                    </button>
+                </div>
+
+                <div class="tab-pane" id="add_text" role="tabpanel">
+                    <h5>Добавьте текстовое сопровождение, разъяснение к уроку</h5>
+                    <form method="post" action="{{ path('hb.lesson.edit', {id: lesson.id}) }}">
+                        {{ form_widget(formText) }}
+                        <input type="submit" value="Сохранить" class="btn btn-success"/>
+                    </form>
+                </div>
+
+                <div class="tab-pane {{ quiz_tab_class }}" id="add_question" role="tabpanel">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <span class="alert-gray-100">Создавайте опросы, тесты, экзамены</span>
+                            <h5>Текущие вопросы</h5>
+                            <table class="table table-striped qa-table">
+                                {% for question in quiz.questions %}
+                                    <tr>
+                                        <th colspan="3">
+                                            <a href="#" id="question_{{ question.id }}" data-type="textarea"
+                                               data-pk="{{ question.id }}"
+                                               data-title="текст вопроса"
+                                               style="color: black"
+                                            >{{ question.questionText }}</a>
+
+
+                                            <a href="{{ path('hb.lesson.quiz.remove', {id: question.id}) }}"
+                                               class="btn btn-pill btn-sm btn-outline-danger btn-danger pull-right"
+                                               onclick="return confirm('Удалить вопрос?')">
+                                                <i class="fa fa-remove"></i>
+                                            </a>
+                                        </th>
+                                    </tr>
+                                    {% for answer in question.answers %}
+                                        <tr>
+                                            <td style="width: 20px;">
+                                                <input type="checkbox" id="right_answer_{{ answer.id }}"
+                                                       {% if answer.isRight %}checked{% endif %}
+                                                >
+
+                                            </td>
+                                            <td colspan="2">
+                                                <a href="#" id="answer_{{ answer.id }}" data-type="textarea"
+                                                   data-pk="{{ answer.id }}"
+                                                   data-title="текст ответа"
+                                                   style="color: black"
+                                                >{{ answer.answerText }}</a>
+
+
+                                                <a href="{{ path('hb.lesson.quiz.answer.remove', {id: answer.id}) }}"
+                                                   class="btn btn-pill btn-sm btn-outline-danger pull-right"
+                                                   onclick="return confirm('Удалить ответ?')">
+                                                    <i class="fa fa-remove"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+
+                                    <tr>
+                                        <td colspan="3">
+                                            <form action="{{ path('hb.lesson.quiz.answer.add', {id: question.id}) }}"
+                                                  method="post">
+
+                                                <input type="text" name="question_text" required
+                                                       placeholder="Новый ответ"
+                                                       style="width: 80%"
+                                                >
+                                                <input type="checkbox" name="is_right" value="true"
+                                                       id="is_right_{{ question.id }}">
+
+                                                <label for="is_right_{{ question.id }}">Верный</label>
+                                                <button type="submit"
+                                                        class="btn btn-pill btn-sm btn-success pull-right">
+                                                    <i class="fa fa-plus"></i>
+                                                </button>
+
+                                            </form>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Добавить вопрос</h5>
+                            <form method="post" action="{{ path('hb.lesson.edit', {id: lesson.id, tab: 'quiz'}) }}">
+                                {{ form_start(formQuestion) }}
+
+                                {{ form_row(formQuestion.questionText) }}
+
+                                <button type="button" class="btn btn-sm btn-success" id="add_answer">
+                                    <i class="fa fa-plus"></i> Ответ
+                                </button>
+
+                                <ul id="answers-list" style=""
+                                    data-prototype="{{ form_widget(formQuestion.answers.vars.prototype)|e }}"
+                                    data-widget-tags="{{ '<div class=\'col-md-12\' style=\'display: block\'></div>'|e }}">
+                                </ul>
+
+                                {{ form_widget(formQuestion) }}
+
+                                <button type="submit" class="btn btn-primary">Добавить</button>
+                                {{ form_end(formQuestion) }}
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane" id="add_iframe" role="tabpanel">
+                    <h5>Добавить Iframe</h5>
+                    <span class="alert-gray-100">Если вы хотите использовать информацию c внешних сайтов, вы можете сделать это здесь в помощью вставки код iframe </span>
+                    <form method="post" action="{{ path('hb.lesson.edit', {id: lesson.id}) }}">
+                        {{ form_widget(formIframe) }}
+                        <input type="submit" value="Сохранить" class="btn btn-success"/>
+                    </form>
+                </div>
+
+
+
+                <div class="tab-pane {{ webinar_tab_class }}" id="add_webinar" role="tabpanel">
+                    <h5>Если вы планируете проводить закрытый вебинар, для учащихся на курсе, добавьте его в этой
+                        вкладке, выбрав дату и время</h5>
+                    <form method="post" action="{{ path('hb.lesson.edit', {id: lesson.id, tab: 'webinar'}) }}">
+                        <div style="display: flex">
+                            {{ form_widget(formWebinar) }}
+                        </div>
+
+                        <input type="submit" value="Сохранить" class="btn btn-success"/>
+                    </form>
+                </div>
+
+                <div class="tab-pane {{ consultation_tab_class }}" id="add_consultation" role="tabpanel">
+                    <h5>Если вы планируете проводить консультацию, для учащихся на курсе, добавьте его в этой вкладке,
+                        выбрав дату и время.</h5>
+                    <span class="alert-gray-100">Примечание: в двухстороннем аудио формате может присутствовать до 25 человек, в формате видео конференции до 9 участников.</span>
+
+                    <form method="post" action="{{ path('hb.lesson.edit', {id: lesson.id, tab: 'consultation'}) }}">
+                        <div style="display: flex">
+                            {{ form_widget(formConsultation) }}
+                        </div>
+                        <input type="submit" value="Сохранить" class="btn btn-success"/>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="lesson-elements">
+        {{ render(controller('hb.admin.controller.lesson_element.list:handleAction', {lesson: lesson.id})) }}
+    </div>
+{% endblock %}

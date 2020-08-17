@@ -1,0 +1,13 @@
+{% if saved %}
+    <div class="alert alert-success" role="alert">Сохранено!</div>
+{% endif %}
+<div class="row">
+    <div class="col-md-8 text-center">
+        <form method="post" name="block5" data-funnel-id="{{ funnel.id }}">
+            {{ form_widget(form) }}
+            <button type="submit" class="btn btn-success">
+                Сохранить
+            </button>
+        </form>
+    </div>
+</div>

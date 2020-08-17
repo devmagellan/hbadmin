@@ -1,0 +1,111 @@
+{% import '@HBAdmin/SaleFunnel/OneTimeOffer/macro/funnel_empty.html.twig' as funnel_empty %}
+
+{% set course = funnel.course %}
+<div class="col-md-8">
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger" role="alert">
+            {{ message }}
+        </div>
+    {% endfor %}
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success" role="alert">
+            {{ message }}
+        </div>
+    {% endfor %}
+
+    <div class="alert-gray-100">ОТО - Оne Тime Оffer. Единоразовое "мега крутое" предложение, которое
+        появляется на странице благодарности, после регистрации или какого-либо действия пользователя. Цель-
+        дать возможность за небольшие деньги познакомиться с автором до вебинара, повысить лояльность
+        пользователя и мотивировать заплатить за более дорогой продукт.
+    </div>
+    <br>
+    <div class="alert-gray-100">Двухступенчатое ОТО - под собой подразумевает, то что при попадании на
+        первую ступень ОТО - человеку мы предлагаем зарегистрироваться на вебинар, а на второй ступени уже
+        купить само ОТО (необходимо наличие вебинаров автора)
+    </div>
+    <br>
+
+    {% if purpose_violation == false %}
+
+        {{ form_start(form) }}
+
+        {{ form_row(form.level) }}
+
+        <div class="alert-gray-100">Укажите на каких страницах для каких воронок его использовать</div>
+
+        {% if purpose_in_use['forWebinar'] == false and course.salesFunnelWebinar | length > 0 %}
+            {{ form_row(form.forWebinar) }}
+        {% else %}
+            {% if course.salesFunnelWebinar | length == 0 %}
+                {{ funnel_empty.render('Вебинарная') }}
+            {% endif %}
+        {% endif %}
+
+        {% if purpose_in_use['forEducational'] == false and course.salesFunnelEducational != null %}
+            {{ form_row(form.forEducational) }}
+        {% else %}
+            {% if course.salesFunnelEducational == null %}
+                {{ funnel_empty.render('Образовательная') }}
+            {% endif %}
+        {% endif %}
+
+        {% if purpose_in_use['forLeadMagnet'] == false and course.saleFunnelLeadCollections | length > 0 %}
+            {{ form_row(form.forLeadMagnet) }}
+        {% else %}
+            {% if course.saleFunnelLeadCollections | length == 0 %}
+                {{ funnel_empty.render('Сбор лидов') }}
+            {% endif %}
+        {% endif %}
+
+        {% if purpose_in_use['forMiniCourse'] == false and course.salesFunnelMiniCourse != null %}
+            {% if course.owner.packet and course.owner.packet.type == constant('\\HB\\AdminBundle\\Entity\\Types\\CustomerPacketType::PROFESSIONAL') %}
+                <div class="form-group">
+                    <div class="form-check">
+                        <input type="checkbox" id="hb_adminbundle_sale_funnel_one_time_offer_forMiniCourse"
+                               class="form-check-input" disabled>
+                        <label class="form-check-label"
+                               for="hb_adminbundle_sale_funnel_one_time_offer_forMiniCourse">
+                            Мини курс (
+                            <small class='alert-gray-100'>Доступно на пакете выше</small>
+                            )
+                        </label>
+                    </div>
+                </div>
+            {% else %}
+                {{ form_row(form.forMiniCourse) }}
+            {% endif %}
+        {% else %}
+
+            {% if course.salesFunnelMiniCourse == null %}
+                {{ funnel_empty.render('Мини курс') }}
+            {% endif %}
+
+        {% endif %}
+
+        <button class="btn btn-success" type="button" id="form_submit_targeting">Сохранить</button>
+        <div style="display: none;">
+            {{ form_end(form) }}
+        </div>
+    {% else %}
+        Добавление не возможно. Нет свободных страниц для OTO
+    {% endif %}
+</div>
+
+<script>
+    $(function () {
+        $('select[id={{ form.level.vars.id }}]').change(function () {
+            if ('TWO' === $(this).val()) {
+                $('input[id=one_time_offer_targeting_forWebinar]').prop('checked', false);
+            }
+        });
+
+        $('input[id=one_time_offer_targeting_forWebinar]').change(function () {
+            var oto_step = $('select[id={{ form.level.vars.id }}]').val();
+            if ('TWO' === oto_step) {
+                $(this).prop('checked', false);
+            }
+
+        });
+    });
+</script>

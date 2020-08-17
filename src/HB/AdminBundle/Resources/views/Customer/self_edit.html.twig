@@ -1,0 +1,393 @@
+{% extends "@HBAdmin/layout.html.twig" %}
+
+{% block js_footer %}
+    <script>
+
+        function updatePhoto(response) {
+            openHoldon();
+            var uuid = response.uuid;
+            var cdn = response.cdnUrl;
+            var file_name = '';
+
+            if (response.sourceInfo.file) {
+                file_name = response.sourceInfo.file.name;
+            } else {
+                file_name = response.name;
+            }
+
+            var path = Routing.generate('hb.customer.update.photo', {id: {{ customer.id }}});
+
+            $.post(path, {uuid: uuid, cdn: cdn, file_name: file_name}, function () {
+                if (response.status && response.status === 'error' && response.message) {
+                    alert(response.message);
+                } else {
+                    $('img[name=customer_photo]').attr('src', cdn);
+                }
+
+                closeHoldon();
+            });
+        }
+
+        $('button[id=customer_photo]').on('click', function () {
+            const min_height_crop = $(this).data('min-height');
+            const min_height = min_height_crop / 10;
+            const min_width_crop = $(this).data('min-width');
+            const min_width = min_width_crop / 10;
+
+            uploadcare.openDialog(null, {
+                imagesOnly: true,
+                tabs: '{{ upload_care_sources }}',
+                crop: min_width_crop + 'x' + min_height_crop + ' minimum',
+                validators: [
+                    minDimensions(min_width, min_height)
+                ]
+            }).done(function (file) {
+                file.progress(function (uploadInfo) {
+                    $('#progressbar').progressbar({value: uploadInfo.progress * 100});
+                });
+
+                file.promise()
+                    .done(function (fileInfo) {
+                        updatePhoto(fileInfo);
+                    });
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block body %}
+    <div class="card">
+        <div class="card-header">
+            Редактирование профиля
+        </div>
+        <div class="card-body">
+            <div class="row">
+
+                <div class="col-md-4">
+
+                    <form enctype="multipart/form-data" method="post"
+                          action="{{ path('hb.customer.self.edit') }}">
+                        {% if not form.vars.valid %}
+                            <div class="alert alert-error">
+                                {{ form_errors(form) }}
+                            </div>
+                        {% endif %}
+                        <table>
+                            <tr>
+                                <td>
+                                    <img style="width: 100px"
+                                         src="{% if customer.photo %}{{ customer.photo.fileUrl }}{% endif %}"
+                                         name="customer_photo"/>
+
+                                    <button type="button" class="btn btn-sm btn-success" id="customer_photo"
+                                            data-min-width="250" data-min-height="250">
+                                        <i class="fa fa-photo"></i> Фото (256x256 px)
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><b>Телефон:</b> {{ customer.phone }}</td>
+                                <td></td>
+                                <td><b>Email:</b> {{ customer.email }}</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    {{ form_row(form.firstName) }}
+                                    {{ form_row(form.surname) }}
+                                </td>
+                                <td style="width: 40px"></td>
+                                <td valign="top">
+                                    {{ form_row(form.plainPassword) }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">
+                                    {{ form_row(form.aboutInfo) }}
+                                </td>
+                            </tr>
+                        </table>
+                        {{ form_widget(form._token) }}
+                        <input type="submit" value="Сохранить" class="btn btn-primary"/>
+                    </form>
+                </div>
+
+                {% if is_granted('ROLE_PRODUCER') or is_granted('ROLE_AUTHOR') %}
+                    <div class="col-md-7">
+                        <h4>Тарифные планы</h4>
+                        <table class="table">
+                            <tr>
+                                <th>Ваш план</th>
+                                <td> {{ customer.packet }}
+                                    {% if customer.hasPacketSubscription %}
+                                        / подписка
+                                        {% if customer.getPacketSubscription == constant('HB\\AdminBundle\\Entity\\Customer::PACKET_SUBSCRIPTION_MONTH') %}
+                                           / на месяц
+                                        {% elseif customer.getPacketSubscription == constant('HB\\AdminBundle\\Entity\\Customer::PACKET_SUBSCRIPTION_YEAR') %}
+                                           / на год
+                                        {% endif %}
+
+                                        {% if customer.packetUntilDate == null %}
+                                            / <b>не оплачено</b>
+                                        {% else %}
+                                            / до {{ customer.packetUntilDate.format('d.m.Y') }}
+                                        {% endif %}
+                                    {% else %}
+                                        процентный
+                                    {% endif %}
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="2">
+                                    <img src="{{ asset('bundles/hbadmin/images/plans.jpg') }}" width="100%">
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th colspan="2" style="text-align: center;">
+                                    <button type="button" class="btn btn-primary js-anchor-customer-plan">
+                                        Изменить тарифный план
+                                    </button>
+                                </th>
+                            </tr>
+
+                            {#{% if customer.packet.type != constant('\\HB\\AdminBundle\\Entity\\Types\\CustomerPacketType::PROFESSIONAL') %}
+                                <tr>
+                                    <th>Профессиональный</th>
+                                    <td>
+                                        <a href="{{ path('hb.customer.self.change_packet', {id: customer.id, type: constant('\\HB\\AdminBundle\\Entity\\Types\\CustomerPacketType::PROFESSIONAL')}) }}"
+                                           class="btn btn-outline-success">Применить</a>
+                                    </td>
+                                </tr>
+                            {% endif %}
+
+
+                            {% if customer.packet.type != constant('\\HB\\AdminBundle\\Entity\\Types\\CustomerPacketType::PREMIUM') %}
+                                <tr>
+                                    <th>Премиум</th>
+                                    <td>
+                                        <a href="{{ path('hb.customer.self.change_packet', {id: customer.id, type: constant('\\HB\\AdminBundle\\Entity\\Types\\CustomerPacketType::PREMIUM')}) }}"
+                                           class="btn btn-outline-success">Применить</a>
+                                    </td>
+                                </tr>
+                            {% endif %}
+
+                            {% if customer.packet.type != constant('\\HB\\AdminBundle\\Entity\\Types\\CustomerPacketType::WEBINAR') %}
+                                <tr>
+                                    <th>Вебинарный</th>
+                                    <td>
+                                        <a href="{{ path('hb.customer.self.change_packet', {id: customer.id, type: constant('\\HB\\AdminBundle\\Entity\\Types\\CustomerPacketType::WEBINAR')}) }}"
+                                           class="btn btn-outline-success">Применить</a>
+                                    </td>
+                                </tr>
+                            {% endif %}
+
+                            {% if customer.packet.type != constant('\\HB\\AdminBundle\\Entity\\Types\\CustomerPacketType::ONLINE_SCHOOL') %}
+                                <tr>
+                                    <th>Онлайн-школа</th>
+                                    <td>
+                                        <a href="{{ path('hb.customer.self.change_packet', {id: customer.id, type: constant('\\HB\\AdminBundle\\Entity\\Types\\CustomerPacketType::ONLINE_SCHOOL')}) }}"
+                                           class="btn btn-outline-success">Применить</a>
+                                    </td>
+                                </tr>
+                            {% endif %}
+
+                            {% if customer.packet.type != constant('\\HB\\AdminBundle\\Entity\\Types\\CustomerPacketType::BASIC') %}
+                                <tr>
+                                    <th>Базовый</th>
+                                    <td>
+                                        <a href="{{ path('hb.customer.self.change_packet', {id: customer.id, type: constant('\\HB\\AdminBundle\\Entity\\Types\\CustomerPacketType::BASIC')}) }}"
+                                           class="btn btn-outline-success">Применить</a>
+                                    </td>
+                                </tr>
+                            {% endif %}
+
+                            {% if customer.packet.type != constant('\\HB\\AdminBundle\\Entity\\Types\\CustomerPacketType::EXTENDED') %}
+                                <tr>
+                                    <th>Расширенный</th>
+                                    <td>
+                                        <a href="{{ path('hb.customer.self.change_packet', {id: customer.id, type: constant('\\HB\\AdminBundle\\Entity\\Types\\CustomerPacketType::EXTENDED')}) }}"
+                                           class="btn btn-outline-success">Применить</a>
+                                    </td>
+                                </tr>
+                            {% endif %}
+
+                            {% if customer.packet.type != constant('\\HB\\AdminBundle\\Entity\\Types\\CustomerPacketType::VIP') %}
+                                <tr>
+                                    <th>VIP</th>
+                                    <td>
+                                        {% if customer.requestedPacket and customer.requestedPacket.type == constant('\\HB\\AdminBundle\\Entity\\Types\\CustomerPacketType::VIP') %}
+                                            <span class="btn btn-outline-danger">Запрос отправлен</span>
+                                        {% else %}
+                                            <a href="{{ path('hb.customer.self.change_packet', {id: customer.id, type: constant('\\HB\\AdminBundle\\Entity\\Types\\CustomerPacketType::VIP')}) }}"
+                                               class="btn btn-outline-warning">Запросить</a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endif %}
+
+                            {% if customer.packet.type != constant('\\HB\\AdminBundle\\Entity\\Types\\CustomerPacketType::CUSTOM') %}
+                                <tr>
+                                    <th>Индивидуальный</th>
+                                    <td>
+                                        {% if customer.requestedPacket and customer.requestedPacket.type == constant('\\HB\\AdminBundle\\Entity\\Types\\CustomerPacketType::CUSTOM') %}
+                                            <span class="btn btn-outline-danger">Запрошен</span>
+                                        {% else %}
+                                            <a href="{{ path('hb.customer.self.change_packet', {id: customer.id, type: constant('\\HB\\AdminBundle\\Entity\\Types\\CustomerPacketType::CUSTOM')}) }}"
+                                               class="btn btn-outline-warning">Запросить</a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endif %}#}
+
+                        </table>
+                    </div>
+                {% endif %}
+
+
+            </div>
+        </div>
+    </div>
+
+
+    {% if is_granted('ROLE_PRODUCER') or is_granted('ROLE_AUTHOR') %}
+        <h4>Реквизиты для получения оплаты</h4>
+
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link show active" data-toggle="tab" href="#transferWise" role="tab" aria-controls="paypal"
+                   aria-selected="true">
+                    <img src="{{ asset('bundles/hbadmin/img/transferwise.png') }}" style="height: 20px">
+                    TransferWise</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link show" data-toggle="tab" href="#payoneer" role="tab" aria-controls="payoneer"
+                   aria-selected="false">
+                    <i class="fa fa-credit-card"></i> Payoneer</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link show " data-toggle="tab" href="#paypal" role="tab" aria-controls="paypal"
+                   aria-selected="true">
+                    <i class="fa fa-paypal"></i> Paypal</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link show" data-toggle="tab" href="#bank" role="tab" aria-controls="bank"
+                   aria-selected="false">
+                    <i class="fa fa-bank"></i> Банк</a>
+            </li>
+        </ul>
+
+
+        <div class="tab-content">
+            <div class="tab-pane show active" id="transferWise" role="tabpanel">
+                <div class="col-md-6">
+
+                    <div class="transferwise_wrapper">
+                        {% if customer.transferWiseAccount %}
+                            {{ render(controller('hb.admin.controller.customer.transferwise.form:handleAction', {id: customer.id})) }}
+                        {% else %}
+                            <button type="button"
+                                    name="add_transferwise"
+                                    data-account-type="{{ constant('\\HB\\AdminBundle\\Entity\\CustomerTransferWiseAccount::TYPE_RU_LOCAl') }}"
+                                    class="btn btn-primary">
+                                Россия (Местный банковский счет)
+                            </button>
+                            <button type="button"
+                                    name="add_transferwise"
+                                    data-account-type="{{ constant('\\HB\\AdminBundle\\Entity\\CustomerTransferWiseAccount::TYPE_RU_CARD') }}"
+                                    class="btn btn-primary">
+                                Россия (Российская банковская карта)
+                            </button>
+                            <button type="button"
+                                    name="add_transferwise"
+                                    data-account-type="{{ constant('\\HB\\AdminBundle\\Entity\\CustomerTransferWiseAccount::TYPE_UA') }}"
+                                    class="btn btn-success">
+                                Украина
+                            </button>
+                        {% endif %}
+                    </div>
+
+                    <script>
+                        $(function () {
+                            $('button[name=add_transferwise]').click(function () {
+                                var type = $(this).data('account-type');
+
+                                openHoldon();
+                                $.get(
+                                    Routing.generate('hb.customer.transferwise.form', {
+                                        id: {{ customer.id }},
+                                        type: type
+                                    }),
+                                    function (response) {
+                                        $('.transferwise_wrapper').html(response);
+                                        closeHoldon();
+                                    }
+                                );
+                            });
+
+                            $('.transferwise_wrapper').on('submit', 'form', function (e) {
+                                e.preventDefault();
+
+                                var path = $(this).attr('action');
+                                var formData = $(this).serialize();
+
+                                openHoldon();
+                                $.ajax({
+                                    type: "POST",
+                                    url: path,
+                                    data: formData,
+                                    dataType: "json",
+                                    success: function (response) {
+                                        $('.transferwise_wrapper').html(response.responseText);
+                                        closeHoldon();
+                                    },
+                                    error: function (response) {
+                                        $('.transferwise_wrapper').html(response.responseText);
+                                        closeHoldon();
+                                    }
+                                });
+                            })
+                        });
+                    </script>
+
+                </div>
+            </div>
+
+            <div class="tab-pane show" id="payoneer" role="tabpanel">
+                <div class="col-md-6">
+                    <h4>Реквизиты Payoneer</h4>
+                    <form method="post" action="{{ path('hb.customer.self.edit') }}">
+                        {{ form_widget(formAccountPayoneer) }}
+
+                        <button class="btn btn-success">Сохранить</button>
+                    </form>
+                </div>
+            </div>
+            <div class="tab-pane show " id="paypal" role="tabpanel">
+                <div class="col-md-6">
+                    <h4>Реквизиты Paypal</h4>
+                    <form method="post" action="{{ path('hb.customer.self.edit') }}">
+                        {{ form_widget(formAccountPaypal) }}
+
+                        <button class="btn btn-success">Сохранить</button>
+                    </form>
+                </div>
+            </div>
+            <div class="tab-pane show " id="bank" role="tabpanel">
+                <div class="col-md-6">
+                    <h4>Реквизиты Банка</h4>
+                    <form method="post" action="{{ path('hb.customer.self.edit') }}">
+                        {{ form_widget(formAccountBank) }}
+
+                        <button class="btn btn-success">Сохранить</button>
+                    </form>
+                </div>
+            </div>
+
+
+        </div>
+        <br><br>
+    {% endif %}
+
+
+{% endblock %}

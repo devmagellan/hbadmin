@@ -1,0 +1,337 @@
+{% extends "@HBAdmin/layout.html.twig" %}
+
+{% import '@HBAdmin/macros/view_link.html.twig' as demo_link %}
+{% import '@HBAdmin/macros/return_to_course.html.twig' as return %}
+
+{% macro render(title) %}
+    <div class="form-group">
+        <div class="form-check">
+            <input type="checkbox" class="form-check-input" value="1" disabled>
+            <label class="form-check-label">
+                {{ title }} <span class="alert-gray-100">(необходимо заполнить)</span>
+            </label>
+        </div>
+    </div>
+{% endmacro %}
+{% import _self as disabled_funnel %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="{{ path('hb.courses.list') }}">Продукты</a>
+        </li>
+        <li class="breadcrumb-item active">
+            <a href="{{ path('hb.course.edit', {id: funnel.course.id}) }}">{{ funnel.course.info.title }}</a>
+        </li>
+        <li class="breadcrumb-item">Воронки</li>
+        <li class="breadcrumb-item"><b>Сбор лидов</b></li>
+    </ol>
+{% endblock %}
+
+{% block js_head %}
+    <script>
+        function uploadImage(id) {
+            const min_width_crop = 600;
+            const min_width = min_width_crop / 10;
+            const min_height_crop = 630;
+            const min_height = min_height_crop / 10;
+
+            uploadcare.openDialog(null, {
+                imagesOnly: true,
+                tabs: '{{ upload_care_sources }}',
+                crop: min_width_crop + 'x' + min_height_crop + ' minimum',
+                validators: [
+                    minDimensions(min_width, min_height)
+                ]
+            }).done(function (file) {
+                file.progress(function (uploadInfo) {
+                    $('#progressbar').progressbar({value: uploadInfo.progress * 100});
+                });
+
+                file.promise()
+                    .done(function (fileInfo) {
+                        updateImage(fileInfo, id);
+                    });
+            });
+        }
+
+        function uploadFile(id) {
+            uploadcare.openDialog(null, {
+                tabs: '{{ upload_care_sources }}',
+                validators: [
+                    maxFileSize({{ max_file_size }})
+                ]
+            }).done(function (file) {
+                openHoldon('Загрузка файла');
+
+                file.progress(function (uploadInfo) {
+                    $('#progressbar').progressbar({value: uploadInfo.progress * 100});
+                });
+
+                file.promise()
+                    .done(function (fileInfo) {
+                        updateFile(fileInfo, id);
+                        closeHoldon();
+                    });
+            });
+        }
+
+        function updateImage(response, id) {
+            openHoldon();
+            var uuid = response.uuid;
+            var cdn = response.cdnUrl;
+            var file_name = '';
+            if (response.sourceInfo.file) {
+                file_name = response.sourceInfo.file.name;
+            } else {
+                file_name = response.name;
+            }
+
+            var path = Routing.generate('hb.sale_funnel.lead_collection.update_image', {id: id});
+
+            $.post(path, {uuid: uuid, cdn: cdn, file_name: file_name}, function (response) {
+                if (response.status && response.status === 'error' && response.message) {
+                    alert(response.message);
+                }
+                document.location = document.location;
+            });
+        }
+
+        function updateFile(response, id) {
+            openHoldon();
+            var uuid = response.uuid;
+            var cdn = response.cdnUrl;
+            var file_name = '';
+            if (response.sourceInfo.file) {
+                file_name = response.sourceInfo.file.name;
+            } else {
+                file_name = response.name;
+            }
+
+            var path = Routing.generate('hb.sale_funnel.lead_collection.update_file', {id: id});
+
+            $.post(path, {uuid: uuid, cdn: cdn, file_name: file_name}, function (response) {
+                if (response.status && response.status === 'error' && response.message) {
+                    alert(response.message);
+                }
+                document.location = document.location;
+            });
+        }
+
+        $(function () {
+            $('div.card').on('click', 'button[id=upload_image]', function () {
+                var funnel_id = $(this).data('funnel-id');
+                uploadImage(funnel_id)
+            }).on('click', 'button[id=upload_file]', function () {
+                var funnel_id = $(this).data('funnel-id');
+                uploadFile(funnel_id)
+            });
+
+        });
+    </script>
+{% endblock %}
+
+{% block body %}
+
+    <div class="card">
+        <div class="card-header">
+            Редактирование воронки {{ return.render(funnel.course.id) }}
+            <div class="pull-right">
+                {{ demo_link.render(asset('bundles/hbadmin/img/funnel_landing/leadmagnet_m.jpg')) }}
+            </div>
+        </div>
+        <div class="card-body">
+
+
+            <form name="lead_magnet" action="{{ path('hb.sale_funnel.lead_collection.edit', {id: course.id}) }}" method="post">
+                <div class="row">
+                    <div class="col-md-4">
+                        <span class="alert-gray-100">После сохранения возможно добавление файлов</span>
+
+                        <br>
+
+                        {# check funnel depending of course creator packet #}
+                        {% if course.owner.packet and course.owner.packet.type == constant('\\HB\\AdminBundle\\Entity\\Types\\CustomerPacketType::PROFESSIONAL') %}
+                            {% set professional_packet = true %}
+                            {% set denied_html = '<small class=\'alert-gray-100\'>Доступно на пакете выше</small>' %}
+                        {% else %}
+                            {% set professional_packet = false %}
+                            {% set denied_html = '' %}
+                        {% endif %}
+                        {# check funnel depending of course creator packet #}
+
+
+                        {% if lead_magnets_violation == false %}
+                            <h5>Выберите лидформы</h5>
+                        {% else %}
+                            <span class="invalid-feedback d-block">
+                            <span class="d-block">
+                                <span class="form-error-icon badge badge-danger text-uppercase">Добавление не возможно</span>
+                                <span class="form-error-message">Нет свободных лид магнитов.</span>
+                            </span>
+                        </span>
+                        {% endif %}
+
+                        {% set can_add_lead_magnet = false %}
+
+                        {# Check disctinct use lead magnets and resolve if can use the lead magnet #}
+                        {% if lead_magnets_use['leadMagnetOrganic'] == false and course.salesFunnelOrganic != null %}
+                            {{ form_row(form.leadMagnetOrganic) }}
+
+                            {% set can_add_lead_magnet = true %}
+                        {% else %}
+                            {{ disabled_funnel.render('Целевая страница') }}
+                        {% endif %}
+
+                        {% if lead_magnets_use['leadMagnetWebinar'] == false and course.salesFunnelWebinar | length > 0 %}
+                            {{ form_row(form.leadMagnetWebinar) }}
+
+                            {% set can_add_lead_magnet = true %}
+                        {% else %}
+                            {{ disabled_funnel.render('Вебинар') }}
+                        {% endif %}
+
+                        {% if lead_magnets_use['leadMagnetEducation'] == false and course.salesFunnelEducational != null %}
+                            {{ form_row(form.leadMagnetEducation) }}
+
+                            {% set can_add_lead_magnet = true %}
+                        {% else %}
+                            {{ disabled_funnel.render('Образовательная воронка') }}
+                        {% endif %}
+
+                        {% if lead_magnets_use['leadMagnetDownSell'] == false and course.salesFunnelDownSells | length > 0 %}
+                            {{ form_row(form.leadMagnetDownSell) }}
+
+                            {% set can_add_lead_magnet = true %}
+                        {% else %}
+                            {{ disabled_funnel.render('Выгодная формула') }}
+                        {% endif %}
+
+                        {% if lead_magnets_use['leadMagnetLayerCake'] == false and course.saleFunnelLayerCakes | length > 0 %}
+                            {% if professional_packet %}
+                                <input type="checkbox" disabled> Слоеный пирог ({{ denied_html|raw }})
+                            {% else %}
+                                {{ form_row(form.leadMagnetLayerCake) }}
+
+                                {% set can_add_lead_magnet = true %}
+                            {% endif %}
+                        {% else %}
+                            {{ disabled_funnel.render('Слоеный пирог') }}
+                        {% endif %}
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        {% if can_add_lead_magnet == true %}
+                            {{ form_row(form.title) }}
+
+                            {{ form_row(form.description) }}
+                            {{ form_row(form.fullDescription) }}
+                            {{ form_row(form.buttonText) }}
+
+                            {% if lead_magnets_violation == false %}
+                                <button class="btn btn-success">Сохранить</button>
+
+                            {% endif %}
+                        {% else %}
+                            <h4>Нет доступных лидформ для добавления</h4>
+                        {% endif %}
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        $(function () {
+            $('form[name=lead_magnet]').submit(function () {
+                var leads = $(this).find('input[type=checkbox]:checked');
+
+                if (leads.length > 0) {
+                } else {
+                    alert('Необходимо выбрать лид-магнит!');
+                    return false;
+                }
+            })
+        })
+    </script>
+
+    {% for funnel in course.getSaleFunnelLeadCollections %}
+        <div class="card">
+            <div class="card-header">
+                Лид магнит(ы): <b>{{ funnel.getLeadMagnets | join(', ') }}</b>
+
+                <div class="pull-right">
+
+                    <a href="{{ path('hb.sale_funnel.lead_collection.preview', {id: funnel.id}) }}"
+                       class="btn btn-pill btn-sm btn btn-outline-primary" target="_blank" title="Предпросмотр"><i
+                                class="fa fa-eye"></i> </a>
+                    <a href="{{ path('hb.sale_funnel.lead_collection.edit.lead_magnet', {id: funnel.id}) }}"
+                       class="btn btn-pill btn-sm btn btn-info"><i class="fa fa-edit"></i> </a>
+                    <a href="{{ path('hb.sale_funnel.lead_collection.remove', {id: funnel.id}) }}"
+                       class="btn btn-pill btn-sm btn-danger"><i class="fa fa-remove"></i> </a>
+                </div>
+
+                {% if funnel.file == null %}
+                    <span class="invalid-feedback d-block">
+                            <span class="d-block">
+                                <span class="form-error-icon badge badge-danger text-uppercase">Ошибка</span>
+                                <span class="form-error-message">Необходимо загрузить файл</span>
+                            </span>
+                        </span>
+                {% endif %}
+            </div>
+            <div class="card-body">
+                <div class="row">
+
+                    <div class="col-md-6">
+                        <h6><b>Название: </b> {{ funnel.title }}</h6>
+                        <h6><b>Краткое описание: </b>{{ funnel.description }}</h6>
+                        <h6><b>Развернутое описание: </b>{{ funnel.fullDescription }}</h6>
+                        <h6><b>Текст кнопки: </b>{{ funnel.buttonText }}</h6>
+                    </div>
+
+                    <div class="col-md-3">
+                        <h4>Картинка</h4>
+                        {% if funnel.image %}
+
+                            <a href="{{ funnel.image.fileUrl }}" target="_blank">
+                                <img src="{{ funnel.image.fileUrl }}" style="max-height: 100px;">
+                            </a>
+                            <a href="{{ path('hb.sale_funnel.lead_collection.remove_image', {id: funnel.id}) }}"
+                               class="btn btn-pill btn-sm btn-outline-danger"><i class="fa fa-remove"></i> </a>
+                            <br>
+                            <br>
+                        {% endif %}
+
+                        <button type="button" class="btn btn-orange" id="upload_image" data-funnel-id="{{ funnel.id }}">
+                            <i class="fa fa-photo"></i>
+                            Загрузить картинку(600x630 px)
+                        </button>
+                    </div>
+
+                    <div class="col-md-3">
+                        <h4>Файл</h4>
+                        {% if funnel.file %}
+
+                            <a href="{{ funnel.file.fileUrl }}" target="_blank">
+                                {{ funnel.file.fileName }}
+                            </a>
+                            <a href="{{ path('hb.sale_funnel.lead_collection.remove_file', {id: funnel.id}) }}"
+                               class="btn btn-pill btn-sm btn-outline-danger"><i class="fa fa-remove"></i> </a>
+                            <br>
+                            <br>
+                        {% endif %}
+
+                        <button type="button" class="btn btn-indigo" id="upload_file" data-funnel-id="{{ funnel.id }}">
+                            <i class="fa fa-file"></i>
+                            Загрузить файл (<1.5Gb)
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
+{% endblock %}

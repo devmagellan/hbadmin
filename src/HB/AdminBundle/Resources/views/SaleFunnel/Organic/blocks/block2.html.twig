@@ -1,0 +1,34 @@
+{% if saved %}
+    <div class="alert alert-success" role="alert">Сохранено!</div>
+{% endif %}
+<div class="row">
+    <div class="col-md-8 text-center">
+        <form method="post" name="block2" data-funnel-id="{{ funnel.id }}">
+            <small class="alert-gray-100">Расскажите о вашей программе обучения словами понятными вашей целевой аудитории</small>
+            {{ form_widget(form) }}
+            <button type="submit" class="btn btn-success">
+                Сохранить
+            </button>
+        </form>
+    </div>
+
+    <div class="col-md-2 text-center">
+        <h4>Фото курса</h4>
+        {% if funnel.block2CourseImage %}
+
+            <a href="{{ funnel.block2CourseImage.fileUrl }}" target="_blank">
+                <img src="{{ funnel.block2CourseImage.fileUrl }}" style="max-height: 200px;">
+            </a>
+            <button class="btn btn-pill btn-sm btn-outline-danger" id="block2_remove_image"><i class="fa fa-remove"></i> </button>
+            <br>
+            <br>
+        {% endif %}
+
+        <button type="button" class="btn btn-orange" id="block2_upload_image"><i class="fa fa-photo"></i>
+            Загрузить фото (800x800 px)
+        </button>
+        <br>
+        <small class="alert-gray-100">Если вы не предоставите свою картинку, по умолчанию мы поставим такую: </small>
+        <img src="{{ asset('bundles/hbadmin/img/what_we_inveted.jpg') }}" style="height: 200px;">
+    </div>
+</div>

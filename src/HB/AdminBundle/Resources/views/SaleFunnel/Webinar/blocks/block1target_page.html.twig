@@ -1,0 +1,191 @@
+{% include '@HBAdmin/datepicker/datepicker-init.html.twig' %}
+{% if saved %}
+    <div class="alert alert-success" role="alert">Сохранено!</div>
+{% endif %}
+
+<style>
+    ul[id=webinar-dates] {
+        list-style: none;
+        padding-left: unset;
+    }
+
+    legend {
+        display: none;
+    }
+
+</style>
+<div class="row">
+    <div class="col-md-5">
+        <form method="post" name="block1" data-funnel-id="{{ funnel.id }}">
+            <small class="alert-gray-100">Вебинар - это внутреннее рабочее название. Для пользователей вебинар мы
+                назваем "мастер-класс", целевая страница будет называться "Мастер-класс" и далее название.
+            </small>
+            <br>
+
+            {{ form_widget(form.title) }}
+            {{ form_errors(form.title) }}
+            <br>
+            {{ form_widget(form.description) }}
+            {{ form_errors(form.description) }}
+
+            <br><br>
+
+            <ul id="webinar-dates"
+                data-prototype="{{ form_widget(form.dates.vars.prototype)|e }}"
+                data-widget-tags="{{ '<div style=\'display: block\'></div>'|e }}">
+                {% for key, dateField in form.dates %}
+
+                    <div style="display: block" class="webinar-time">
+
+                        <button class="btn btn-sm pull-right btn-danger btn-pill" style="z-index: 99" type="button" id="remove_date_{{ key }}" data-date-id="{{ dateField.vars.value.id }}">
+                            <i class="fa fa-remove"></i></button>
+                        {{ form_errors(dateField) }}
+                        {{ form_widget(dateField) }}
+
+                    </div>
+                    <hr>
+                {% endfor %}
+            </ul>
+
+            <button type="button" class="btn btn-primary" id="add_date">
+                Добавить дату
+            </button>
+            <button type="submit" class="btn btn-success">
+                Сохранить
+            </button>
+        </form>
+
+        <script>
+            $(function () {
+                $('button[id=add_date]').click(function (e) {
+                    console.log('ha');
+
+                    var list = $('ul[id=webinar-dates]');
+                    var counter = list.data('widget-counter') | list.children().length;
+
+                    if (!counter) {
+                        counter = list.children().length;
+                    }
+
+                    var newWidget = list.attr('data-prototype');
+                    var close_button = "<button class='btn btn-sm pull-right btn-danger btn-pill' style='z-index: 99' type='button' id='remove_date_" + counter + "' ><i class='fa fa-remove'></i></button>";
+
+                    newWidget = newWidget.replace(/__name__/g, counter);
+                    counter++;
+                    list.data(' widget-counter', counter);
+
+                    var newElem = $(list.attr('data-widget-tags')).html(close_button + newWidget + '<hr>');
+                    $(newElem).find("option[value='Europe/Kiev']").prop('selected', true);
+                    newElem.appendTo(list);
+
+                    $('.datetimepicker-webinar').datetimepicker({
+                        format: 'Y-m-d H:i',
+                        minDate: moment().add(1, 'days').format('YYYY-MM-DD HH:mm')
+                    });
+                });
+
+                $('ul[id=webinar-dates]').on('click', 'button[id^=remove_date]', (function () {
+                    var date_id = $(this).data('date-id');
+                    $(this).parent().remove();
+
+                    if (date_id) {
+                        openHoldon();
+                        var path = Routing.generate('hb.sale_funnel.webinar.block1.remove.webinar_date', {id: date_id});
+                        $.post(path, function () {
+                            document.location = document.location;
+                        });
+                    }
+                }));
+            });
+        </script>
+
+    </div>
+
+    <div class="col-md-4 text-center">
+        <h4>Баннер вебинара (не обязательно)</h4>
+        {% if funnel.imageBanner %}
+
+            <a href="{{ funnel.imageBanner.fileUrl }}" target="_blank">
+                <img src="{{ funnel.imageBanner.fileUrl }}" style="max-height: 100px;">
+            </a>
+            <button class="btn btn-pill btn-sm btn-outline-danger" id="block1_remove_image"><i class="fa fa-remove"></i>
+            </button>
+            <br>
+            <br>
+        {% endif %}
+
+        <button type="button" class="btn btn-orange" id="block1_upload_banner">
+            <i class="fa fa-photo"></i>
+            Загрузить баннер (1440x760 px)
+        </button>
+
+        <br>
+        <small class="alert-gray-100">
+            Если вы не предоставляете свой вариант баннера, по умолчанию мы поставим такой:
+        </small>
+
+        <br><br>
+        <a href="{{ asset('bundles/hbadmin/images/banner_default.jpg') }}" target="_blank">
+            <img src="{{ asset('bundles/hbadmin/images/banner_default.jpg') }}" style="max-width: 200px">
+        </a>
+
+        <br><br>
+        <h4>Видеоприглашение на вебинар (не обязательно)</h4>
+        {% if funnel.videoBanner %}
+
+            <a href="{{ funnel.videoBanner.fileUrl }}" target="_blank">
+                {{ funnel.videoBanner.fileName }}
+            </a>
+            <button class="btn btn-pill btn-sm btn-outline-danger" id="block1_remove_video"><i class="fa fa-remove"></i>
+            </button>
+            <br>
+            <br>
+        {% endif %}
+
+        <button type="button" class="btn btn-indigo" id="block1_upload_video"><i class="fa fa-file-video-o"></i>
+            Добавить видео (<1.5Gb)
+        </button>
+        <br>
+        <small class="alert-gray-100">Например, видео приветствие, видео обзор программы курса</small>
+    </div>
+    <div class="col-md-2 text-center">
+
+        {% if (funnel.theses|length) != 3 and (funnel.theses|length) != 6 %}
+            <span class="invalid-feedback d-block">
+                <span class="d-block">
+                    <span class="form-error-icon badge badge-danger text-uppercase">Ошибка</span> <span
+                            class="form-error-message">Необходимо минимум 3 или 6 пунктов</span>
+                </span>
+            </span>
+        {% endif %}
+
+        {% if funnel.theses | length < 6 %}
+            <form method="post" name="block1_thesis" data-funnel-id="{{ funnel.id }}">
+
+                {{ form_widget(formThesis) }}
+
+                <button type="submit" class="btn btn-success">
+                    Добавить
+                </button>
+            </form>
+        {% endif %}
+
+        <br>
+
+        {% if funnel.theses | length > 0 %}
+
+
+            <table class="table table-bordered">
+                {% for thesis in funnel.theses %}
+                    <tr>
+                        <td>{{ thesis.description }}</td>
+                        <td>
+                            <button type="button" id="remove_thesis_{{ thesis.id }}" data-thesis-id="{{ thesis.id }}"
+                                    class="btn btn-pill btn-sm btn-outline-danger"><i class="fa fa-remove"></i></button>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% endif %}
+    </div>
+</div>

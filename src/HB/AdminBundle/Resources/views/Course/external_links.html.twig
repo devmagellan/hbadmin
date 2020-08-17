@@ -1,0 +1,16 @@
+{% if accessRestriction %}
+    <div class="alert alert-danger">Только администратор может редактировать ссылки</div>
+{% endif %}
+
+{% if saved %}
+    <div class="alert alert-success">Данные сохранены</div>
+{% endif %}
+
+{{ form_start(form) }}
+{{ form_widget(form) }}
+
+{% if is_granted('ROLE_ADMIN') %}
+    <button type="button" class="btn btn-primary" id="external_link_submit">Сохранить</button>
+{% endif %}
+
+{{ form_end(form) }}

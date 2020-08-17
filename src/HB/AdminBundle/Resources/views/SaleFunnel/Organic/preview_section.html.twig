@@ -1,0 +1,38 @@
+<li class="collapse_item {% if first %}active{% endif %}">
+    <div class="collapse_el">
+        <i class="collapse_icon icon-List-Open"></i>
+        <p class="collapse_name">
+            {{ section.title }}
+        </p>
+        <div class="collapse_rs">
+            <p class="collapse_lnumb">
+                Лекций: {{ lessons | length }}
+            </p>
+
+            <p class="collapse_date">
+
+            </p>
+
+        </div>
+    </div>
+    <ul class="collapse_list">
+
+        {% for lesson in lessons %}
+            <li class="collapse_citem" style="display: block">
+                {% for element in lesson.elements %}
+                    <i class="fa {{ element.type.iconName }} collapse_cicon"></i>
+                {% endfor %}
+
+                <a class='item collapse_cname' onclick="return false" style="">
+                    {{ lesson.title }}
+                </a>
+
+                <div class="collapse_crs pull-right">
+                    {% if lesson.isFree %}
+                        <a class="collapse_prev" onclick="return false">Предварительный просмотр</a>
+                    {% endif %}
+                </div>
+            </li><br>
+        {% endfor %}
+    </ul>
+</li>

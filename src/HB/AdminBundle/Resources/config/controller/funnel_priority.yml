@@ -1,0 +1,20 @@
+services:
+    hb.admin.controller.funnel_priority.index:
+        class: HB\AdminBundle\Controller\FunnelPriority\IndexController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@twig"
+            - "@access.service"
+
+    hb.admin.controller.funnel_priority.reset_to_default:
+        class: HB\AdminBundle\Controller\FunnelPriority\ResetToDefaultController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@router"
+            - "@access.service"
+
+    hb.admin.controller.funnel_priority.update:
+        class: HB\AdminBundle\Controller\FunnelPriority\UpdatePriorityController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@access.service"

@@ -1,0 +1,36 @@
+<div class="row">
+
+
+    <div class="col-md-6">
+        <span class="alert-gray-100">
+            Вы можете загрузить видео, текстовый документ(pdf, doc) или дать ссылку на другой ваш продукт опубликованный на нашей платформе
+        </span>
+        <br>
+        {% if funnel.offerFile %}
+            <a href="{{ funnel.offerFile.fileUrl }}" target="_blank">{{ funnel.offerFile.fileName }}</a>
+            <br>
+        {% endif %}
+        <button type="button" class="btn btn-light"
+                data-file-type="{{ constant('\\HB\\AdminBundle\\Entity\\SaleFunnel\\SalesFunnelOneTimeOffer::OTO_FILE_TYPE_OFFER') }}"
+                data-block="4"
+                id="add_file_offer">
+            <i class="fa fa-file"></i> Загрузить файл
+        </button>
+        {% if funnel.offerFile %}
+            <a href="{{ path('hb.sale_funnel.one_time_offer.remove.file', {id: funnel.id, type: constant('\\HB\\AdminBundle\\Entity\\SaleFunnel\\SalesFunnelOneTimeOffer::OTO_FILE_TYPE_OFFER') }) }}"
+               class="btn btn-danger"><i class="fa fa-remove"></i> Удалить</a>
+        {% endif %}
+    </div>
+
+    <div class="col-md-6">
+        {% if saved %}
+            <div class="alert alert-success" role="alert">Сохранено!</div>
+        {% endif %}
+
+        {{ form_start(form) }}
+
+        {{ form_widget(form) }}
+        <button class="btn btn-success" type="button" id="form_submit_link">Сохранить</button>
+        {{ form_end(form) }}
+    </div>
+</div>

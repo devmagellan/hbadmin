@@ -1,0 +1,1500 @@
+hb_admin_homepage:
+    path:     /{id}
+    defaults: { _controller: 'hb.admin.controller.customer_action.list:handleAction', id: null }
+    requirements:
+        id: \d+
+
+hb.login_router:
+    path:     /router
+    defaults: { _controller: HBAdminBundle:Login:router }
+
+hb.customer.create:
+    path:   /customer/create
+    defaults: { _controller: 'hb.admin.controller.customer.create:handleAction' }
+
+hb.customer.list:
+    path:   /customers/{page}
+    defaults: { _controller: 'hb.admin.controller.customer.list:handleAction', page: 1 }
+    requirements:
+        page: \d+
+
+hb.customer.edit:
+    path:   /customer/{id}/edit
+    defaults: { _controller: 'hb.admin.controller.customer.edit:handleAction' }
+    requirements:
+        id: \d+
+
+hb.customer.self.edit:
+    path:   /customer/self/edit
+    defaults: { _controller: 'hb.admin.controller.customer.self_edit:handleAction' }
+
+hb.customer.self.edit.old_url_for_intercom:
+    path:   /customer/self/33/edit
+    defaults: { _controller: 'hb.admin.controller.customer.self_edit:handleAction' }
+
+hb.customer.transferwise.form:
+    path:   /customer/transferwise/form/{id}
+    defaults: { _controller: 'hb.admin.controller.customer.transferwise.form:handleAction' }
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.customer.transferwise.remove:
+    path:   /customer/transferwise/remove/{id}
+    defaults: { _controller: 'hb.admin.controller.customer.transferwise.remove:handleAction' }
+    requirements:
+        id: \d+
+
+hb.customer.self.change_packet:
+    path:   /customer/self/{id}/change_packet/{type}
+    defaults: { _controller: 'hb.admin.controller.customer.change_packet:handleAction' }
+    requirements:
+        id: \d+
+
+hb.course.create:
+    path:   /course/create
+    defaults: { _controller: 'hb.admin.controller.course.create:handleAction' }
+
+hb.course.create_sandbox:
+    path:   /course/create/sandbox
+    defaults: { _controller: 'hb.admin.controller.course.create_sandbox:handleAction' }
+
+hb.courses.list:
+    path:   /course/list/{page}
+    defaults: { _controller: 'hb.admin.controller.course.list:handleAction', page: 1 }
+    requirements:
+        page: \d+
+
+hb.course.edit:
+    path:   /course/edit/{id}
+    defaults: { _controller: 'hb.admin.controller.course.edit:handleAction'}
+    requirements:
+        page: \d+
+        
+hb.course.stop_lessons:
+    path:   /course/stop_lessons/{id}
+    defaults: { _controller: 'hb.admin.controller.course.stop_lessons:handleAction'}
+    requirements:
+        page: \d+
+
+hb.course.remove:
+    path:   /course/remove/{id}
+    defaults: { _controller: 'hb.admin.controller.course.remove:handleAction'}
+    requirements:
+        page: \d+
+
+hb.course.change_status:
+    path:   /course/change_status/{id}/{status}
+    defaults: { _controller: 'hb.admin.controller.course.change_status:handleAction'}
+    requirements:
+        page: \d+
+
+hb.course.request_moderate:
+    path:   /course/request_moderate/{id}
+    defaults: { _controller: 'hb.admin.controller.course.request_moderate:handleAction'}
+    requirements:
+        page: \d+
+
+hb.course.external_links:
+    path:   /course/external_links/{id}
+    defaults: { _controller: 'hb.admin.controller.course.external_links_form:handleAction'}
+    requirements:
+        page: \d+
+    options:
+        expose: true
+
+hb.course.external.funnels.queue:
+    path:   /course/external/funnels/queue
+    defaults: { _controller: 'hb.admin.controller.external.funnels.queue:handleAction'}
+
+hb.lesson.remove:
+    path:   /course/lesson/{id}/remove
+    defaults: { _controller: 'hb.admin.controller.lesson.remove:handleAction' }
+    requirements:
+        id: \d+
+
+hb.lesson.edit:
+    path:   /course/lesson/{id}/edit
+    defaults: { _controller: 'hb.admin.controller.lesson.edit:handleAction' }
+    requirements:
+        id: \d+
+
+
+hb.lesson.add.file.check.count:
+    path:   /course/lesson/file/check/count/{id}
+    defaults: { _controller: 'hb.admin.controller.lesson.file.check.count:handleAction'}
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.lesson.add.file:
+    path:   /course/lesson/file/add/{id}
+    defaults: { _controller: 'hb.admin.controller.lesson.file.add:handleAction'}
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.lesson.switch.free.status:
+    path:   /course/lesson/switch/freestatus/{id}
+    defaults: { _controller: 'hb.admin.controller.lesson.switch.free_status:handleAction'}
+    requirements:
+        id: \d+
+    options:
+        expose: true
+        
+hb.lesson.update.inline.ajax:
+    path:   /course/lesson/update/inline/ajax
+    defaults: { _controller: 'hb.admin.controller.lesson.update.inline.ajax:handleAction'}
+    options:
+        expose: true
+
+hb.lesson.quiz.inline_edit:
+    path:   /course/lesson/quiz/inline-edit
+    defaults: { _controller: 'hb.admin.controller.lesson.quiz.inline_edit:handleAction'}
+    methods: [POST]
+    options:
+        expose: true
+
+hb.lesson.quiz.change_answer_right:
+    path:   /course/lesson/quiz/change-answer-right/{id}
+    defaults: { _controller: 'hb.admin.controller.lesson.quiz.change_answer_right:handleAction'}
+    methods: [POST]
+    options:
+        expose: true
+
+hb.lesson.quiz.remove:
+    path:   /course/lesson/quiz/remove/{id}
+    defaults: { _controller: 'hb.admin.controller.lesson.quiz.remove:handleAction'}
+    requirements:
+        id: \d+
+
+hb.lesson.quiz.answer.remove:
+    path:   /course/lesson/quiz/answer/remove/{id}
+    defaults: { _controller: 'hb.admin.controller.lesson.quiz.answer.remove:handleAction'}
+    requirements:
+        id: \d+
+
+hb.lesson.quiz.answer.add:
+    path:   /course/lesson/quiz/answer/add/{id}
+    defaults: { _controller: 'hb.admin.controller.lesson.quiz.answer.add:handleAction'}
+    requirements:
+        id: \d+
+
+hb.lesson_section.list:
+    path:   /course/lessons/section/{id}/list
+    defaults: { _controller: 'hb.admin.controller.lesson_section.list:handleAction'}
+    requirements:
+        id: \d+
+
+hb.lesson_section.remove:
+    path:   /course/lessons/section/{id}/remove
+    defaults: { _controller: 'hb.admin.controller.lesson_section.remove:handleAction'}
+    requirements:
+        id: \d+
+
+hb.lesson_section.edit:
+    path:   /course/lessons/section/{id}/edit
+    defaults: { _controller: 'hb.admin.controller.lesson_section.edit:handleAction'}
+    requirements:
+        id: \d+
+
+hb.lesson_sections.update_priority:
+    path:   /course/lessons/sections/update/priority
+    defaults: { _controller: 'hb.admin.controller.lesson_sections.update_priority:handleAction'}
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.lesson_section.update:
+    path:   /course/lessons/section/update/{id}
+    defaults: { _controller: 'hb.admin.controller.lesson_section.inline_edit_form:handleAction'}
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.lesson_section.update.price_block:
+    path:   /course/lessons/section/update/price/block/{section}/{block}
+    defaults: { _controller: 'hb.admin.controller.lesson_section.update.price_block:handleAction'}
+    requirements:
+        section: \d+
+        block: \d+
+    options:
+        expose: true
+
+
+
+hb.lesson_elements.update_priority:
+    path:   /course/lesson/elements/update/priority
+    defaults: { _controller: 'hb.admin.controller.lesson_element.update_priority:handleAction'}
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.lesson_element.remove:
+    path:   /course/lesson/element/{id}
+    defaults: { _controller: 'hb.admin.controller.lesson_element.remove:handleAction'}
+    requirements:
+        id: \d+
+
+hb.lesson_element.text.edit:
+    path:   /course/lesson/element/text/edit/{id}
+    defaults: { _controller: 'hb.admin.controller.lesson_element.text.edit:handleAction'}
+    requirements:
+        id: \d+
+
+hb.lesson_element.iframe.edit:
+    path:   /course/lesson/element/iframe/edit/{id}
+    defaults: { _controller: 'hb.admin.controller.lesson_element.iframe.edit:handleAction'}
+    requirements:
+        id: \d+
+
+
+hb.lesson_element.list:
+    path:   /course/lesson/element/list/{lesson}
+    defaults: { _controller: 'hb.admin.controller.lesson_element.list:handleAction'}
+    requirements:
+        lesson: \d+
+    options:
+        expose: true
+
+hb.lesson_element.update.inline.ajax:
+    path:   /course/lesson/element/update/inline
+    defaults: { _controller: 'hb.admin.controller.lesson_element.inline.edit:handleAction'}
+    options:
+        expose: true
+
+
+hb.lesson_sections.update_priority.lessons:
+    path:   /course/lessons/sections/update/priority/lessons
+    defaults: { _controller: 'hb.admin.controller.lesson_sections.lessons.update_priority:handleAction'}
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.lesson_section.update.inline.ajax:
+    path:   /course/lesson/section/update/inline
+    defaults: { _controller: 'hb.admin.controller.lesson_section.update.inline.ajax:handleAction'}
+    options:
+        expose: true
+
+hb.lesson_section.move_into_lesson:
+    path:   /course/lesson/section/move/into/lesson/{section}/{lesson}
+    defaults: { _controller: 'hb.admin.controller.lesson_section.move_lesson_into:handleAction'}
+    requirements:
+        section: \d+
+        lesson: \d+
+    options:
+        expose: true
+
+
+hb.customer_actions:
+    path:   /actions
+    defaults: { _controller: 'hb.admin.controller.customer_action.list:handleAction'}
+
+hb.customer_action.viewed:
+    path:   /action/{id}/viewed
+    defaults: { _controller: 'hb.admin.controller.customer_action.viewed:handleAction' }
+    options:
+        expose: true
+    requirements:
+        id: \d+
+
+hb.customer_action.mark_published:
+    path:   /action/{id}/mark_published
+    defaults: { _controller: 'hb.admin.controller.customer_action.mark_published:handleAction' }
+    options:
+        expose: true
+    requirements:
+        id: \d+
+
+hb.customer.switch_status:
+    path: /customer/switch/status/{id}
+    defaults: { _controller: 'hb.admin.controller.customer.switch_status:handleAction' }
+    requirements:
+        id: \d+
+
+#hb.customer.remove:
+#    path: /customer/remove/{id}
+#    defaults: { _controller: 'hb.admin.controller.customer.remove:handleAction' }
+#    requirements:
+#        id: \d+
+
+hb.customer.update.photo:
+    path: /customer/update/photo/{id}
+    defaults: { _controller: 'hb.admin.controller.customer.update.photo:handleAction' }
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.customer.role.check_type:
+    path: /customer/role/check_type/{id}/{compareRole}
+    defaults: { _controller: 'hb.admin.controller.customer.role.check_type:handleAction' }
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.upload_care.file.remove:
+    path: /upload_care/file/remove/{uuid}
+    defaults: { _controller: 'hb.admin.controller.upload_care.remove:handleAction' }
+    options:
+        expose: true
+
+hb.sale_funnel.organic.create:
+    path: /course/sale_funnel/organic/create/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.organic.create:handleAction' }
+    requirements:
+        id: \d+
+
+hb.sale_funnel.organic.edit:
+    path: /course/sale_funnel/organic/edit/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.organic.edit:handleAction' }
+    requirements:
+        id: \d+
+
+hb.sale_funnel.organic.price_blocks:
+    path: /course/sale_funnel/organic/price_blocks/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.organic.price_blocks:handleAction' }
+    requirements:
+        id: \d+
+
+hb.sale_funnel.organic.preview:
+    path: /course/sale_funnel/organic/preview/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.organic.preview:handleAction' }
+    requirements:
+        id: \d+
+
+# Sale funnel organic. Block1
+hb.sale_funnel.organic.block1banner:
+    path: /course/sale_funnel/organic/block1/banner/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.organic.block1banner:handleAction' }
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.sale_funnel.organic.block1banner.image.update:
+    path: /course/sale_funnel/organic/block1/banner/image/update/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.organic.block1banner.image.update:handleAction' }
+    methods: [POST]
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.sale_funnel.organic.block1banner.video.update:
+    path: /course/sale_funnel/organic/block1/banner/video/update/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.organic.block1banner.video.update:handleAction' }
+    methods: [POST]
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.sale_funnel.organic.block1banner.image.remove:
+    path: /course/sale_funnel/organic/block1/banner/image/remove/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.organic.block1banner.image.remove:handleAction' }
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.sale_funnel.organic.block1banner.video.remove:
+    path: /course/sale_funnel/organic/block1/banner/video/remove/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.organic.block1banner.video.remove:handleAction' }
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+# Sale funnel organic. Block2
+hb.sale_funnel.organic.block2main_info:
+    path: /course/sale_funnel/organic/block2/main_info/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.organic.block2main_info:handleAction' }
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+
+hb.sale_funnel.organic.block2main_info.image.update:
+    path: /course/sale_funnel/organic/block2/image/update/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.organic.block2main_info.image.update:handleAction' }
+    methods: [POST]
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.sale_funnel.organic.block2main_info.image.remove:
+    path: /course/sale_funnel/organic/block2/image/remove/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.organic.block2main_info.image.remove:handleAction' }
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+# Sale funnel organic. Block3
+hb.sale_funnel.organic.block3knowledge:
+    path: /course/sale_funnel/organic/block3/knowledge/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.organic.block3knowledge:handleAction' }
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.sale_funnel.organic.block3knowledge.remove:
+    path: /course/sale_funnel/organic/block3/knowledge/remove/{id}/{funnel}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.organic.block3knowledge.remove:handleAction' }
+    requirements:
+        id: \d+
+        funnel: \d+
+    options:
+        expose: true
+
+# Sale funnel organic. Block4
+hb.sale_funnel.organic.block4action_call_1:
+    path: /course/sale_funnel/organic/block4/action_call1/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.organic.block4action_call_1:handleAction' }
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.sale_funnel.organic.block4action_call_1.image.update:
+    path: /course/sale_funnel/organic/block4/image/update/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.organic.block4action_call_1.image.update:handleAction' }
+    methods: [POST]
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.sale_funnel.organic.block4action_call_1.image.remove:
+    path: /course/sale_funnel/organic/block4/image/remove/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.organic.block4action_call_1.image.remove:handleAction' }
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+# Sale funnel organic. Block5
+hb.sale_funnel.organic.block5recommended:
+    path: /course/sale_funnel/organic/block5/recommended/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.organic.block5recommended:handleAction' }
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+# Sale funnel organic. Block6
+hb.sale_funnel.organic.block6author:
+    path: /course/sale_funnel/organic/block6/author/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.organic.block6author:handleAction' }
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.sale_funnel.organic.block6author.photo.update:
+    path: /course/sale_funnel/organic/block6/author/photo/update/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.organic.block6author.image.update:handleAction' }
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.sale_funnel.organic.block6author.photo.remove:
+    path: /course/sale_funnel/organic/block6/author/photo/remove/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.organic.block6author.image.remove:handleAction' }
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.sale_funnel.organic.block6author.video.update:
+    path: /course/sale_funnel/organic/block6/author/video/update/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.organic.block6author.video.update:handleAction' }
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.sale_funnel.organic.block6author.video.remove:
+    path: /course/sale_funnel/organic/block6/author/video/remove/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.organic.block6author.video.remove:handleAction' }
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+# Sale funnel organic. Block7
+hb.sale_funnel.organic.block7feedback:
+    path: /course/sale_funnel/organic/block7/feedback/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.organic.block7feedback:handleAction' }
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.sale_funnel.organic.block7feedback.update.video:
+    path: /course/sale_funnel/organic/block7/feedback/update/video/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.organic.block7feedback.update.video:handleAction' }
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+
+hb.sale_funnel.organic.block7feedback.remove.video:
+    path: /course/sale_funnel/organic/block7/feedback/remove/video/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.organic.block7feedback.remove.video:handleAction' }
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.sale_funnel.organic.block7feedback.remove:
+    path: /course/sale_funnel/organic/block7/feedback/remove/{id}/{funnel}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.organic.block7feedback.remove:handleAction' }
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+# Sale funnel organic. Block8
+hb.sale_funnel.organic.block8action_call_2:
+    path: /course/sale_funnel/organic/block8/action_call1/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.organic.block8action_call_2:handleAction' }
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.sale_funnel.organic.block8action_call_2.image.update:
+    path: /course/sale_funnel/organic/block8/image/update/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.organic.block8action_call_2.image.update:handleAction' }
+    methods: [POST]
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.sale_funnel.organic.block8action_call_2.image.remove:
+    path: /course/sale_funnel/organic/block8/image/remove/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.organic.block8action_call_2.image.remove:handleAction' }
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+# Sale funnel organic. Block9
+hb.sale_funnel.organic.block9company_logo:
+    path: /course/sale_funnel/organic/block9/company_logo/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.organic.block9companies:handleAction' }
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.sale_funnel.organic.block9company_logo.add:
+    path: /course/sale_funnel/organic/block9/company_logo/add/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.organic.block9companies.add.company.logo:handleAction' }
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.sale_funnel.organic.block9company_logo.remove:
+    path: /course/sale_funnel/organic/block9/company_logo/remove/{id}/{funnel}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.organic.block9companies.remove.company.logo:handleAction' }
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+# Sale funnel organic. Block10
+hb.sale_funnel.organic.block10additional_blocks:
+    path: /course/sale_funnel/organic/block10/additional_block/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.organic.block10additional_blocks:handleAction' }
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.sale_funnel.organic.block10additional_blocks.edit:
+    path: /course/sale_funnel/organic/block10/additional_block/edit/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.organic.block10additional_blocks.edit:handleAction' }
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.sale_funnel.organic.block10additional_blocks.remove:
+    path: /course/sale_funnel/organic/block10/additional_block/{funnel}/{block}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.organic.block10additional_blocks.remove:handleAction' }
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+# Sale funnel organic. Block11
+hb.sale_funnel.organic.block11payment_text:
+    path: /course/sale_funnel/organic/block11/payment/text/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.organic.block11payment_text:handleAction' }
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.sale_funnel.organic.block11payment_text.remove:
+    path: /course/sale_funnel/organic/block11/payment/text/remove/{id}/{funnel}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.organic.block11payment_text.remove:handleAction' }
+    requirements:
+        id: \d+
+        funnel: \d+
+    options:
+        expose: true
+
+# Sale funnel organic. Block12
+hb.sale_funnel.organic.block12photo_signature:
+    path: /course/sale_funnel/organic/block12/photo/signature/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.organic.block12photo_signature:handleAction' }
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.sale_funnel.organic.block12photo_signature.add:
+    path: /course/sale_funnel/organic/block12/photo/signature/add/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.organic.block12photo_signature.add:handleAction' }
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.sale_funnel.organic.block12photo_signature.remove:
+    path: /course/sale_funnel/organic/block12/photo/signature/remove/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.organic.block12photo_signature.remove:handleAction' }
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+
+# Sale funnel organic price blocks
+hb.sale_funnel_organic_price_block_setting.basic:
+    path: /sale_funnel_organic/price_block_setting/basic/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel_organic_price_block.setting.basic:handleAction' }
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.sale_funnel_organic_price_block_setting.optimal:
+    path: /sale_funnel_organic/price_block_setting/optimal/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel_organic_price_block.setting.optimal:handleAction' }
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.sale_funnel_organic_price_block_setting.vip:
+    path: /sale_funnel_organic/price_block_setting/vip/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel_organic_price_block.setting.vip:handleAction' }
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.sale_funnel_organic_price_block_setting.remove.thesis:
+    path: /sale_funnel_organic/price_block_setting/remove/thesis/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel_organic_block.setting.remove_thesis:handleAction' }
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+# Sale funnel Lead Collection
+hb.sale_funnel.lead_collection.edit:
+    path: /sale_funnel/lead_collection/edit/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.lead_collection.edit:handleAction'}
+    requirements:
+        id: \d+
+
+hb.sale_funnel.lead_collection.edit.lead_magnet:
+    path: /sale_funnel/lead_collection/edit/lead_magnet/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.lead_collection.edit_lead_magnet:handleAction'}
+    requirements:
+        id: \d+
+
+hb.sale_funnel.lead_collection.remove:
+    path: /sale_funnel/lead_collection/remove/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.lead_collection.remove:handleAction'}
+    requirements:
+        id: \d+
+
+hb.sale_funnel.lead_collection.update_image:
+    path: /course/sale_funnel/lead_collection/update/image/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.lead_collection.update_image:handleAction' }
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.sale_funnel.lead_collection.update_file:
+    path: /course/sale_funnel/lead_collection/update/file/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.lead_collection.update_file:handleAction' }
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.sale_funnel.lead_collection.remove_file:
+    path: /course/sale_funnel/lead_collection/remove/file/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.lead_collection.remove_file:handleAction' }
+    requirements:
+        id: \d+
+
+hb.sale_funnel.lead_collection.remove_image:
+    path: /course/sale_funnel/lead_collection/remove/image/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.lead_collection.remove_image:handleAction' }
+    requirements:
+        id: \d+
+
+hb.sale_funnel.lead_collection.preview:
+    path: /course/sale_funnel/lead_collection/preview/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.lead_collection.preview:handleAction' }
+    requirements:
+        id: \d+
+
+# Sale funnel broken basket
+hb.sale_funnel.broken_basket.change_discount_percent:
+    path: /course/sale_funnel/broken_basket/change_discount_percent/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.broken_basket.change_discount_percent:handleAction' }
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+# Sale funnel broken basket
+hb.sale_funnel.post_sale.edit:
+    path: /course/sale_funnel/post_sale/edit/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.post_sale.edit:handleAction' }
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+# Sale funnel cross sale
+hb.sale_funnel.cross_sale.create:
+    path: /course/sale_funnel/cross_sale/create/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.cross_sale.create:handleAction' }
+    requirements:
+        id: \d+
+
+hb.sale_funnel.cross_sale.remove:
+    path: /course/sale_funnel/cross_sale/remove/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.cross_sale.remove:handleAction' }
+    requirements:
+        id: \d+
+
+hb.sale_funnel.cross_sale.edit:
+    path: /course/sale_funnel/cross_sale/edit/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.cross_sale.edit:handleAction' }
+    requirements:
+        id: \d+
+
+hb.sale_funnel.cross_sale.remove.discount_course:
+    path: /course/sale_funnel/cross_sale/remove/discount_course/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.cross_sale.remove.discount_course:handleAction' }
+    requirements:
+        id: \d+
+
+# Sale funnel cross sale
+hb.sale_funnel.hot_leads.create:
+    path: /course/sale_funnel/hot_leads/create/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.hot_leads.create:handleAction' }
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.sale_funnel.hot_leads.remove:
+    path: /course/sale_funnel/hot_leads/remove/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.hot_leads.remove:handleAction' }
+    requirements:
+        id: \d+
+
+hb.sale_funnel.hot_leads.remove_success_history:
+    path: /course/sale_funnel/hot_leads/remove/success/history/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.hot_leads.remove_success_history:handleAction' }
+    requirements:
+        id: \d+
+
+hb.sale_funnel.hot_leads.edit:
+    path: /course/sale_funnel/hot_leads/edit/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.hot_leads.edit:handleAction' }
+    requirements:
+        id: \d+
+
+hb.sale_funnel.hot_leads.edit_success_history:
+    path: /course/sale_funnel/hot_leads/edit_success_history/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.hot_leads.edit_success_history:handleAction' }
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+# Sale funnel layer cake
+hb.sale_funnel.layer_cake.list:
+    path: /course/sale_funnel/layer_cake/list/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.layer_cake.list:handleAction' }
+    requirements:
+        id: \d+
+
+hb.sale_funnel.layer_cake.edit:
+    path: /course/sale_funnel/layer_cake/edit/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.layer_cake.edit:handleAction' }
+    requirements:
+        id: \d+
+
+hb.sale_funnel.layer_cake.switch.relation.lesson:
+    path: /course/sale_funnel/layer_cake/switch/relation/lesson/{funnel}/{lesson}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.layer_cake.switch_lesson_relation:handleAction' }
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.sale_funnel.layer_cake.switch.relation.section:
+    path: /course/sale_funnel/layer_cake/switch/relation/section/{funnel}/{section}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.layer_cake.switch_lesson_section_relation:handleAction' }
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.sale_funnel.layer_cake.view:
+    path: /course/sale_funnel/layer_cake/view/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.layer_cake.view:handleAction' }
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.sale_funnel.layer_cake.remove:
+    path: /course/sale_funnel/layer_cake/remove/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.layer_cake.remove:handleAction' }
+    requirements:
+        id: \d+
+
+# Sale funnel mini course
+hb.sale_funnel.mini_course.create:
+    path:   /course/sale_funnel/mini_course/create/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.mini_course.create:handleAction'}
+    requirements:
+        id: \d+
+
+hb.sale_funnel.mini_course.remove:
+    path:   /course/sale_funnel/mini_course/remove/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.mini_course.remove:handleAction'}
+    requirements:
+        id: \d+
+
+hb.sale_funnel.mini_course.edit:
+    path:   /course/sale_funnel/mini_course/edit/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.mini_course.edit:handleAction'}
+    requirements:
+        id: \d+
+
+hb.sale_funnel.mini_course.edit.files_block:
+    path:   /course/sale_funnel/mini_course/edit/{id}/files_block
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.mini_course.edit_lesson.files_block:handleAction'}
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.sale_funnel.mini_course.remove_lesson:
+    path:   /course/sale_funnel/mini_course/remove/lesson/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.mini_course.remove_lesson:handleAction'}
+    requirements:
+        id: \d+
+
+hb.sale_funnel.mini_course.edit_lesson:
+    path:   /course/sale_funnel/mini_course/edit/lesson/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.mini_course.edit_lesson:handleAction'}
+    requirements:
+        id: \d+
+
+hb.sale_funnel.mini_course.lesson.update.file_homework:
+    path: /course/sale_funnel/mini_course/lesson/update/file_homework/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.mini_course.update.file_homework:handleAction' }
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.sale_funnel.mini_course.lesson.update.file_lesson:
+    path: /course/sale_funnel/mini_course/lesson/update/file_lesson/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.mini_course.update.file_lesson:handleAction' }
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.sale_funnel.mini_course.lesson.remove.file_lesson:
+    path: /course/sale_funnel/mini_course/lesson/remove/file_lesson/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.mini_course.remove.file_lesson:handleAction' }
+    requirements:
+        id: \d+
+
+hb.sale_funnel.mini_course.lesson.remove.file_homework:
+    path: /course/sale_funnel/mini_course/lesson/remove/file_homework/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.mini_course.remove.file_homework:handleAction' }
+    requirements:
+        id: \d+
+
+# Sale funnel down sell
+hb.sale_funnel.down_sell.list:
+    path: /course/sale_funnel/down_sell/list/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.down.list:handleAction'}
+    requirements:
+        id: \d+
+
+hb.sale_funnel.down_sell.remove:
+    path: /course/sale_funnel/down_sell/remove/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.down.remove:handleAction'}
+    requirements:
+        id: \d+
+
+hb.sale_funnel.down_sell.edit:
+    path: /course/sale_funnel/down_sell/edit/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.down.edit:handleAction'}
+    requirements:
+        id: \d+
+
+# Sale funnel webinar
+hb.sale_funnel.webinar.list:
+    path:   /course/sale_funnel/webinar/list/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.webinar.list:handleAction'}
+    requirements:
+        id: \d+
+
+hb.sale_funnel.webinar.get_price:
+    path:   /course/sale_funnel/webinar/get_price/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.webinar.get_price:handleAction'}
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.sale_funnel.webinar.create:
+    path:   /course/sale_funnel/webinar/create/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.webinar.create:handleAction'}
+    requirements:
+        id: \d+
+
+hb.sale_funnel.webinar.remove:
+    path:   /course/sale_funnel/webinar/remove/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.webinar.remove:handleAction'}
+    requirements:
+        id: \d+
+
+hb.sale_funnel.webinar.edit:
+    path:   /course/sale_funnel/webinar/edit/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.webinar.edit:handleAction'}
+    requirements:
+        id: \d+
+
+hb.sale_funnel.webinar.preview:
+    path:   /course/sale_funnel/webinar/preview/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.webinar.preview:handleAction'}
+    requirements:
+        id: \d+
+
+# Sale funnel webinar Block 1 Target page
+hb.sale_funnel.webinar.block1.edit:
+    path:   /course/sale_funnel/webinar/block1/edit/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.webinar.edit.block1_target_page:handleAction'}
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.sale_funnel.webinar.block1.upload.image:
+    path:   /course/sale_funnel/webinar/block1/upload/image/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.webinar.upload.image_banner:handleAction'}
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.sale_funnel.webinar.block1.remove.image:
+    path:   /course/sale_funnel/webinar/block1/remove/image/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.webinar.remove.image_banner:handleAction'}
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.sale_funnel.webinar.block1.upload.video:
+    path:   /course/sale_funnel/webinar/block1/upload/video/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.webinar.upload.video_banner:handleAction'}
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.sale_funnel.webinar.block1.remove.video:
+    path:   /course/sale_funnel/webinar/block1/remove/video/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.webinar.remove.video_banner:handleAction'}
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.sale_funnel.webinar.block1.remove.thesis:
+    path:   /course/sale_funnel/webinar/block1/remove/thesis/{funnel}/{thesis}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.webinar.remove.thesis:handleAction'}
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.sale_funnel.webinar.block1.remove.webinar_date:
+    path:   /course/sale_funnel/webinar/block1/remove/webinar_date/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.webinar.remove.webinar_date:handleAction'}
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+# Sale funnel webinar Block 2 Warming letter
+hb.sale_funnel.webinar.block2.edit:
+    path:   /course/sale_funnel/webinar/block2/edit/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.webinar.edit.block2_warming_letter:handleAction'}
+    requirements:
+        id: \d+
+
+hb.sale_funnel.webinar.block2.update.homework.file:
+    path:   /course/sale_funnel/webinar/block2/update/homework/file/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.webinar.upload.b2_homework_file:handleAction'}
+    requirements:
+        id: \d+
+
+hb.sale_funnel.webinar.block2.update.workbook.file:
+    path:   /course/sale_funnel/webinar/block2/update/workbook/file/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.webinar.upload.b2_workbook_file:handleAction'}
+    requirements:
+        id: \d+
+
+hb.sale_funnel.webinar.block2.remove.homework.file:
+    path:   /course/sale_funnel/webinar/block2/remove/homework/file/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.webinar.remove.b2_homework_file:handleAction'}
+    requirements:
+        id: \d+
+
+hb.sale_funnel.webinar.block2.remove.workbook.file:
+    path:   /course/sale_funnel/webinar/block2/remove/workbook/file/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.webinar.remove.b2_workbook_file:handleAction'}
+    requirements:
+        id: \d+
+
+
+# Sale funnel webinar Block 3 bonuses
+hb.sale_funnel.webinar.block3.bonuses:
+    path:   /course/sale_funnel/webinar/block3/bonuses/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.webinar.bonuses:handleAction'}
+    requirements:
+        id: \d+
+
+hb.sale_funnel.webinar.block3.bonus.remove:
+    path:   /course/sale_funnel/webinar/block3/bonus/remove/{funnel}/{bonus}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.webinar.bonus.remove:handleAction'}
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.sale_funnel.webinar.block3.bonus.update.file:
+    path:   /course/sale_funnel/webinar/block3/bonus/update/file/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.webinar.bonus.update_file:handleAction'}
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.sale_funnel.webinar.block3.bonus.remove.file:
+    path:   /course/sale_funnel/webinar/block3/bonus/remove/file/{funnel}/{bonus}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.webinar.bonus.remove_file:handleAction'}
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+# Sale funnel webinar Block 4 price
+hb.sale_funnel.webinar.block4.price.index:
+    path:   /course/sale_funnel/webinar/block4/price/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.webinar.price.index:handleAction' }
+    requirements:
+        id: \d+
+
+hb.sale_funnel.webinar.block4.price.remove.promocode:
+    path:   /course/sale_funnel/webinar/block4/price/remove/promocode/{funnel}/{code}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.webinar.price.remove.promocode:handleAction' }
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+# Sale funnel webinar Block 5 auto webinar
+hb.sale_funnel.webinar.block5.auto_webinar.switch:
+    path:   /course/sale_funnel/webinar/block5/auto_webinar/switch/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.webinar.autowebinar:handleAction' }
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+# Sale funnel webinar Block 6 offer
+hb.sale_funnel.webinar.block6.offer:
+    path:   /course/sale_funnel/webinar/block6/offer/switch/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.webinar.offer:handleAction' }
+    requirements:
+        id: \d+
+
+hb.sale_funnel.webinar.block6.offer.remove:
+    path:   /course/sale_funnel/webinar/block6/offer/remove/{funnel}/{offer}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.webinar.offer.remove:handleAction' }
+    requirements:
+        funnel: \d+
+        offer: \d+
+    options:
+        expose: true
+
+# Sale funnel webinar Block 7 webinar record
+hb.sale_funnel.webinar.block7.webinar.record:
+    path:   /course/sale_funnel/webinar/block7/webinar/record/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.webinar.record:handleAction' }
+    requirements:
+        id: \d+
+
+# Sale funnel Walker Start
+hb.sale_funnel.walker_start.create:
+    path:   /course/sale_funnel/walker_start/create/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.walker_start.create:handleAction' }
+    requirements:
+        id: \d+
+
+hb.sale_funnel.walker_start.remove:
+    path:   /course/sale_funnel/walker_start/remove/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.walker_start.remove:handleAction' }
+    requirements:
+        id: \d+
+
+hb.sale_funnel.walker_start.info:
+    path:   /course/sale_funnel/walker_start/info
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.walker_start.info:handleAction' }
+
+# Sale funnel Author Club
+hb.sale_funnel.author_club.create:
+    path:   /course/sale_funnel/author_club/create/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.author_club.create:handleAction' }
+    requirements:
+        id: \d+
+
+hb.sale_funnel.author_club.info:
+    path:   /course/sale_funnel/author_club/info/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.author_club.info:handleAction' }
+    requirements:
+        id: \d+
+
+# Sale funnel Educational
+hb.sale_funnel.educational.create:
+    path:   /course/sale_funnel/educational/create/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.educational.create:handleAction' }
+    requirements:
+        id: \d+
+
+hb.sale_funnel.educational.remove:
+    path:   /course/sale_funnel/educational/remove/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.educational.remove:handleAction' }
+    requirements:
+        id: \d+
+
+hb.sale_funnel.educational.edit:
+    path:   /course/sale_funnel/educational/edit/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.educational.edit:handleAction' }
+    requirements:
+        id: \d+
+
+hb.sale_funnel.educational.edit.letter:
+    path:   /course/sale_funnel/educational/edit/letter/{funnel}/{letter}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.educational.edit_letter:handleAction' }
+    requirements:
+        id: \d+
+
+hb.sale_funnel.educational.new_letter.add.file:
+    path:   /course/sale_funnel/educational/new_letter/add/file
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.educational.add_new_letter.file:handleAction' }
+
+hb.sale_funnel.educational.letter.remove:
+    path:   /course/sale_funnel/educational/letter/remove/{funnel}/{letter}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.educational.letter.remove:handleAction' }
+    requirements:
+        funnel: \d+
+        letter: \d+
+
+hb.sale_funnel.educational.update.file:
+    path:   /course/sale_funnel/educational/update/file/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.educational.update.file:handleAction' }
+    requirements:
+        id: \d+
+
+hb.sale_funnel.educational.update.letter_file:
+    path:   /course/sale_funnel/educational/update/letter/file/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.educational.update.letter_file:handleAction' }
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.sale_funnel.educational.remove.file:
+    path:   /course/sale_funnel/educational/remove/file/{id}/{type}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.educational.remove.file:handleAction' }
+    requirements:
+        id: \d+
+
+hb.sale_funnel.educational.remove.letter.file:
+    path:   /course/sale_funnel/educational/remove/letter/file/{funnel}/{letter}/{type}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.educational.remove.letter.file:handleAction' }
+    requirements:
+        funnel: \d+
+        letter: \d+
+
+# Sale funnel One Time Offer
+hb.sale_funnel.one_time_offer.list:
+    path:   /course/sale_funnel/one_time_offer/list/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.one_time_offer.list:handleAction' }
+    requirements:
+        id: \d+
+
+hb.sale_funnel.one_time_offer.remove:
+    path:   /course/sale_funnel/one_time_offer/remove/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.one_time_offer.remove:handleAction' }
+    requirements:
+        id: \d+
+
+hb.sale_funnel.one_time_offer.update.file:
+    path:   /course/sale_funnel/one_time_offer/update/file/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.one_time_offer.update.file:handleAction' }
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.sale_funnel.one_time_offer.remove.file:
+    path:   /course/sale_funnel/one_time_offer/remove/file/{id}/{type}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.one_time_offer.remove.file:handleAction' }
+    requirements:
+        id: \d+
+
+hb.sale_funnel.one_time_offer.preview:
+    path:   /course/sale_funnel/one_time_offer/preview/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.one_time_offer.preview:handleAction' }
+    requirements:
+        id: \d+
+        
+hb.sale_funnel.one_time_offer.create:
+    path:   /course/sale_funnel/one_time_offer/create/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.one_time_offer.create:handleAction' }
+    requirements:
+        id: \d+
+
+hb.sale_funnel.one_time_offer.edit:
+    path:   /course/sale_funnel/one_time_offer/edit/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.one_time_offer.edit:handleAction' }
+    requirements:
+        id: \d+
+        
+hb.sale_funnel.one_time_offer.errors:
+    path:   /course/sale_funnel/one_time_offer/errors/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.one_time_offer.errors:handleAction' }
+    requirements:
+        id: \d+
+        
+# One Time Offer Blocks
+hb.sale_funnel.one_time_offer.blocks.block1_targeting:
+    path:   /course/sale_funnel/one_time_offer/blocks/block1_targeting/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.one_time_offer.blocks.block1_targeting:handleAction' }
+    requirements:
+        id: \d+
+        
+hb.sale_funnel.one_time_offer.blocks.block2_offers:
+    path:   /course/sale_funnel/one_time_offer/blocks/block2_offers/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.one_time_offer.blocks.block2_offers:handleAction' }
+    requirements:
+        id: \d+
+        
+hb.sale_funnel.one_time_offer.blocks.block2_offers.remove_offer:
+    path:   /course/sale_funnel/one_time_offer/blocks/block2_offers/remove/offer/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.one_time_offer.blocks.block2_offers.remove_offer:handleAction' }
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.sale_funnel.one_time_offer.blocks.block2_offers.edit_offer:
+    path:   /course/sale_funnel/one_time_offer/blocks/block2_offers/edit/offer/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.one_time_offer.blocks.block2_offers.edit_offer:handleAction' }
+    requirements:
+        id: \d+
+        
+hb.sale_funnel.one_time_offer.blocks.block3_description:
+    path:   /course/sale_funnel/one_time_offer/blocks/block3_description/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.one_time_offer.blocks.block3_description:handleAction' }
+    requirements:
+        id: \d+
+    
+hb.sale_funnel.one_time_offer.blocks.block4_offer_link:
+    path:   /course/sale_funnel/one_time_offer/blocks/block4_offer_link/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.one_time_offer.blocks.block4_link_offer:handleAction' }
+    requirements:
+        id: \d+
+
+# Sale funnel Partner
+hb.sale_funnel.partner.list:
+    path:   /course/sale_funnel/partner/list/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.partner.list:handleAction' }
+    requirements:
+        id: \d+
+
+hb.sale_funnel.partner.edit:
+    path:   /course/sale_funnel/partner/edit/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.partner.edit:handleAction' }
+    requirements:
+        id: \d+
+
+hb.sale_funnel.partner.remove:
+    path:   /course/sale_funnel/partner/remove/{id}
+    defaults: { _controller: 'hb.admin.controller.sale_funnel.partner.remove:handleAction' }
+    requirements:
+        id: \d+
+
+# Funnel priority
+hb.sale_funnel.priority.reset_to_default:
+    path:   /course/sale_funnel/priority/reset_to_default/{id}
+    defaults: { _controller: 'hb.admin.controller.funnel_priority.reset_to_default:handleAction' }
+    requirements:
+        id: \d+
+
+hb.sale_funnel.priority.update_priority:
+    path:   /course/sale_funnel/priority/update/{id}
+    defaults: { _controller: 'hb.admin.controller.funnel_priority.update:handleAction'}
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+
+# Finance Customer
+hb.finance.customer.payments:
+    path:   /finance
+    defaults: { _controller: 'hb.admin.controller.finance.payment.customer:handleAction'}
+
+hb.finance.customer.report:
+    path:   /finance/report
+    defaults: { _controller: 'hb.admin.controller.finance.report.customer:handleAction'}
+
+# Finance Admin
+hb.finance.admin.payments:
+    path:   /finance/admin
+    defaults: { _controller: 'hb.admin.controller.finance.payment.list.admin:handleAction'}
+
+hb.finance.admin.payment.remove:
+    path:   /finance/admin/payment/remove/{id}
+    defaults: { _controller: 'hb.admin.controller.finance.payment.remove:handleAction'}
+    requirements:
+        id: \d+
+
+hb.finance.admin.payment.edit:
+    path:   /finance/admin/payment/edit/{id}
+    defaults: { _controller: 'hb.admin.controller.finance.payment.edit:handleAction'}
+    requirements:
+        id: \d+
+
+hb.finance.admin.reports:
+    path:   /finance/reports/admin
+    defaults: { _controller: 'hb.admin.controller.finance.report.admin:handleAction'}
+
+hb.finance.admin.report.edit:
+    path:   /finance/admin/report/edit/{id}
+    defaults: { _controller: 'hb.admin.controller.finance.report.edit:handleAction'}
+    requirements:
+        id: \d+
+
+hb.finance.admin.consolidate_report:
+    path:   /finance/admin/consolidate_report
+    defaults: { _controller: 'hb.admin.controller.finance.consolidate_report:handleAction'}
+    requirements:
+        id: \d+
+
+hb.finance.admin.upload_csv:
+    path:   /finance/admin/upload_csv
+    defaults: { _controller: 'hb.admin.controller.finance.upload_csv:handleAction'}
+    methods: [POST]
+
+hb.finance.admin.report.remove:
+    path:   /finance/admin/report/remove/{id}
+    defaults: { _controller: 'hb.admin.controller.finance.report.remove:handleAction'}
+    requirements:
+        id: \d+
+
+hb.finance.admin.report.update_file:
+    path:   /finance/admin/report/update_file/{id}
+    defaults: { _controller: 'hb.admin.controller.finance.report.update_file:handleAction'}
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+hb.finance.teachable_transaction:
+    path:   /teachable_transaction/list
+    defaults: { _controller: 'hb.admin.controller.finance.teachable_transaction:handleAction'}
+
+hb.finance.drip:
+    path:   /drip
+    defaults: { _controller: 'hb.admin.controller.finance.drip:handleAction'}
+
+hb.redirect:
+    path:   /redirect/sandbox/{url}
+    defaults: { _controller: 'hb.admin.controller.redirect:handleAction'}
+
+# Teachable student
+hb.teachable_student.activity_list:
+    path:   /students/activity
+    defaults: { _controller: 'hb.admin.controller.teachable_student.activity_list:handleAction' }
+
+hb.teachable_student.progress_list:
+    path:   /students/progress
+    defaults: { _controller: 'hb.admin.controller.teachable_student.progress_list:handleAction' }
+
+hb.teachable_student.comments_list:
+    path:   /students/comments
+    defaults: { _controller: 'hb.admin.controller.teachable_student.comments:handleAction' }
+
+hb.teachable_student.comment_rating:
+    path:   /students/comment_rating/{id}
+    defaults: { _controller: 'hb.admin.controller.teachable_student.comment_rating:handleAction' }
+    options:
+        expose: true

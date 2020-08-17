@@ -1,0 +1,120 @@
+<script>
+
+    function block3UploadFile(id) {
+        uploadcare.openDialog(null, {
+            tabs: '{{ upload_care_sources }}',
+            validators: [
+                maxFileSize({{ max_file_size }})
+            ]
+        }).done(function (file) {
+            openHoldon('Загрузка файла');
+
+            file.progress(function(uploadInfo) {
+                $('#progressbar').progressbar({value: uploadInfo.progress * 100});
+            });
+
+            file.promise()
+                .done(function (fileInfo) {
+                    block3UpdateFile(fileInfo, id);
+                    closeHoldon();
+                });
+        });
+    }
+
+    function block3UpdateFile(response, id) {
+        openHoldon('Сохранение в базу данных');
+        var uuid = response.uuid;
+        var cdn = response.cdnUrl;
+        var file_name = '';
+        if (response.sourceInfo.file) {
+            file_name = response.sourceInfo.file.name;
+        } else {
+            file_name = response.name;
+        }
+
+        $.post(
+            Routing.generate('hb.sale_funnel.webinar.block3.bonus.update.file', {id: id}),
+            {uuid: uuid, cdn: cdn, file_name: file_name}, function (response) {
+                if (response.status && response.status === 'error' && response.message) {
+                    alert(response.message);
+                } else {
+                    updateBlock3();
+                }
+
+                closeHoldon();
+            });
+    }
+
+
+    function block3RemoveFile(id) {
+        openHoldon("Удаление файла");
+
+        $.post(
+            Routing.generate('hb.sale_funnel.webinar.block3.bonus.remove.file', {bonus: id, funnel: {{ funnel.id }} }),
+            function (response) {
+                if (response.status && response.status === 'error' && response.message) {
+                    alert(response.message);
+                } else {
+                    updateBlock3();
+                }
+                closeHoldon();
+            });
+    }
+
+    function updateBlock3() {
+        $.get(
+            '{{ path('hb.sale_funnel.webinar.block3.bonuses', {id: funnel.id}) }}',
+            function (response) {
+                $('div.block3').html(response);
+            }
+        );
+    }
+
+    $(function () {
+        $('div.block3').on('submit', 'form[name=block3_bonus]', function (e) {
+            openHoldon();
+            e.preventDefault();
+
+            var formData = $(this).serialize();
+
+            $.ajax({
+                type: "POST",
+                url: '{{ path('hb.sale_funnel.webinar.block3.bonuses', {id: funnel.id}) }}',
+                data: formData,
+                dataType: "json",
+                success: function (response) {
+                    $('div.block3').html(response.responseText);
+                    closeHoldon();
+                },
+                error: function (response) {
+                    $('div.block3').html(response.responseText);
+                    closeHoldon();
+                }
+            });
+            return false;
+        }).on('click', 'button[name=block3_bonus_file]', function () {
+            var id = $(this).data('bonus-id');
+            block3UploadFile(id)
+        }).on('click', 'button[name=bonus_file_remove]', function () {
+            var id = $(this).data('bonus-id');
+            block3RemoveFile(id)
+        }).on('click', 'button[name=bonus_remove]', function () {
+            openHoldon('Removing bonus');
+            $.post(
+                Routing.generate('hb.sale_funnel.webinar.block3.bonus.remove', {
+                    funnel: {{ funnel.id }},
+                    bonus: $(this).data('bonus-id')
+                }),
+                function (response) {
+                    if (response.status && response.status === 'error' && response.message) {
+                        alert(response.message);
+                    } else {
+                        updateBlock3();
+                    }
+                    closeHoldon();
+                }
+            )
+        });
+
+    });
+</script>

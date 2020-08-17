@@ -1,0 +1,44 @@
+services:
+    hb.admin.controller.api.hook.teachable.transaction_created:
+        class: HB\AdminBundle\Controller\Api\Hook\Teachable\TransactionCreatedController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@teachable.course_mapper"
+            - "@teachable.webhooks_mapper"
+
+    hb.admin.controller.api.hook.teachable.transaction_refunded:
+        class: HB\AdminBundle\Controller\Api\Hook\Teachable\TransactionRefundedController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@teachable.course_mapper"
+
+    hb.admin.controller.api.hook.teachable.enrollment_created:
+        class: HB\AdminBundle\Controller\Api\Hook\Teachable\EnrollmentCreatedController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@teachable.webhooks_mapper"
+
+    hb.admin.controller.api.hook.teachable.lecture_progress_created:
+        class: HB\AdminBundle\Controller\Api\Hook\Teachable\LectureProgressCreatedController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@teachable.webhooks_mapper"
+
+    hb.admin.controller.api.hook.teachable.response_created:
+        class: HB\AdminBundle\Controller\Api\Hook\Teachable\ResponseCreatedController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@teachable.webhooks_mapper"
+
+    hb.admin.controller.api.hook.teachable.comment_created:
+        class: HB\AdminBundle\Controller\Api\Hook\Teachable\CommentCreatedController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@teachable.webhooks_mapper"
+
+    hb.admin.controller.api.hook.teachable.all:
+        class: HB\AdminBundle\Controller\Api\Hook\Teachable\TeachableWebhookListenController
+        arguments:
+            - "@amqp.manager"
+            - "%amqp_queue_teachable_webhook%"
+            - "%amqp_exchange_name%"

@@ -1,0 +1,60 @@
+{% if added %}
+    <div class="alert alert-success" role="alert">Добавлено!</div>
+{% endif %}
+<div class="row">
+    <div class="col-md-4">
+        <a href="" class="new_file_url" target="_blank"></a>
+        <button type="button" class="btn btn-sm btn-indigo" id="block7_upload_new_video">
+            <i class="fa fa-file-video-o"></i>
+            Загрузить видео
+        </button>
+
+        <form method="post" name="block7" data-funnel-id="{{ funnel.id }}">
+            <div style="display: none;">
+                {{ form_row(form.fileCdn) }}
+                {{ form_row(form.fileUuid) }}
+                {{ form_row(form.fileName) }}
+            </div>
+            {{ form_widget(form) }}
+
+            <button type="submit" class="btn btn-success">
+                Добавить
+            </button>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    <br>
+    {% if funnel.block7Feedbacks | length > 0 %}
+        {% for feedback in funnel.block7Feedbacks %}
+            <div class="col-md-3">
+                {{ feedback.feedBackAuthor }} <button class="btn btn-pill btn-sm btn-danger" id="remove_feedback_{{ feedback.id }}" data-feedback-id="{{ feedback.id }}">
+                    <i class="fa fa-remove"></i>
+                </button>
+
+                {% if feedback.feedBackVideo %}
+                    <br>
+                    <a href="{{ feedback.feedBackVideo.fileUrl }}" target="_blank">
+                        {{ feedback.feedBackVideo.fileName }}
+                    </a>
+                    <button class="btn btn-pill btn-sm btn-outline-danger" id="block7_remove_video_{{ feedback.id }}"
+                            data-feedback-id="{{ feedback.id }}"
+                    ><i class="fa fa-remove"></i> </button>
+                {% endif %}
+
+                <br>
+                <button type="button" class="btn btn-sm btn-indigo" id="block7_upload_video_{{ feedback.id }}" data-feedback-id="{{ feedback.id }}"
+                ><i class="fa fa-file-video-o"></i>
+                    Загрузить видео
+                </button>
+<br>
+                {% if feedback.feedBackVideo %}
+                    <video width="320" height="240" controls>
+                        <source src="{{ feedback.feedBackVideo.fileUrl }}">
+                    </video>
+                {% endif %}
+            </div>
+        {% endfor %}
+    {% endif %}
+</div>

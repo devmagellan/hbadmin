@@ -1,0 +1,114 @@
+{% extends "@HBAdmin/layout.html.twig" %}
+
+{% block css_head %}
+    <style>
+        .filters {
+            display: flex;
+        }
+    </style>
+{% endblock %}
+
+
+{% block js_footer %}
+    <script>
+        $(function () {
+            $('.navigation a').click(function () {
+                let page = $(this).text();
+                let input = $("<input>").attr("type", "hidden").attr("name", "page").val(page);
+                {% if use_filters == 1 %}
+                $('form[name=filters] input[type=text][name^="f"], select[name^="f"]').each(function () {
+                    if ($(this).val()) {
+                        $('form[name=filters]').append($(input)).submit();
+                    }
+                });
+                {% endif %}
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block body %}
+
+    <div class="card">
+        <div class="card-header">
+            Активность студентов
+        </div>
+        <div class="card-body">
+
+            <form name="filters" method="get" action="{{ path('hb.teachable_student.activity_list') }}">
+                <div class="filters">
+
+                    <select name="f[courseName]" class="form-control">
+                        <option value="">[Курс]</option>
+                        {% for courseName in courseNames %}
+                            <option value="{{ courseName }}"
+                                    {% if filters and filters.courseName == courseName %}selected{% endif %}>
+                                {{ courseName }}
+                            </option>
+                        {% endfor %}
+                    </select>
+
+                    <input type="text" class='datepicker' name="f[startDateJoinedAt]" placeholder="[Старт обучения с]" {% if filters.startDateJoinedAt is defined %}value="{{ filters.startDateJoinedAt }}"{% endif %}>
+                    <input type="text" class='datepicker' name="f[endDateJoinedAt]" placeholder="[по]" {% if filters.endDateJoinedAt is defined %}value="{{ filters.endDateJoinedAt }}"{% endif %}>
+
+                    <input type="text" class='datepicker' name="f[startDateLastLogin]" placeholder="[Последний вход с]" {% if filters.startDateLastLogin is defined %}value="{{ filters.startDateLastLogin }}"{% endif %}>
+                    <input type="text" class='datepicker' name="f[endDateLastLogin]" placeholder="[по]" {% if filters.endDateLastLogin is defined %}value="{{ filters.endDateLastLogin }}"{% endif %}>
+
+                    <button class="btn btn-success" type="submit">Применить фильтр</button>
+                    <a href="{{ path('hb.teachable_student.activity_list') }}" class="btn btn-warning">Сбросить</a>
+
+                </div>
+            </form>
+
+
+
+            <div class="navigation">
+                {{ knp_pagination_render(students) }}
+            </div>
+
+            <table class="table table-bordered table-condensed">
+                <tr>
+                    <th>ФИО</th>
+                    <th>Email</th>
+                    <th>Курс</th>
+                    <th>Покупки, $</th>
+                    <th>Старт обучения</th>
+                    <th>Последний вход</th>
+                </tr>
+                {% if students | length > 0 %}
+                    {% for item in students %}
+                        <tr>
+                            <td>{{ item.student.studentName }}</td>
+                            <td>{{ item.student.studentEmail }}</td>
+                            <td>{{ item.student.courseName }}</td>
+                            <td>{{ item.salesSum | cash }}</td>
+                            <td>
+                                {% if item.student.lastActivityAt %}
+                                    {{ item.student.lastActivityAt.format("Y-m-d H:i:s") }}<br>
+                                {% endif %}
+                                {{ item.student.lastActivityText }}
+                            </td>
+                            <td>
+                                {% if item.student.lastSignInAt %}
+                                    {{ item.student.lastSignInAt.format("Y-m-d H:i:s") }}<br>
+                                {% endif %}
+                                {{ item.student.lastSignInAtText }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <th colspan="6" class="text-center">
+                            Нет данных по студентам
+                        </th>
+                    </tr>
+                {% endif %}
+            </table>
+
+            <div class="navigation">
+                {{ knp_pagination_render(students) }}
+            </div>
+
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% for lesson in lessons %}
+    <tr>
+        <td></td>
+        <td>{{ lesson.title }}</td>
+        <td>
+            <input type="checkbox"  {% if funnel.hasLesson(lesson) %}checked{% endif %}
+                   id="switch_lesson_for_funnel_{{ lesson.id }}" data-lesson-id="{{ lesson.id }}"
+                   data-section-id="{{ lesson.section.id }}" data-funnel-id="{{ funnel.id }}">
+        </td>
+    </tr>
+{% endfor %}

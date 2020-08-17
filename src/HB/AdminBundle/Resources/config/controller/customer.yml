@@ -1,0 +1,149 @@
+services:
+    hb.admin.controller.customer.switch_status:
+        class: HB\AdminBundle\Controller\Customer\SwitchStatusController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@router"
+            - "@security.token_storage"
+            - "@session.flash_bag"
+            - "@customer.access.service"
+
+    hb.admin.controller.customer.remove:
+        class: HB\AdminBundle\Controller\Customer\RemoveController
+        arguments:
+            - "@security.token_storage"
+            - "@doctrine.orm.entity_manager"
+            - "@session.flash_bag"
+            - "@router"
+            - "@upload_care.service"
+            - "@customer.access.service"
+
+    hb.admin.controller.customer.list:
+        class: HB\AdminBundle\Controller\Customer\ListController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@twig"
+            - "@knp_paginator"
+            - "@customer.access.service"
+
+    hb.admin.controller.customer.create:
+        class: HB\AdminBundle\Controller\Customer\CreateController
+        arguments:
+            - "@form.factory"
+            - "@image.manager"
+            - "@session.flash_bag"
+            - "@router"
+            - "@security.password_encoder"
+            - "@form.handler"
+            - "@doctrine.orm.entity_manager"
+            - "@twig"
+            - "@security.token_storage"
+            - "@customer.access.service"
+            - "@sandbox_course.service"
+
+    hb.admin.controller.customer.edit:
+        class: HB\AdminBundle\Controller\Customer\EditController
+        arguments:
+            - "@form.factory"
+            - "@form.handler"
+            - "@session.flash_bag"
+            - "@router"
+            - "@doctrine.orm.entity_manager"
+            - "@security.password_encoder"
+            - "@twig"
+            - "@security.token_storage"
+            - "@customer.access.service"
+
+    hb.admin.controller.customer.self_edit:
+        class: HB\AdminBundle\Controller\Customer\SelfEditController
+        arguments:
+            - "@form.factory"
+            - "@form.handler"
+            - "@session.flash_bag"
+            - "@router"
+            - "@doctrine.orm.entity_manager"
+            - "@security.password_encoder"
+            - "@twig"
+            - "@security.token_storage"
+            - "@intercom.event_recorder"
+
+    hb.admin.controller.customer.transferwise.form:
+        class: HB\AdminBundle\Controller\Customer\TransferWiseController
+        arguments:
+            - "@form.factory"
+            - '@twig'
+            - "@form.handler"
+
+    hb.admin.controller.customer.transferwise.remove:
+        class: HB\AdminBundle\Controller\Customer\TransferWiseRemoveController
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@router'
+            - '@session.flash_bag'
+
+    hb.admin.controller.customer.update.photo:
+        class: HB\AdminBundle\Controller\Customer\UpdatePhotoController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@customer.access.service"
+            - "@security.token_storage"
+            - "@intercom.event_recorder"
+
+    hb.admin.controller.customer.role.check_type:
+        class: HB\AdminBundle\Controller\Customer\CheckRoleTypeController
+        arguments:
+            - "@twig"
+            - "@customer.access.service"
+
+    hb.admin.controller.customer.change_packet:
+        class: HB\AdminBundle\Controller\Customer\ChangePacketController
+        arguments:
+            - "@security.token_storage"
+            - "@custom_mailer"
+            - "@doctrine.orm.entity_manager"
+            - "@router"
+            - "@session.flash_bag"
+            - "%email_from%"
+            - "%emails_for_notification%"
+
+    hb.admin.controller.password.recovery.request:
+        class: HB\AdminBundle\Controller\Customer\Password\RequestRecoveryController
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@custom_mailer'
+            - '@form.factory'
+            - '@router'
+            - '@twig'
+            - '@session.flash_bag'
+            - '%email_from%'
+
+    hb.admin.controller.password.recovery:
+        class: HB\AdminBundle\Controller\Customer\Password\RecoveryController
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@form.factory'
+            - '@router'
+            - '@twig'
+            - '@session.flash_bag'
+            - '@security.password_encoder'
+
+    hb.admin.controller.signup.confirm_data:
+        class: HB\AdminBundle\Controller\Customer\SignUp\ConfirmDataController
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@form.factory'
+            - '@router'
+            - '@session.flash_bag'
+            - '@twig'
+            - '@sms.sender'
+            - '@security.password_encoder'
+            - '@zapier.event.collector'
+
+    hb.admin.controller.signup.confirm_sms:
+        class: HB\AdminBundle\Controller\Customer\SignUp\ConfirmSmsController
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@twig'
+            - '@router'
+            - '@session.flash_bag'
+            - '@form.factory'

@@ -1,0 +1,29 @@
+<script>
+    $(function () {
+        $('div.block5').on('submit', 'form[name=block5]', function (e) {
+            openHoldon();
+            e.preventDefault();
+
+            var formData = $(this).serialize();
+            var id = $(this).data('funnel-id');
+
+            $.ajax({
+                type: "POST",
+                url: Routing.generate('hb.sale_funnel.organic.block5recommended', {id: id}),
+                data: formData,
+                dataType: "json",
+                success: function (response) {
+                    $('div.block5').html(response.responseText);
+                    closeHoldon();
+                },
+                error: function (response) {
+                    $('div.block5').html(response.responseText);
+                    closeHoldon();
+                }
+            });
+
+            return false;
+        });
+
+    });
+</script>

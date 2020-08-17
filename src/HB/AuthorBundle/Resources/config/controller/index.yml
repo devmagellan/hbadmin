@@ -1,0 +1,38 @@
+services:
+
+    hb.author.controller.index.view:
+        class: HB\AuthorBundle\Controller\Index\IndexController
+        arguments:
+            - "@twig"
+
+    hb.author.controller.terms.view:
+        class: HB\AuthorBundle\Controller\Index\TermsController
+        arguments:
+            - "@twig"
+
+    hb.author.controller.index.sign_up_form:
+        class: HB\AuthorBundle\Controller\Index\SignUpController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@form.factory"
+            - "@security.password_encoder"
+            - "@session"
+            - "@security.token_storage"
+            - "@twig"
+            - "@session.flash_bag"
+
+    hb.author.controller.indexAlt.view:
+        class: HB\AuthorBundle\Controller\Index\IndexControllerAlt
+        arguments:
+            - "@twig"
+
+    hb.author.controller.indexAlt.sign_up_form:
+        class: HB\AuthorBundle\Controller\Index\SignUpController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@form.factory"
+            - "@security.password_encoder"
+            - "@session"
+            - "@security.token_storage"
+            - "@twig"
+            - "@session.flash_bag"

@@ -1,0 +1,28 @@
+<div class="row">
+    {% if funnel.block9CompaniesLogo | length < 5 %}
+        <div class="col-md-3 text-center">
+            <button type="button" class="btn btn-orange" id="block9_upload_image"><i class="fa fa-photo"></i>
+                Добавить лого компании (140x140 px)
+            </button>
+        </div>
+    {% endif %}
+</div>
+
+<hr>
+
+<div class="row">
+
+    {% for company in funnel.block9CompaniesLogo %}
+        {% if company.logo %}
+            <div class="col-md-2">
+                <a href="{{ company.logo.fileUrl }}" target="_blank">
+                    <img src="{{ company.logo.fileUrl }}" style="max-height: 200px;">
+                </a>
+                <button class="btn btn-pill btn-sm btn-outline-danger" id="block9_remove_company_logo_{{ company.id }}"
+                        data-company-id= {{ company.id }}
+                ><i class="fa fa-remove"></i></button>
+            </div>
+
+        {% endif %}
+    {% endfor %}
+</div>

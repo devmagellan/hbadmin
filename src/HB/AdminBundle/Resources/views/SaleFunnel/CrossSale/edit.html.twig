@@ -1,0 +1,83 @@
+{% extends "@HBAdmin/layout.html.twig" %}
+
+{% import '@HBAdmin/macros/return_to_course.html.twig' as return %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="{{ path('hb.courses.list') }}">Продукты</a>
+        </li>
+        <li class="breadcrumb-item active">
+            <a href="{{ path('hb.course.edit', {id: funnel.course.id}) }}">{{ funnel.course.info.title }}</a>
+        </li>
+        <li class="breadcrumb-item">Воронки</li>
+        <li class="breadcrumb-item"><b>Кросс продажа</b></li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+
+    <div class="card">
+        <div class="card-header">
+            Редактирование воронки {{ return.render(funnel.course.id) }}
+        </div>
+        <div class="card-body">
+            <div class="row">
+
+                <div class="col-md-6">
+                    {% if funnel.discountCourses | length == 0 %}
+                        {{ form_start(form) }}
+
+                        {{ form_widget(form) }}
+
+                        <button class="btn btn-success">Сохранить</button>
+
+                        {{ form_end(form) }}
+                        <br>
+                    {% endif %}
+
+                    {% if funnel.discountCourses | length > 0 %}
+                        <table class="table">
+                            <tr>
+                                <th>Курс</th>
+                                <th>Скидка</th>
+                                <th></th>
+                            </tr>
+                            {% for discountCourse in funnel.discountCourses %}
+                                {% if discountCourse.course %}
+                                    <tr>
+                                        <td>
+                                            {{ discountCourse.course.info.title }}
+                                        </td>
+                                        <td>{{ discountCourse.discountPercent }} %</td>
+                                        <td>
+                                            <a href="{{ path('hb.sale_funnel.cross_sale.remove.discount_course', {id: discountCourse.id}) }}"
+                                               class="btn btn-pill btn-sm btn-danger">
+                                                <i class="fa fa-remove"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                        </table>
+                    {% endif %}
+                </div>
+
+                <div class="col-md-6">
+                    <span class="alert-gray-100">
+                        При Выборе этого варианта с Вами свяжется наш менеджер подключит Вас к Клубу Авторов, и настроит кросс продажу продуктов Авторов из Клуба Авторов
+                    </span>
+                    {{ form_start(formFunnel) }}
+
+                    {{ form_widget(formFunnel) }}
+
+                    <button class="btn btn-success">Сохранить</button>
+
+                    {{ form_end(formFunnel) }}
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

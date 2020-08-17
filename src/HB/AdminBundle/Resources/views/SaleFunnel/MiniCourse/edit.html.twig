@@ -1,0 +1,140 @@
+{% extends "@HBAdmin/layout.html.twig" %}
+
+{% import '@HBAdmin/macros/return_to_course.html.twig' as return %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="{{ path('hb.courses.list') }}">Продукты</a>
+        </li>
+        <li class="breadcrumb-item active">
+            <a href="{{ path('hb.course.edit', {id: funnel.course.id}) }}">{{ funnel.course.info.title }}</a>
+        </li>
+        <li class="breadcrumb-item">Воронки</li>
+        <li class="breadcrumb-item"><b>Мини курс</b></li>
+    </ol>
+{% endblock %}
+
+{% block js_footer %}
+    <script>
+        $(function () {
+            $('a.list-group-item.list-group-item-action').click(function () {
+                $('a.list-group-item.list-group-item-action').removeClass('active');
+                $(this).addClass('active');
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block body %}
+
+    <div class="card">
+        <div class="card-header">
+            Редактирование воронки {{ return.render(funnel.course.id) }}
+        </div>
+        <div class="card-body">
+            <div class="row">
+
+                <div class="col-md-5">
+                    {{ form_start(form) }}
+
+                    {{ form_widget(form) }}
+
+                    <button type="submit" class="btn btn-sm btn-success">Сохранить</button>
+
+                    {{ form_end(form) }}
+                </div>
+
+                <div class="col-md-5">
+                    {{ form_start(formLesson) }}
+
+                    {{ form_widget(formLesson) }}
+
+                    <button type="submit" class="btn btn-sm btn-success">Добавить</button>
+
+                    {{ form_end(formLesson) }}
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+
+    {% if funnel.lessons | length > 0 %}
+        <div class="card">
+            <div class="card-header">
+                Уроки
+            </div>
+
+            <div class="card-body">
+                <div class="row bd-example2">
+                    <div class="col-4">
+                        <div class="list-group" id="list-example">
+                            {% for idx, lesson in funnel.lessons %}
+                                <a class="list-group-item list-group-item-action {% if idx == 0 %}active{% endif %}"
+                                   href="#list-item-{{ lesson.id }}">{{ lesson.title }}
+
+                                    {% if lesson.lessonFile == false and lesson.homeWorkFile == false and lesson.lessonText == false and lesson.homeworkText == false %}
+                                        <div class="pull-right">
+                                        <span class="invalid-feedback d-block">
+                                            <span class="d-block">
+                                                <span class="form-error-icon badge badge-danger text-uppercase">Ошибка</span>
+                                                <span class="form-error-message">Добавьте текст или файл</span>
+                                            </span>
+                                        </span>
+                                        </div>
+                                    {% endif %}
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="col-8">
+                        <div id="spy-example2" data-spy="scroll" data-target="#list-example" data-offset="0"
+                             style="height: 400px; overflow: auto">
+                            {% for lesson in funnel.lessons %}
+                                <h4 id="list-item-{{ lesson.id }}">{{ lesson.title }}
+                                    <a href="{{ path('hb.sale_funnel.mini_course.edit_lesson', {id: lesson.id}) }}"
+                                       class="btn btn-pill btn-sm btn-outline-info"><i class="fa fa-edit"></i> </a>
+                                    <a href="{{ path('hb.sale_funnel.mini_course.remove_lesson', {id: lesson.id}) }}"
+                                       class="btn btn-pill btn-sm btn-outline-danger"><i class="fa fa-remove"></i> </a>
+                                </h4>
+
+                                {% if lesson.lessonFile %}
+                                    <h5><b>Файл урока</b></h5>
+                                    <p><a href="{{ lesson.lessonFile.fileUrl }}"
+                                          target="_blank">{{ lesson.lessonFile.fileName }}</a></p>
+                                {% endif %}
+
+                                {% if lesson.lessonText %}
+                                    <h5><b>Текст урока</b></h5>
+                                    <p>
+                                        {{ lesson.lessonText | raw }}
+                                    </p>
+                                {% endif %}
+
+                                {% if lesson.homeworkFile %}
+                                    <h5><b>Файл домашнего задания</b></h5>
+                                    <p><a href="{{ lesson.homeworkFile.fileUrl }}"
+                                          target="_blank">{{ lesson.homeworkFile.fileName }}</a></p>
+                                {% endif %}
+
+                                {% if lesson.homeworkText %}
+                                    <h5><b>Текст домашнего задания</b></h5>
+                                    <p>
+                                        {{ lesson.homeworkText | raw }}
+                                    </p>
+                                {% endif %}
+
+                                <hr>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    {% endif %}
+
+{% endblock %}

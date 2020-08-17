@@ -1,0 +1,8 @@
+{% for lesson in lessons %}
+    {% if funnel.hasLesson(lesson) %}
+        <tr>
+            <td></td>
+            <td>{{ lesson.title }}</td>
+        </tr>
+    {% endif %}
+{% endfor %}

@@ -1,0 +1,52 @@
+{% extends "@HBAdmin/layout.html.twig" %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="{{ path('hb.courses.list') }}">Продукты</a>
+        </li>
+        <li class="breadcrumb-item active">
+            <a href="{{ path('hb.course.edit', {id: funnel.course.id}) }}">{{ funnel.course.info.title }}</a>
+        </li>
+        <li class="breadcrumb-item">Воронки</li>
+        <li class="breadcrumb-item">
+            <a href="{{ path('hb.sale_funnel.mini_course.edit', {id: funnel.course.id}) }}">Мини курс</a>
+        </li>
+        <li class="breadcrumb-item">
+            <b>{% if lesson.title %}{{ lesson.title }}{% else %}Редактирование урока{% endif %}</b></li>
+    </ol>
+{% endblock %}
+
+{% block js_footer %}
+    {% include '@HBAdmin/SaleFunnel/MiniCourse/editLesson-js.html.twig' %}
+{% endblock %}
+
+{% block body %}
+
+    <div class="card">
+        <div class="card-header">
+            Редактирование урока мини курса
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    {{ form_start(form) }}
+
+                    {{ form_widget(form) }}
+
+                    <button type="submit" class="btn btn-sm btn-success">Сохранить</button>
+
+                    {{ form_end(form) }}
+                </div>
+
+                <div class="col-md-6 files_block">
+                    {{ render(controller('hb.admin.controller.sale_funnel.mini_course.edit_lesson.files_block:handleAction', {lesson: lesson})) }}
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+
+{% endblock %}

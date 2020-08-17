@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="shortcut icon" href="img/favicon.png">
+    <title>HBAdmin</title>
+
+    <link rel="apple-touch-icon" sizes="57x57" href="//cdn.baxtep.com/img/favicon/apple-icon-57x57.png?v=1">
+    <link rel="apple-touch-icon" sizes="60x60" href="//cdn.baxtep.com/img/favicon/apple-icon-60x60.png?v=1">
+    <link rel="apple-touch-icon" sizes="72x72" href="//cdn.baxtep.com/img/favicon/apple-icon-72x72.png?v=1">
+    <link rel="apple-touch-icon" sizes="76x76" href="//cdn.baxtep.com/img/favicon/apple-icon-76x76.png?v=1">
+    <link rel="apple-touch-icon" sizes="114x114" href="//cdn.baxtep.com/img/favicon/apple-icon-114x114.png?v=1">
+    <link rel="apple-touch-icon" sizes="120x120" href="//cdn.baxtep.com/img/favicon/apple-icon-120x120.png?v=1">
+    <link rel="apple-touch-icon" sizes="144x144" href="//cdn.baxtep.com/img/favicon/apple-icon-144x144.png?v=1">
+    <link rel="apple-touch-icon" sizes="152x152" href="//cdn.baxtep.com/img/favicon/apple-icon-152x152.png?v=1">
+    <link rel="apple-touch-icon" sizes="180x180" href="//cdn.baxtep.com/img/favicon/apple-icon-180x180.png?v=1">
+    <link rel="icon" type="image/png" sizes="192x192" href="//cdn.baxtep.com/img/favicon/android-icon-192x192.png?v=1">
+    <link rel="icon" type="image/png" sizes="32x32" href="//cdn.baxtep.com/img/favicon/favicon-32x32.png?v=1">
+    <link rel="icon" type="image/png" sizes="96x96" href="//cdn.baxtep.com/img/favicon/favicon-96x96.png?v=1">
+    <link rel="icon" type="image/png" sizes="16x16" href="//cdn.baxtep.com/img/favicon/favicon-16x16.png?v=1">
+    <link rel="manifest" href="//cdn.baxtep.com/img/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="//cdn.baxtep.com/img/favicon/ms-icon-144x144.png?v=1">
+    <meta name="theme-color" content="#FF6400">
+
+    <!-- Icons -->
+    <link href="{{ asset('bundles/hbadmin/') }}vendors/css/flag-icon.min.css" rel="stylesheet">
+    <link href="{{ asset('bundles/hbadmin/') }}vendors/css/font-awesome.min.css" rel="stylesheet">
+    <link href="{{ asset('bundles/hbadmin/') }}vendors/css/simple-line-icons.min.css" rel="stylesheet">
+
+    <!-- Main styles for this application -->
+    <link href="{{ asset('bundles/hbadmin/') }}css/style.css" rel="stylesheet">
+
+    <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
+
+    {% block css_head %}{% endblock %}
+    {% block js_head %}{% endblock %}
+
+</head>
+<body class="app header-fixed sidebar-fixed aside-menu-fixed aside-menu-hidden">
+<header class="app-header navbar">
+    <button class="navbar-toggler mobile-sidebar-toggler d-lg-none" type="button">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <a class="navbar-brand" href="#"></a>
+    <button class="navbar-toggler sidebar-toggler d-md-down-none" type="button">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <ul class="nav navbar-nav ml-auto">
+        <li class="nav-item dropdown">
+            <a style="display:inline-block" class="nav-link nav-link" data-toggle="dropdown" href="#" role="button"
+               aria-haspopup="true" aria-expanded="false">
+                {{ app.user.username }}
+                [{{ app.user.roles|join(',') }}]
+            </a>
+            &nbsp;&nbsp;<a style="display:inline-block" class="btn btn-primary" href="{{ path('logout') }}">Выйти</a>
+            &nbsp;&nbsp;
+        </li>
+    </ul>
+</header>
+<div class="app-body">
+    <div class="sidebar">
+        <nav class="sidebar-nav">
+            <ul class="nav">
+                <li class="nav-title">
+                    Меню автора
+                </li>
+
+            </ul>
+        </nav>
+        <button class="sidebar-minimizer brand-minimizer" type="button"></button>
+    </div>
+    <!-- Main content -->
+    <main class="main">
+        <div class="container-fluid">
+            <br>
+            {% for message in app.flashes('error') %}
+                <div class="alert alert-danger" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+
+            {% block body %}{% endblock %}
+
+        </div>
+        <!-- /.conainer-fluid -->
+    </main>
+</div>
+<footer class="app-footer">
+    <span><a href="{{ path('hb_admin_homepage') }}">HeartBeats</a> © 2018.</span>
+</footer>
+
+<!-- Bootstrap and necessary plugins -->
+<script src="{{ asset('bundles/hbadmin/') }}vendors/js/jquery.min.js"></script>
+<script src="{{ asset('bundles/hbadmin/') }}vendors/js/popper.min.js"></script>
+<script src="{{ asset('bundles/hbadmin/') }}vendors/js/bootstrap.min.js"></script>
+<script src="{{ asset('bundles/hbadmin/') }}vendors/js/pace.min.js"></script>
+
+<!-- Plugins and scripts required by all views -->
+<script src="{{ asset('bundles/hbadmin/') }}vendors/js/Chart.min.js"></script>
+
+<!-- CoreUI Pro main scripts -->
+
+<script src="{{ asset('bundles/hbadmin/') }}js/app.js"></script>
+
+</body>
+</html>

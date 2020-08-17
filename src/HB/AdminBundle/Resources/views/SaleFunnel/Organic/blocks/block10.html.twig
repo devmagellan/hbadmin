@@ -1,0 +1,54 @@
+{% if added %}
+    <div class="alert alert-success" role="alert">Добавлен!</div>
+{% endif %}
+<div class="row">
+    <div class="col-md-8 text-center">
+        <form name="block10" data-funnel-id="{{ funnel.id }}">
+            {{ form_widget(form) }}
+            <button type="submit" class="btn btn-orange">Добавить блок</button>
+        </form>
+    </div>
+</div>
+
+{% for block in funnel.block10AdditionalBlocks %}
+    <hr>
+    <div class="row">
+        <div class="col-md-10">
+            <button class="btn btn-pill btn-outline-danger btn-sm pull-right"
+                    data-block-id="{{ block.id }}"
+                    id="remove_additional_block_{{ block.id }}">
+                <i class="fa fa-remove"></i>
+            </button>
+            <button class="btn btn-pill btn-outline-success btn-sm pull-right"
+                    data-block-id="{{ block.id }}"
+                    id="edit_additional_block_{{ block.id }}">
+                <i class="fa fa-edit"></i>
+            </button>
+
+            <b>{{ block.title }}</b>
+            <br>
+            {{ block.description |raw }}
+        </div>
+    </div>
+    <hr>
+{% endfor %}
+
+<div class="modal block_modal" tabindex="-1" role="dialog" id="block_modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Редактировать дополнительный блок</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="block_modal_body">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#block_modal"
+        style="display: none;" id="edit_block_modal_open">
+</button>

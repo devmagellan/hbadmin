@@ -1,0 +1,53 @@
+{% extends "@HBAdmin/layout.html.twig" %}
+
+{% block body %}
+    <div class="card">
+        <div class="card-header">
+            Список отчетов
+        </div>
+        <div class="card-body">
+
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>id</th>
+                    <th>Дата</th>
+                    <th>Пользователь</th>
+                    <th>Файл</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% if reports | length > 0 %}
+                    {% for report in reports %}
+                        <tr>
+                            <td>{{ report.id }}</td>
+                            <td>
+                                {{ report.reportDate.format("F") | trans([],'messages') }}
+                                {{ report.reportDate.format("Y") }}
+                            </td>
+                            <td>
+                                {{ report.customer }} <br>
+                                <small>[{{ report.customer.role }}]</small>
+                            </td>
+                            <td>
+                                {% if report.file %}
+                                    <a href="{{ report.file.fileUrl }}" target="_blank"
+                                       name="file_link_{{ report.id }}">{{ report.file.fileName }}</a>
+                                {% else %}
+                                    Отчет отсутствует
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="3" style="text-align: center">Данные появятся по истечению месяца при условии что у
+                            Вас были продажи
+                        </td>
+                    </tr>
+                {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends "@HBAdmin/layout.html.twig" %}
+
+{% block body %}
+    <style>
+        table {
+            font-size: 16px;
+        }
+    </style>
+    <div class="card">
+        <div class="card-header">
+            Список платежей
+        </div>
+        <div class="card-body">
+
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>id</th>
+                    <th>Дата</th>
+                    <th>Пользователь</th>
+                    <th>Сумма</th>
+                    <th>Период оплаты</th>
+                    <th>Комментарий</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% if payments | length > 0 %}
+                    {% for payment in payments %}
+                        <tr>
+                            <td>{{ payment.id }}</td>
+                            <td>
+                                {{ payment.paymentDate.format("d.m.Y") }}
+                            </td>
+                            <td>
+                                {{ payment.customer }} <br>
+                                <small>[{{ payment.customer.role }}]</small>
+                            </td>
+                            <td>{{ payment.amount }} $</td>
+                            <td>
+                                {% if payment.startDate %}{{ payment.startDate.format('d.m.Y') }}{% endif %}
+                                -
+                                {% if payment.endDate %}{{ payment.endDate.format('d.m.Y') }}{% endif %}
+                            </td>
+                            <td>{{ payment.details }}</td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="6" style="text-align: center">
+                            Данные появятся по истечении недели при условии что у Вас были продажи
+                        </td>
+                    </tr>
+                {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,6 @@
+{% if errors | length > 0 %}
+    <h5>Активаций Воронки Единоразовое предложение невозможна. Для активации исправьте следующие ошибки:</h5>
+{% endif %}
+{% for error in errors %}
+    <div class="alert alert-danger" role="alert">{{ error }}</div>
+{% endfor %}

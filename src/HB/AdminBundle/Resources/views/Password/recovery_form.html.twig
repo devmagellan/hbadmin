@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>HBAdmin</title>
+    <link href="{{ asset('bundles/hbadmin/') }}vendors/css/font-awesome.min.css" rel="stylesheet">
+    <link href="{{ asset('bundles/hbadmin/') }}vendors/css/simple-line-icons.min.css" rel="stylesheet">
+    <link href="{{ asset('bundles/hbadmin/') }}css/style.css" rel="stylesheet">
+</head>
+
+<body class="app flex-row align-items-center">
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card-group">
+                <div class="card p-4">
+                    <div class="card-body">
+
+                        <h4>Восстановление пароля</h4>
+
+                        {{ form_start(form) }}
+                        {{ form_widget(form) }}
+
+                        <button type="submit" class="btn btn-success">Сохранить</button>
+
+                        <div class="pull-right">
+                            <a href="{{ path('login') }}" class="btn btn-link">Форма входа</a>
+                        </div>
+
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

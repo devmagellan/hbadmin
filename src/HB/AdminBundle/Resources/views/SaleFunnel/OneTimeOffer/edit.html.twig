@@ -1,0 +1,273 @@
+{% extends "@HBAdmin/layout.html.twig" %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="{{ path('hb.courses.list') }}">Продукты</a>
+        </li>
+        <li class="breadcrumb-item active">
+            <a href="{{ path('hb.course.edit', {id: funnel.course.id}) }}">{{ funnel.course.info.title }}</a>
+        </li>
+        <li class="breadcrumb-item">Воронки</li>
+        <li class="breadcrumb-item">Единоразовое предложение</li>
+        <li class="breadcrumb-item">
+            <a href="{{ path('hb.sale_funnel.one_time_offer.list', {id: funnel.course.id}) }}">
+                Список
+            </a>
+        </li>
+        <li class="breadcrumb-item"><b>Наполнение</b></li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+    {% set tab = app.request.get('tab') %}
+    {% if tab %}
+        {% if tab == 'offers' %}
+            {% set block1_show = '' %}
+            {% set block2_show = 'show' %}
+            {% set block3_show = '' %}
+            {% set block4_show = '' %}
+        {% endif %}
+    {% else %}
+        {% set block1_show = 'show' %}
+        {% set block2_show = '' %}
+        {% set block3_show = '' %}
+        {% set block4_show = '' %}
+    {% endif %}
+
+    {% set block_required = '<div class="pull-right"><span class="form-error-icon badge badge-danger text-uppercase">Обязательный</span></div>' %}
+
+    <style>
+        .block3 .form-group {
+            margin-bottom: unset;
+        }
+    </style>
+
+    <div class="card">
+        <div class="card-header">
+            Блоки воронки
+        </div>
+        <div class="card-body">
+
+            <div class="funnel-errors"></div>
+            <script>
+                function updateErrors() {
+                    $.post('{{ path('hb.sale_funnel.one_time_offer.errors', {id: funnel.id}) }}', function (response) {
+                        $('.funnel-errors').html(response);
+                    });
+                }
+                updateErrors();
+            </script>
+
+
+            <div id="accordion" role="tablist">
+
+
+                <div class="card">
+                    <div class="card-header" role="tab">
+                        {{ block_required | raw }}
+                        <h5 class="mb-0">
+                            <a data-toggle="collapse" href="#block_1" aria-expanded="true" aria-controls="collapseOne">
+                                Б1. Таргетинг и Настройки
+                            </a>
+                        </h5>
+
+                    </div>
+                    <div class="collapse {{ block1_show }}" id="block_1" role="tabpanel" aria-labelledby="headingOne"
+                         data-parent="#accordion">
+                        <div class="card-body block1">
+
+                            {{ render(controller('hb.admin.controller.sale_funnel.one_time_offer.blocks.block1_targeting:handleAction', {id: funnel.id})) }}
+
+                        </div>
+                        <script>
+                            $('.block1').on('click', 'button[id=form_submit_targeting]', function () {
+                                var form = $('.block1 form');
+                                var path = $(form).attr('action');
+                                console.log(path);
+
+                                var formData = $(form).serialize();
+
+                                openHoldon();
+                                $.ajax({
+                                    type: "POST",
+                                    url: path,
+                                    data: formData,
+                                    dataType: "json",
+                                    success: function (response) {
+                                        $('div.block1').html(response.responseText);
+                                        closeHoldon();
+                                        updateErrors();
+                                    },
+                                    error: function (response) {
+                                        $('div.block1').html(response.responseText);
+                                        closeHoldon();
+                                        updateErrors();
+                                    }
+                                });
+                            })
+                        </script>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header" role="tab">
+                        {{ block_required | raw }}
+                        <h5 class="mb-0">
+                            <a data-toggle="collapse" href="#block_2" aria-expanded="true" aria-controls="collapseOne">
+                                Б2. Наполнение страницы единоразового предложения: Вариации
+                            </a>
+                        </h5>
+
+                    </div>
+                    <div class="collapse {{ block2_show }}" id="block_2" role="tabpanel" aria-labelledby="headingOne"
+                         data-parent="#accordion">
+                        <div class="card-body block2">
+                            {{ render(controller('hb.admin.controller.sale_funnel.one_time_offer.blocks.block2_offers:handleAction', {id: funnel.id})) }}
+                        </div>
+
+                        <script>
+                            function updateBlock2() {
+                                var path = '{{ path('hb.sale_funnel.one_time_offer.blocks.block2_offers', {id: funnel.id}) }}';
+                                openHoldon();
+                                $.get(path, function (response) {
+                                    $('div.block2').html(response);
+                                    closeHoldon();
+                                    updateErrors();
+                                })
+                            }
+
+                            $('.block2').on('click', 'button[id=form_submit_offer]', function () {
+                                var form = $('.block2 form');
+                                var path = $(form).attr('action');
+
+                                var formData = $(form).serialize();
+
+                                openHoldon();
+                                $.ajax({
+                                    type: "POST",
+                                    url: path,
+                                    data: formData,
+                                    dataType: "json",
+                                    success: function (response) {
+                                        $('div.block2').html(response.responseText);
+                                        closeHoldon();
+                                        updateErrors();
+                                    },
+                                    error: function (response) {
+                                        $('div.block2').html(response.responseText);
+                                        closeHoldon();
+                                        updateErrors();
+                                    }
+                                });
+                            }).on('click', 'button[id^=remove_offer_]', function () {
+                                var id = $(this).data('offer-id');
+                                var path = Routing.generate('hb.sale_funnel.one_time_offer.blocks.block2_offers.remove_offer', {id: id});
+                                openHoldon();
+                                $.post(path, function (response) {
+                                    console.log(response);
+                                    closeHoldon();
+                                    updateBlock2();
+                                    updateErrors();
+                                })
+                            });
+                        </script>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header" role="tab">
+                        {{ block_required | raw }}
+                        <h5 class="mb-0">
+                            <a data-toggle="collapse" href="#block_3" aria-expanded="true" aria-controls="collapseOne">
+                                Б3. Наполнение страницы единоразового предложения: Контент
+                            </a>
+                        </h5>
+
+                    </div>
+                    <div class="collapse {{ block3_show }}" id="block_3" role="tabpanel" aria-labelledby="headingOne"
+                         data-parent="#accordion">
+                        <div class="card-body block3">
+                            {{ render(controller('hb.admin.controller.sale_funnel.one_time_offer.blocks.block3_description:handleAction', {id: funnel.id})) }}
+                        </div>
+                        <script>
+
+
+                            $('.block3').on('click', 'button[id=form_submit_description]', function () {
+                                var form3 = $('.block3 form');
+                                var path = $(form3).attr('action');
+
+                                openHoldon();
+
+                                $.ajax({
+                                    type: "POST",
+                                    url: path,
+                                    data: $(form3).serialize(),
+                                    dataType: "json",
+                                    success: function (response) {
+                                        $('div.block3').html(response.responseText);
+                                        closeHoldon();
+                                        updateErrors();
+                                    },
+                                    error: function (response) {
+                                        $('div.block3').html(response.responseText);
+                                        closeHoldon();
+                                    }
+                                });
+                            })
+                        </script>
+
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header" role="tab">
+                        {{ block_required | raw }}
+                        <h5 class="mb-0">
+                            <a data-toggle="collapse" href="#block_4" aria-expanded="true" aria-controls="collapseOne">
+                                Б4. Что получат покупатели единоразового предложения
+                            </a>
+                        </h5>
+
+                    </div>
+                    <div class="collapse {{ block4_show }}" id="block_4" role="tabpanel" aria-labelledby="headingOne"
+                         data-parent="#accordion">
+                        <div class="card-body block4">
+                            {{ render(controller('hb.admin.controller.sale_funnel.one_time_offer.blocks.block4_link_offer:handleAction', {id: funnel.id})) }}
+                        </div>
+
+                        <script>
+                            $('.block4').on('click', 'button[id=form_submit_link]', function () {
+                                var form4 = $('.block4 form');
+                                var path = $(form4).attr('action');
+
+                                openHoldon();
+
+                                $.ajax({
+                                    type: "POST",
+                                    url: path,
+                                    data: $(form4).serialize(),
+                                    dataType: "json",
+                                    success: function (response) {
+                                        $('div.block4').html(response.responseText);
+                                        closeHoldon();
+                                        updateErrors();
+                                    },
+                                    error: function (response) {
+                                        $('div.block4').html(response.responseText);
+                                        closeHoldon();
+                                        updateErrors();
+                                    }
+                                });
+                            })
+                        </script>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+{% include '@HBAdmin/SaleFunnel/OneTimeOffer/js/js.html.twig' %}
+{% endblock %}

@@ -1,0 +1,202 @@
+services:
+    hb.admin.controller.sale_funnel.webinar.list:
+        class: HB\AdminBundle\Controller\SaleFunnel\Webinar\ListController
+        arguments:
+            - "@twig"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.webinar.create:
+        class: HB\AdminBundle\Controller\SaleFunnel\Webinar\CreateController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@router"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.webinar.remove:
+        class: HB\AdminBundle\Controller\SaleFunnel\Webinar\RemoveController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@router"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.webinar.edit:
+        class: HB\AdminBundle\Controller\SaleFunnel\Webinar\EditController
+        arguments:
+            - "@twig"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.webinar.get_price:
+        class: HB\AdminBundle\Controller\SaleFunnel\Webinar\GetWebinarPriceController
+        arguments:
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.webinar.preview:
+        class: HB\AdminBundle\Controller\SaleFunnel\Webinar\PreviewController
+        arguments:
+            - "@twig"
+            - "@access.service"
+
+# Block 1 Target page info
+    hb.admin.controller.sale_funnel.webinar.edit.block1_target_page:
+        class: HB\AdminBundle\Controller\SaleFunnel\Webinar\Blocks\Block1TargetPage\Block1TargetPageController
+        arguments:
+            - "@twig"
+            - "@form.factory"
+            - "@form.handler"
+            - "@doctrine.orm.entity_manager"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.webinar.upload.image_banner:
+        class: HB\AdminBundle\Controller\SaleFunnel\Webinar\Blocks\Block1TargetPage\Block1BannerUpdateImageController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@upload_care.service"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.webinar.upload.video_banner:
+        class: HB\AdminBundle\Controller\SaleFunnel\Webinar\Blocks\Block1TargetPage\Block1BannerUpdateVideoController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@upload_care.service"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.webinar.remove.image_banner:
+        class: HB\AdminBundle\Controller\SaleFunnel\Webinar\Blocks\Block1TargetPage\Block1BannerRemoveImageController
+        arguments:
+            - "@upload_care.service"
+            - "@doctrine.orm.entity_manager"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.webinar.remove.video_banner:
+        class: HB\AdminBundle\Controller\SaleFunnel\Webinar\Blocks\Block1TargetPage\Block1BannerRemoveVideoController
+        arguments:
+            - "@upload_care.service"
+            - "@doctrine.orm.entity_manager"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.webinar.remove.thesis:
+        class: HB\AdminBundle\Controller\SaleFunnel\Webinar\Blocks\Block1TargetPage\Block1RemoveThesisController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.webinar.remove.webinar_date:
+        class: HB\AdminBundle\Controller\SaleFunnel\Webinar\Blocks\Block1TargetPage\RemoveDateController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+
+# Block 2 Warming letter
+    hb.admin.controller.sale_funnel.webinar.edit.block2_warming_letter:
+        class: HB\AdminBundle\Controller\SaleFunnel\Webinar\Blocks\Block2WarmingLetter\WarmingLetterController
+        arguments:
+            - "@form.factory"
+            - "@form.handler"
+            - "@twig"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.webinar.upload.b2_homework_file:
+        class: HB\AdminBundle\Controller\SaleFunnel\Webinar\Blocks\Block2WarmingLetter\Block2WarmingLetterUpdateHomeWorkFileController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@upload_care.service"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.webinar.upload.b2_workbook_file:
+        class: HB\AdminBundle\Controller\SaleFunnel\Webinar\Blocks\Block2WarmingLetter\Block2WarmingLetterUpdateWorkBookFileController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@upload_care.service"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.webinar.remove.b2_homework_file:
+        class: HB\AdminBundle\Controller\SaleFunnel\Webinar\Blocks\Block2WarmingLetter\Block2WarmingLetterRemoveHomeWorkFileController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@upload_care.service"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.webinar.remove.b2_workbook_file:
+        class: HB\AdminBundle\Controller\SaleFunnel\Webinar\Blocks\Block2WarmingLetter\Block2WarmingLetterRemoveWorkBookFileController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@upload_care.service"
+            - "@access.service"
+
+# Block 3 Bonuses
+    hb.admin.controller.sale_funnel.webinar.bonuses:
+        class: HB\AdminBundle\Controller\SaleFunnel\Webinar\Blocks\Block3Bonuses\Block3BonusController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@form.factory"
+            - "@form.handler"
+            - "@twig"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.webinar.bonus.remove:
+        class: HB\AdminBundle\Controller\SaleFunnel\Webinar\Blocks\Block3Bonuses\Block3BonusRemoveController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@upload_care.service"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.webinar.bonus.update_file:
+        class: HB\AdminBundle\Controller\SaleFunnel\Webinar\Blocks\Block3Bonuses\Block3UpdateBonusFileController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@upload_care.service"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.webinar.bonus.remove_file:
+        class: HB\AdminBundle\Controller\SaleFunnel\Webinar\Blocks\Block3Bonuses\Block3RemoveBonusFileController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@upload_care.service"
+            - "@access.service"
+
+# Block 4 Price
+    hb.admin.controller.sale_funnel.webinar.price.index:
+        class: HB\AdminBundle\Controller\SaleFunnel\Webinar\Blocks\Block4Price\Block4PriceController
+        arguments:
+            - "@twig"
+            - "@form.factory"
+            - "@form.handler"
+            - "@doctrine.orm.entity_manager"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.webinar.price.remove.promocode:
+        class: HB\AdminBundle\Controller\SaleFunnel\Webinar\Blocks\Block4Price\Block4RemovePromoCodeController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@access.service"
+
+# Block 5 AutoWebinar
+    hb.admin.controller.sale_funnel.webinar.autowebinar:
+        class: HB\AdminBundle\Controller\SaleFunnel\Webinar\Blocks\Block5AutoWebinar\Block5AutoWebinarController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@access.service"
+
+# Block 6 Offer
+    hb.admin.controller.sale_funnel.webinar.offer:
+        class: HB\AdminBundle\Controller\SaleFunnel\Webinar\Blocks\Block6Offer\Block6OfferController
+        arguments:
+            - "@form.factory"
+            - "@twig"
+            - "@form.handler"
+            - "@doctrine.orm.entity_manager"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.webinar.offer.remove:
+        class: HB\AdminBundle\Controller\SaleFunnel\Webinar\Blocks\Block6Offer\RemoveOfferController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@access.service"
+
+# Block 7 Webinar record
+    hb.admin.controller.sale_funnel.webinar.record:
+        class: HB\AdminBundle\Controller\SaleFunnel\Webinar\Blocks\Block7WebinarRecord\Block7WebinarRecordController
+        arguments:
+            - "@form.handler"
+            - "@form.factory"
+            - "@twig"
+            - "@access.service"

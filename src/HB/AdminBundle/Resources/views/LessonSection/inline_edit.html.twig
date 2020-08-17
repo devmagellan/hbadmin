@@ -1,0 +1,46 @@
+{% form_theme form with ['bootstrap_4_layout.html.twig', '@HBAdmin/form/fields.html.twig'] %}
+{% include '@HBAdmin/datepicker/datepicker-init.html.twig' %}
+
+<form method="post" class="modal_section_form" action="{{ path('hb.lesson_section.update', {id: section.id}) }}">
+    {{ form_start(form) }}
+    <div class="modal-body">
+        {{ form_row(form.title) }}
+        {{ form_row(form.type) }}
+
+        <div class="afterDays"
+                {% if section.type != constant("\HB\\AdminBundle\\Entity\\LessonSection::TYPE_AFTER_DAYS") %}
+                    style="display: none;"
+                {% endif %}
+        >{{ form_row(form.afterDays) }}</div>
+        <div class="byDate"
+                {% if section.type != constant("\HB\\AdminBundle\\Entity\\LessonSection::TYPE_BY_DATE") %}
+                    style="display: none;"
+                {% endif %}
+        >{{ form_row(form.byDate) }}</div>
+
+
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+    </div>
+    {{ form_end(form) }}
+</form>
+
+
+<script>
+    $('form.modal_section_form select[id=hb_adminbundle_lessonsection_type]').change(function () {
+        var val = $(this).val();
+
+        if ('{{ constant("\HB\\AdminBundle\\Entity\\LessonSection::TYPE_BY_DATE") }}' === val) {
+            $('form.modal_section_form div.byDate').show();
+            $('form.modal_section_form div.afterDays').hide().find('input').val('');
+        } else if ('{{ constant("\HB\\AdminBundle\\Entity\\LessonSection::TYPE_AFTER_DAYS") }}' === val) {
+            $('form.modal_section_form div.afterDays').show();
+            $('form.modal_section_form div.byDate').hide().find('input').val('');
+        } else {
+            $('form.modal_section_form div.afterDays').hide().find('input').val('');
+            $('form.modal_section_form div.byDate').hide().find('input').val('');
+        }
+    });
+</script>

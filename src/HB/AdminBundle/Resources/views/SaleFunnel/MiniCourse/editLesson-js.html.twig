@@ -1,0 +1,107 @@
+<script>
+    function uploadFileHomework() {
+        uploadcare.openDialog(null, {
+            tabs: '{{ upload_care_sources }}',
+            validators: [
+                maxFileSize({{ max_file_size }})
+            ]
+        }).done(function (file) {
+            openHoldon('Загрузка файла');
+
+            file.progress(function(uploadInfo) {
+                $('#progressbar').progressbar({value: uploadInfo.progress * 100});
+            });
+
+            file.promise()
+                .done(function (fileInfo) {
+                    updateFileHomeWork(fileInfo);
+                    closeHoldon();
+                });
+        });
+    }
+
+    function uploadFileLesson() {
+        uploadcare.openDialog(null, {
+            tabs: '{{ upload_care_sources }}',
+            validators: [
+                maxFileSize({{ max_file_size }})
+            ]
+        }).done(function (file) {
+            openHoldon('Загрузка файла');
+
+            file.progress(function(uploadInfo) {
+                $('#progressbar').progressbar({value: uploadInfo.progress * 100});
+            });
+
+            file.promise()
+                .done(function (fileInfo) {
+                    updateFileLesson(fileInfo);
+                    closeHoldon();
+                });
+        });
+    }
+
+    function updateFileHomeWork(response) {
+        openHoldon();
+        var uuid = response.uuid;
+        var cdn = response.cdnUrl;
+        var file_name = '';
+        if (response.sourceInfo.file) {
+            file_name = response.sourceInfo.file.name;
+        } else {
+            file_name = response.name;
+        }
+
+        var path = Routing.generate('hb.sale_funnel.mini_course.lesson.update.file_homework', {id: {{ lesson.id }}});
+
+        $.post(path, {uuid: uuid, cdn: cdn, file_name: file_name}, function (response) {
+            if (response.status && response.status === 'error' && response.message) {
+                alert(response.message);
+            }
+            update_files_block();
+        });
+    }
+
+    function updateFileLesson(response) {
+        openHoldon('Сохранение в базу данных');
+        var uuid = response.uuid;
+        var cdn = response.cdnUrl;
+        var file_name = '';
+        if (response.sourceInfo.file) {
+            file_name = response.sourceInfo.file.name;
+        } else {
+            file_name = response.name;
+        }
+
+        var path = Routing.generate('hb.sale_funnel.mini_course.lesson.update.file_lesson', {id: {{ lesson.id }}});
+
+        $.post(path, {uuid: uuid, cdn: cdn, file_name: file_name}, function (response) {
+            if (response.status && response.status === 'error' && response.message) {
+                alert(response.message);
+            }
+            update_files_block();
+        });
+    }
+
+    function update_files_block()
+    {
+        openHoldon();
+
+        $.post(
+            Routing.generate('hb.sale_funnel.mini_course.edit.files_block', {id: {{ lesson.id}} } ),
+            function (response) {
+                $('div.files_block').html(response);
+                closeHoldon();
+            }
+        );
+    }
+
+    $(function () {
+        $('div.card-body').on('click', 'button[id=add_file_homework]', function () {
+            uploadFileHomework()
+        }).on('click', 'button[id=add_file_lesson]', function () {
+            uploadFileLesson()
+        });
+
+    });
+</script>

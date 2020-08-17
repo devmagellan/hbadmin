@@ -1,0 +1,75 @@
+services:
+    hb.admin.controller.sale_funnel.educational.create:
+        class: HB\AdminBundle\Controller\SaleFunnel\Educational\CreateController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@router"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.educational.remove:
+        class: HB\AdminBundle\Controller\SaleFunnel\Educational\RemoveController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@router"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.educational.edit:
+        class: HB\AdminBundle\Controller\SaleFunnel\Educational\EditController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@twig"
+            - "@form.factory"
+            - "@form.handler"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.educational.edit_letter:
+        class: HB\AdminBundle\Controller\SaleFunnel\Educational\EditLetterController
+        arguments:
+            - "@router"
+            - "@form.handler"
+            - "@form.factory"
+            - "@twig"
+
+    hb.admin.controller.sale_funnel.educational.add_new_letter.file:
+        class: HB\AdminBundle\Controller\SaleFunnel\Educational\AddNewLetterFileController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@intercom.event_recorder"
+
+    hb.admin.controller.sale_funnel.educational.letter.remove:
+        class: HB\AdminBundle\Controller\SaleFunnel\Educational\RemoveLetterController
+        arguments:
+            - "@upload_care.service"
+            - "@doctrine.orm.entity_manager"
+            - "@router"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.educational.update.file:
+        class: HB\AdminBundle\Controller\SaleFunnel\Educational\UpdateFileController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@upload_care.service"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.educational.update.letter_file:
+        class: HB\AdminBundle\Controller\SaleFunnel\Educational\UpdateLetterFileController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@upload_care.service"
+            - "@intercom.event_recorder"
+
+    hb.admin.controller.sale_funnel.educational.remove.file:
+        class: HB\AdminBundle\Controller\SaleFunnel\Educational\RemoveFunnelFileController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@upload_care.service"
+            - "@access.service"
+            - "@router"
+
+    hb.admin.controller.sale_funnel.educational.remove.letter.file:
+        class: HB\AdminBundle\Controller\SaleFunnel\Educational\RemoveFunnelLetterFileController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@upload_care.service"
+            - "@access.service"
+            - "@router"

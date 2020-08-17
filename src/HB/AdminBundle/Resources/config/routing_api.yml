@@ -1,0 +1,43 @@
+hb.type_form_webhook:
+    path:     /hook/in/type_form
+    defaults: { _controller: 'hb.admin.controller.api.hook.in.type_form:handleAction'}
+
+hb.teachable_webhook:
+    path:     /hook/in/teachable
+    defaults: { _controller: 'hb.admin.controller.api.hook.in.teachable:handleAction'}
+
+hb.youcanbookme_webhook:
+    path:     /hook/in/youcanbookme
+    defaults: { _controller: 'hb.admin.controller.api.hook.in.youcanbookme:handleAction'}
+
+hb.bigmarker_webhook:
+    path:     /hook/in/bigmarker
+    defaults: { _controller: 'hb.admin.controller.api.hook.in.bigmarker:handleAction'}
+
+hb.teachable.transaction_created:
+    path:     /hook/teachable/transaction_created
+    defaults: { _controller: 'hb.admin.controller.api.hook.teachable.transaction_created:handleAction'}
+
+hb.teachable.transaction_refunded:
+    path:     /hook/teachable/transaction_refunded
+    defaults: { _controller: 'hb.admin.controller.api.hook.teachable.transaction_refunded:handleAction'}
+
+hb.teachable.enrollment_created:
+    path:     /hook/teachable/enrollment_created
+    defaults: { _controller: 'hb.admin.controller.api.hook.teachable.enrollment_created:handleAction'}
+
+hb.teachable.lecture_progress_created:
+    path:     /hook/teachable/lecture_progress_created
+    defaults: { _controller: 'hb.admin.controller.api.hook.teachable.lecture_progress_created:handleAction'}
+
+hb.teachable.response_created:
+    path:     /hook/teachable/response_created
+    defaults: { _controller: 'hb.admin.controller.api.hook.teachable.response_created:handleAction'}
+
+hb.teachable.comment_created:
+    path:     /hook/teachable/comment_created
+    defaults: { _controller: 'hb.admin.controller.api.hook.teachable.comment_created:handleAction'}
+
+hb.teachable.all:
+    path:     /hook/teachable/all
+    defaults: { _controller: 'hb.admin.controller.api.hook.teachable.all:handleAction'}

@@ -1,0 +1,92 @@
+{% extends "@HBAdmin/layout.html.twig" %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="{{ path('hb.courses.list') }}">Продукты</a>
+        </li>
+        <li class="breadcrumb-item"><a href="{{ path('hb.course.edit', {id: course.id}) }}">{{ course.info.title }}</a>
+        </li>
+        <li class="breadcrumb-item"><b>Стоп Уроки</b></li>
+        <li class="breadcrumb-item">
+            <a href="{{ path('hb.sale_funnel.organic.price_blocks', {id: course.salesFunnelOrganic.id}) }}">Тарифные
+                планы</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="{{ path('hb.lesson_section.list', {id: course.id}) }}">
+                Разделы и уроки
+            </a>
+        </li>
+    </ol>
+{% endblock %}
+
+{% block js_footer %}
+    <script>
+        $(function () {
+            $('#{{ form.testPassedMark.vars.id }}').change(function () {
+               if (true === $(this).prop('checked')) {
+                   $('div.additional_inputs').show();
+                   $('#{{ form.previousLessonsMark.vars.id }}').prop('checked', true);
+               } else {
+                   $('div.additional_inputs').hide();
+               }
+            });
+
+            $('#{{ form.viewedVideosMark.vars.id }}').change(function () {
+                if (true === $(this).prop('checked')) {
+                    $('#{{ form.previousLessonsMark.vars.id }}').prop('checked', true);
+                }
+            });
+
+            $('#{{ form.previousLessonsMark.vars.id }}').change(function () {
+                if (false === $(this).prop('checked')) {
+                    var option2 = $('#{{ form.viewedVideosMark.vars.id }}').prop('checked');
+                    var option3 = $('#{{ form.testPassedMark.vars.id }}').prop('checked');
+
+                    if (option2 || option3) {
+                        $(this).prop('checked', true)
+                    }
+                }
+            });
+        });
+    </script>
+
+{% endblock %}
+
+{% block body %}
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    Стоп уроки
+                </div>
+                <div class="card-body">
+                    <div class="col-md-4">
+                        {{ form_start(form) }}
+
+                        {{ form_row(form.previousLessonsMark) }}
+                        {{ form_row(form.viewedVideosMark) }}
+                        {{ form_row(form.testPassedMark) }}
+
+                        <div class="additional_inputs"
+                             {% if course.stopLessons.testPassedMark == false %}
+                                 style="display: none"
+                             {% endif %}
+                        >
+                            {{ form_row(form.testsMinPercentPassed) }}
+                            {{ form_row(form.testsMaxAttempts) }}
+                        </div>
+
+
+                        <input type="submit" value="Сохранить" class="btn btn-primary"/>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

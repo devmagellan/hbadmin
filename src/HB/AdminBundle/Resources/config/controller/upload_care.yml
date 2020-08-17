@@ -1,0 +1,5 @@
+services:
+    hb.admin.controller.upload_care.remove:
+        class: HB\AdminBundle\Controller\UploadCare\RemoveFileController
+        arguments:
+            - "@upload_care.service"

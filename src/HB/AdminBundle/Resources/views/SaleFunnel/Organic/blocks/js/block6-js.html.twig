@@ -1,0 +1,172 @@
+<script>
+    function block6UploadBannerImage() {
+        const min_width_crop = 800;
+        const min_width = min_width_crop /10;
+        const min_height_crop = 800;
+        const min_height = min_height_crop /10;
+
+        uploadcare.openDialog(null, {
+            imagesOnly: true,
+            tabs: '{{ upload_care_sources }}',
+            crop: min_width_crop + 'x' + min_height_crop + ' minimum',
+            validators: [
+                minDimensions(min_width, min_height)
+            ]
+        }).done(function (file) {
+            file.progress(function(uploadInfo) {
+                $('#progressbar').progressbar({value: uploadInfo.progress * 100});
+            });
+
+            file.promise()
+                .done(function (fileInfo) {
+                    block6UpdatePhoto(fileInfo);
+                });
+        });
+    }
+
+    function block6UploadBannerVideo() {
+        uploadcare.openDialog(null, {
+            tabs: '{{ upload_care_sources }}',
+            validators: [
+                maxFileSize({{ max_file_size }})
+            ]
+        }).done(function (file) {
+            openHoldon('Загрузка файла');
+            file.progress(function(uploadInfo) {
+                $('#progressbar').progressbar({value: uploadInfo.progress * 100});
+            });
+
+            file.promise()
+                .done(function (fileInfo) {
+                    block6UpdateVideo(fileInfo);
+                    closeHoldon();
+                });
+        });
+    }
+
+    function block6UpdatePhoto(response) {
+        openHoldon();
+        var uuid = response.uuid;
+        var cdn = response.cdnUrl;
+        var file_name = '';
+        if (response.sourceInfo.file) {
+            file_name = response.sourceInfo.file.name;
+        } else {
+            file_name = response.name;
+        }
+
+        var path = Routing.generate('hb.sale_funnel.organic.block6author.photo.update', {id: {{ funnel.id }}});
+
+        $.post(path, {uuid: uuid, cdn: cdn, file_name: file_name}, function (response) {
+            if (response.status && response.status === 'error' && response.message) {
+                alert(response.message);
+            } else {
+                updateBlock6();
+            }
+            closeHoldon();
+        });
+    }
+
+    function block6UpdateVideo(response) {
+        openHoldon();
+        var uuid = response.uuid;
+        var cdn = response.cdnUrl;
+        var file_name = '';
+        if (response.sourceInfo.file) {
+            file_name = response.sourceInfo.file.name;
+        } else {
+            file_name = response.name;
+        }
+
+        var path = Routing.generate('hb.sale_funnel.organic.block6author.video.update', {id: {{ funnel.id }}});
+
+        $.post(path, {uuid: uuid, cdn: cdn, file_name: file_name}, function (response) {
+            if (response.status && response.status === 'error' && response.message) {
+                alert(response.message);
+            } else {
+                updateBlock6();
+            }
+            closeHoldon();
+        });
+    }
+
+    function block6RemovePhoto() {
+        openHoldon("Удаление файла");
+
+        $.post(
+            Routing.generate('hb.sale_funnel.organic.block6author.photo.remove', {id: {{ funnel.id }}}),
+            function (response) {
+                if (response.status && response.status === 'error' && response.message) {
+                    alert(response.message);
+                } else {
+                    updateBlock6();
+                }
+                closeHoldon();
+            });
+    }
+
+    function block6RemoveVideo() {
+        openHoldon("Удаление файла");
+
+        $.post(
+            Routing.generate('hb.sale_funnel.organic.block6author.video.remove', {id: {{ funnel.id }}}),
+            function (response) {
+                if (response.status && response.status === 'error' && response.message) {
+                    alert(response.message);
+                } else {
+                    updateBlock6();
+                }
+                closeHoldon();
+            });
+    }
+
+
+    function updateBlock6() {
+        $.get(
+            Routing.generate('hb.sale_funnel.organic.block6author', {id: {{ funnel.id }}}),
+            function (response) {
+                if (response.status && response.status === 'error' && response.message) {
+                    alert(response.message);
+                } else {
+                    $('div.block6').html(response);
+                }
+            }
+        );
+    }
+
+    $(function () {
+        $('div.block6').on('submit', 'form[name=block6]', function (e) {
+            openHoldon();
+            e.preventDefault();
+
+            var formData = $(this).serialize();
+            var id = $(this).data('funnel-id');
+
+            $.ajax({
+                type: "POST",
+                url: Routing.generate('hb.sale_funnel.organic.block6author', {id: id}),
+                data: formData,
+                dataType: "json",
+                success: function (response) {
+                    $('div.block6').html(response.responseText);
+                    closeHoldon();
+                },
+                error: function (response) {
+                    $('div.block6').html(response.responseText);
+                    closeHoldon();
+                }
+            });
+
+            return false;
+        }).on('click', 'button[id=block6_upload_photo]', function () {
+            block6UploadBannerImage()
+        }).on('click', 'button[id=block6_upload_video]', function () {
+            block6UploadBannerVideo()
+        }).on('click', 'button[id=block6_remove_video]', function () {
+            block6RemoveVideo()
+        }).on('click', 'button[id=block6_remove_image]', function () {
+            block6RemovePhoto()
+        });
+
+    });
+</script>

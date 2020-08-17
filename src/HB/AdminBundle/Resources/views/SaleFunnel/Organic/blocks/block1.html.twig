@@ -1,0 +1,66 @@
+{% if saved %}
+    <div class="alert alert-success" role="alert">Сохранено!</div>
+{% endif %}
+<div class="row">
+    <div class="col-md-4 text-center">
+        <form method="post" name="block1" data-funnel-id="{{ funnel.id }}">
+            {{ form_widget(form) }}
+            <small class="alert-gray-100">
+                Например, "Начать учиться" "Регистрация", "Купить", "Записаться". Если вы оставите это поле пустым, мы будем использовать текст “Купить”
+            </small><br>
+            <button type="submit" class="btn btn-success">
+                Сохранить
+            </button>
+        </form>
+    </div>
+
+    <div class="col-md-4 text-center">
+        <h4>Баннер курса</h4>
+        {% if funnel.block1ImageBanner %}
+
+            <a href="{{ funnel.block1ImageBanner.fileUrl }}" target="_blank">
+                <img src="{{ funnel.block1ImageBanner.fileUrl }}" style="max-height: 100px;">
+            </a>
+            <button class="btn btn-pill btn-sm btn-outline-danger" id="block1_remove_image"><i class="fa fa-remove"></i> </button>
+            <br>
+            <br>
+        {% endif %}
+
+        <button type="button" class="btn btn-orange" id="block1_upload_banner">
+            <i class="fa fa-photo"></i>
+            Добавить баннер (1920х700 px)
+        </button>
+
+        <br>
+        <small class="alert-gray-100">
+        Если вы не предоставляете свой вариант баннера, по умолчанию мы поставим такой:
+        </small>
+
+        <a href="{{ asset('bundles/hbadmin/images/banner_default.jpg') }}" target="_blank">
+            <img src="{{ asset('bundles/hbadmin/images/banner_default.jpg') }}" style="max-width: 200px">
+        </a>
+    </div>
+    <div class="col-md-4 text-center">
+        <h4>Видео для первого экрана</h4>
+        {% if funnel.block1VideoBanner %}
+
+            <a href="{{ funnel.block1VideoBanner.fileUrl }}" target="_blank">
+                {{ funnel.block1VideoBanner.fileName }}
+            </a>
+            <button class="btn btn-pill btn-sm btn-outline-danger" id="block1_remove_video"><i class="fa fa-remove"></i> </button>
+            <br>
+            <video width="320" height="240" controls>
+                <source src="{{ funnel.block1VideoBanner.fileUrl }}">
+                Your browser does not support the video tag.
+            </video>
+
+            <br>
+            <br>
+        {% endif %}
+
+        <button type="button" class="btn btn-indigo" id="block1_upload_video"><i class="fa fa-file-video-o"></i>
+            Добавить видео (<1.5Gb)
+        </button>
+        <br><small class="alert-gray-100">Например, видео приветствие, видео обзор программы курса</small>
+    </div>
+</div>

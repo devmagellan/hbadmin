@@ -1,0 +1,198 @@
+{% extends "@HBAdmin/layout.html.twig" %}
+
+{% block css_head %}
+    {% include "@HBAdmin/LessonSection/include/list-css.html.twig" %}
+{% endblock %}
+
+
+{% block js_footer %}
+    {% include "@HBAdmin/LessonSection/include/list-js.html.twig" %}
+{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="{{ path('hb.courses.list') }}">Продукты</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="{{ path('hb.course.edit', {id: course.id}) }}">
+                {{ course.info.title }}
+            </a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="{{ path('hb.sale_funnel.organic.price_blocks', {id: course.salesFunnelOrganic.id}) }}">Тарифные планы</a>
+        </li>
+        <li class="breadcrumb-item">
+            <b>Разделы и уроки</b>
+        </li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+    {% form_theme form with ['bootstrap_4_layout.html.twig', '@HBAdmin/form/fields.html.twig'] %}
+
+    <a href="{{ path('hb.course.edit', {id: course.id}) }}" class="btn btn-link">
+        <i class="fa fa-arrow-left"></i> Главная страница курса
+    </a>
+
+    <div class="card">
+        <div class="card-header">
+            Разделы и уроки
+        </div>
+        <div class="card-body">
+
+            <form method="post" action="{{ path('hb.lesson_section.list', {id: course.id}) }}">
+                {{ form_start(form) }}
+                <table>
+                    <tr>
+                        <td style="display: flex">
+                            {{ form_row(form.title) }}
+
+                            {#{{ form_row(form.type) }}#}
+
+                            <div class="form-group">
+                                {{ form_label(form.type) }}
+                                <a class="btn btn-pill btn-sm btn-orange questionTrigger" data-toggle="tooltip"
+                                        data-placement="bottom" title=""
+                                        data-original-title='Выбирая тип раздела: "Обычный" - уроки будут доступны студентам все сразу, выбирая "Откроется через N дней", вам необходимо указать количество дней, через которые будет доступен раздел, при выборе "Откроется по дате" - надо указать конкретную дату, в которую будет доступен раздел '>
+                                    <i class="fa fa-question"></i>
+                                </a>
+                                {{ form_widget(form.type) }}
+                            </div>
+
+
+                            <div class="afterDays" style="display: none;">{{ form_row(form.afterDays) }}</div>
+                            <div class="byDate" style="display: none;">{{ form_row(form.byDate) }}</div>
+
+                        </td>
+                    </tr>
+                </table>
+                <button type="submit" class="btn btn-sm btn-success">Добавить</button>
+                {{ form_end(form) }}
+            </form>
+            <br>
+            <form method="post" action="{{ path('hb.lesson_section.list', {id: course.id}) }}">
+                {{ form_start(formLesson) }}
+                <table>
+                    <tr style="display: flex">
+                        <td>
+                            {{ form_row(formLesson.title) }}
+                            {{ form_row(formLesson.section) }}
+                        </td>
+                    </tr>
+                </table>
+                <button type="submit" class="btn btn-sm btn-success">Добавить</button>
+                {{ form_end(formLesson) }}
+            </form>
+
+            {% if canWorkWithOrganicFunnel %}
+                <br>
+                <a href="{{ path('hb.sale_funnel.organic.edit', {id: course.id}) }}"
+                   class="btn btn-outline-cyan">Перейти к наполнению органической воронки (целевая страница курса)</a>
+            {% endif %}
+
+        </div>
+    </div>
+
+
+    <ul class="sectionList">
+        {% for section in sections %}
+            <li data-section-id="{{ section.id }}">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="pull-left">
+                            <i class="fa fa-arrows section_drag"></i>
+                            <b>
+                                <a href="#" id="lesson_section_title_{{ section.id }}" data-type="textarea"
+                                   data-pk="{{ section.id }}"
+                                   data-title="Название раздела"
+                                   style="color: black"
+                                >{{ section.title }}</a>
+
+                            </b>
+                        </div>
+
+
+                        <a href="{{ path('hb.lesson_section.remove', {id: section.id}) }}"
+                           class="btn btn-pill btn-sm btn-outline-danger pull-right"
+                           onclick="return confirm('Удалить раздел ?')">
+                            <i class="fa fa-remove"></i>
+                        </a>
+
+                        <button id="section_edit_{{ section.id }}"
+                                class="btn btn-pill btn-sm btn-outline-success pull-right">
+                            <i class="fa fa-edit"></i>
+                        </button>
+                        <div class="pull-right" style="padding: 0 10px; width: 170px; text-align: center">
+                            {% if section.type == constant("\HB\\AdminBundle\\Entity\\LessonSection::TYPE_AFTER_DAYS") %}
+                                откроется через {{ section.afterDays }} д.
+                            {% elseif section.type == constant("\HB\\AdminBundle\\Entity\\LessonSection::TYPE_BY_DATE") %}
+                                откроется {% if section.byDate %}{{ section.byDate.format("d.m.y") }}{% else %}?{% endif %}
+                            {% else %}
+                                обычный
+                            {% endif %}
+                        </div>
+
+
+                        <div class="pull-right">
+                            <a class="btn btn-pill btn-sm btn-orange questionTrigger"
+                                    data-toggle="tooltip" data-placement="bottom" title=""
+                                    data-original-title="Отметьте тарифные планы на которых будет доступен этот раздел"
+                                    style="margin-right: 10px"
+                            >
+                                <i class="fa fa-question"></i>
+                            </a>
+                            {% if section.course.salesFunnelOrganic %}
+                                {% for block in section.course.salesFunnelOrganic.priceBlocks %}
+                                    <div class="col-md-2" style="display: inline;">
+                                        <input id="block_{{ block.id }}_{{ section.id }}"
+                                               name="block_{{ block.id }}_{{ section.id }}"
+                                               class="form-check-input"
+                                               value=""
+                                               type="checkbox"
+                                               data-block-id="{{ block.id }}"
+                                               data-section-id="{{ section.id }}"
+                                               {% if section.hasPriceBlock(block.id) %}checked{% endif %}
+                                        >
+
+                                        <label class="form-check-label"
+                                               for="block_{{ block.id }}_{{ section.id }}">
+                                            {{ block.title }}
+                                        </label>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="card-body">
+
+                        {{ render(controller('hb.admin.controller.lesson_section.lesson.list:handleAction', {section: section.id} )) }}
+
+                    </div>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+
+
+    <div class="modal section_modal" tabindex="-1" role="dialog" id="section_modal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Редактировать раздел</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="section_modal_body">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#section_modal"
+            style="display: none;" id="section_modal_open">
+    </button>
+
+{% endblock %}

@@ -1,0 +1,50 @@
+{% if added %}
+    <div class="alert alert-success" role="alert">Добавлено!</div>
+{% endif %}
+<div class="row">
+
+    <div class="col-md-3">
+        <form method="post" name="block3_bonus">
+            {{ form_widget(form) }}
+            <button class="btn btn-sm btn-success">Добавить</button>
+        </form>
+    </div>
+
+    {% if funnel.bonuses | length > 0 %}
+        <div class="col-md-9">
+            <table class="table table-bordered">
+                <tr>
+                    <th>Название</th>
+                    <th>Файл</th>
+                    <th></th>
+                </tr>
+                {% for bonus in funnel.bonuses %}
+                    <tr>
+                        <td>{{ bonus.title }}</td>
+                        <td>
+                            {% if bonus.file %}
+                                <a href="{{ bonus.file.fileUrl }}" target="_blank">{{ bonus.file.fileName }}</a>
+                                <button type="button" name="bonus_file_remove" data-bonus-id="{{ bonus.id }}"
+                                        class="btn btn-pill btn-sm btn-outline-danger">
+                                    <i class="fa fa-remove"></i>
+                                </button>
+                            {% endif %}
+
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-outline-blue" name="block3_bonus_file"
+                                    data-bonus-id="{{ bonus.id }}">
+                                <i class="fa fa-file"></i>Загрузить файл
+                            </button>
+
+                            <button class="btn btn-sm btn-pill btn-danger" name="bonus_remove"
+                                    data-bonus-id="{{ bonus.id }}"><i class="fa fa-remove"></i></button>
+                        </td>
+                    </tr>
+
+                {% endfor %}
+            </table>
+        </div>
+    {% endif %}
+
+</div>

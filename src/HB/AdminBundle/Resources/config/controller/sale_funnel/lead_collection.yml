@@ -1,0 +1,65 @@
+services:
+    hb.admin.controller.sale_funnel.lead_collection.remove:
+        class: HB\AdminBundle\Controller\SaleFunnel\LeadCollection\RemoveController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@router"
+            - "@upload_care.service"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.lead_collection.edit:
+        class: HB\AdminBundle\Controller\SaleFunnel\LeadCollection\EditController
+        arguments:
+            - "@form.handler"
+            - "@router"
+            - "@form.factory"
+            - "@session.flash_bag"
+            - "@twig"
+            - "@doctrine.orm.entity_manager"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.lead_collection.edit_lead_magnet:
+        class: HB\AdminBundle\Controller\SaleFunnel\LeadCollection\EditLeadMagnetController
+        arguments:
+            - "@form.handler"
+            - "@router"
+            - "@form.factory"
+            - "@session.flash_bag"
+            - "@twig"
+            - "@doctrine.orm.entity_manager"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.lead_collection.update_file:
+        class: HB\AdminBundle\Controller\SaleFunnel\LeadCollection\UpdateFileController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@upload_care.service"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.lead_collection.update_image:
+        class: HB\AdminBundle\Controller\SaleFunnel\LeadCollection\UpdateImageController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@upload_care.service"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.lead_collection.remove_image:
+        class: HB\AdminBundle\Controller\SaleFunnel\LeadCollection\RemoveImageController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@upload_care.service"
+            - "@router"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.lead_collection.remove_file:
+        class: HB\AdminBundle\Controller\SaleFunnel\LeadCollection\RemoveFileController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@upload_care.service"
+            - "@router"
+            - "@access.service"
+
+    hb.admin.controller.sale_funnel.lead_collection.preview:
+        class: HB\AdminBundle\Controller\SaleFunnel\LeadCollection\PreviewController
+        arguments:
+            - "@twig"

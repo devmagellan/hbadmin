@@ -1,0 +1,5 @@
+{% macro render(course_id) %}
+    <a href="{{ path('hb.course.edit', {id: course_id}) }}" class="btn btn-pill btn-sm" style="margin-left: 50px" >
+        <i class="fa fa-list"></i> Вернуться в каталог
+    </a>
+{% endmacro %}

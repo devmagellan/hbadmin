@@ -1,0 +1,54 @@
+<script>
+
+    function updateBlock4() {
+        $.get(
+            '{{ path('hb.sale_funnel.webinar.block4.price.index', {id: funnel.id}) }}',
+            function (response) {
+                $('div.block4').html(response);
+            }
+        );
+    }
+
+    $(function () {
+        $('div.block4').on('submit', 'form[name=block4_price], form[name=block4_promocode]', function (e) {
+            openHoldon();
+            e.preventDefault();
+
+            var formData = $(this).serialize();
+
+            $.ajax({
+                type: "POST",
+                url: '{{ path('hb.sale_funnel.webinar.block4.price.index', {id: funnel.id}) }}',
+                data: formData,
+                dataType: "json",
+                success: function (response) {
+                    $('div.block4').html(response.responseText);
+                    closeHoldon();
+                },
+                error: function (response) {
+                    $('div.block4').html(response.responseText);
+                    closeHoldon();
+                }
+            });
+            return false;
+        }).on('click', 'button[name=promocode_remove]', function () {
+            openHoldon('Removing promo code');
+            $.post(
+                Routing.generate('hb.sale_funnel.webinar.block4.price.remove.promocode', {
+                    funnel: {{ funnel.id }},
+                    code: $(this).data('promocode-id')
+                }),
+                function (response) {
+                    if (response.status && response.status === 'error' && response.message) {
+                        alert(response.message);
+                    } else {
+                        updateBlock4();
+                    }
+
+                    closeHoldon();
+                }
+            )
+        });
+
+    });
+</script>

@@ -1,0 +1,104 @@
+{% extends "@HBAdmin/layout.html.twig" %}
+
+{% import '@HBAdmin/macros/return_to_course.html.twig' as return %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="{{ path('hb.courses.list') }}">Продукты</a>
+        </li>
+        <li class="breadcrumb-item active">
+            <a href="{{ path('hb.course.edit', {id: course.id}) }}">{{ course.info.title }}</a>
+        </li>
+        <li class="breadcrumb-item">Воронки</li>
+        <li class="breadcrumb-item"><b>Слоеный пирог</b></li>
+    </ol>
+{% endblock %}
+
+{% block js_footer %}
+    <script>
+        $(function () {
+
+            $('button[id^=funnel_view_]').click(function () {
+                openHoldon();
+                $.get(
+                    Routing.generate('hb.sale_funnel.layer_cake.view', {id: $(this).data('funnel-id')}),
+                    function (response) {
+                        if (response.status && response.status === 'error' && response.message) {
+                            alert(response.message);
+                        } else {
+                            $('div.layer-cake-info').html(response);
+                        }
+                        closeHoldon();
+                    }
+                )
+            });
+
+            //
+        });
+    </script>
+{% endblock %}
+
+{% block body %}
+
+    <div class="card">
+        <div class="card-header">
+            Создать новый слоеный пирог {{ return.render(course.id) }}
+        </div>
+        <div class="card-body">
+            <div class="col-md-3">
+                {{ form_start(form) }}
+                {{ form_widget(form) }}
+                <input type="submit" value="Добавить и перейти к наполнению" class="btn btn-primary"/>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+
+    {% if course.saleFunnelLayerCakes | length > 0 %}
+        <div class="card">
+            <div class="card-header">
+                Список слоеных пирогов
+            </div>
+            <div class="card-body">
+                <div class="row">
+
+                    <div class="col-md-4">
+                        <table class="table auto-width">
+                            <tr>
+                                <th>id</th>
+                                <th>Название</th>
+                                <th>Цена</th>
+                                <th></th>
+                            </tr>
+                            {% for cake in course.saleFunnelLayerCakes %}
+                                <tr>
+                                    <td>{{ cake.id }}</td>
+                                    <td>{{ cake.title }}</td>
+                                    <td>{{ cake.price }}</td>
+                                    <td>
+                                        <a href="{{ path('hb.sale_funnel.layer_cake.edit', {id: cake.id}) }}"
+                                           class="btn btn-pill btn-sm btn-outline-primary"><i class="fa fa-edit"></i>
+                                        </a>
+                                        <button id="funnel_view_{{ cake.id }}" data-funnel-id="{{ cake.id }}"
+                                                class="btn btn-pill btn-sm btn-info"><i class="fa fa-eye"></i>
+                                        </button>
+                                        <a href="{{ path('hb.sale_funnel.layer_cake.remove', {id: cake.id}) }}" class="btn btn-pill btn-sm btn-danger">
+                                            <i class="fa fa-remove"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="layer-cake-info"></div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    {% endif %}
+
+{% endblock %}

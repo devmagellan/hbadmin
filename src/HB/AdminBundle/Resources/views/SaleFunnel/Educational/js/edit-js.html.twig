@@ -1,0 +1,198 @@
+<script>
+
+    function uploadNewLetterFile(hidden_name) {
+        uploadcare.openDialog(null, {
+            tabs: '{{ upload_care_sources }}',
+            validators: [
+                maxFileSize({{ max_file_size }})
+            ]
+        }).done(function (file) {
+            openHoldon('Загрузка файла');
+
+            file.progress(function (uploadInfo) {
+                $('#progressbar').progressbar({value: uploadInfo.progress * 100});
+            });
+
+            file.promise()
+                .done(function (fileInfo) {
+                    addLetterFile(fileInfo, hidden_name);
+                    closeHoldon();
+                });
+        });
+    }
+
+    function addLetterFile(response, hidden_name) {
+        openHoldon('Сохранение в базу данных');
+        var uuid = response.uuid;
+        var cdn = response.cdnUrl;
+        var file_name = '';
+        if (response.sourceInfo.file) {
+            file_name = response.sourceInfo.file.name;
+        } else {
+            file_name = response.name;
+        }
+
+        $.post(
+            '{{ path('hb.sale_funnel.educational.new_letter.add.file') }}', {
+                uuid: uuid,
+                cdn: cdn,
+                file_name: file_name
+            },
+            function (response) {
+                if ('success' === response.status) {
+                    var file_link = "<a href='" + cdn + "'>" + file_name + "</a>";
+                    $('div.' + hidden_name).html(file_link);
+
+                    $('input[name=' + hidden_name + ']').val(response.message)
+                } else {
+                    alert('Error');
+                }
+            });
+    }
+
+    function uploadLetterFile(type) {
+        uploadcare.openDialog(null, {
+            tabs: '{{ upload_care_sources }}',
+            validators: [
+                maxFileSize({{ max_file_size }})
+            ]
+        }).done(function (file) {
+            openHoldon('Загрузка файла');
+
+            file.progress(function (uploadInfo) {
+                $('#progressbar').progressbar({value: uploadInfo.progress * 100});
+            });
+
+            file.promise()
+                .done(function (fileInfo) {
+                    updateLetterFile(fileInfo, type);
+                    closeHoldon();
+                });
+        });
+    }
+
+    function updateLetterFile(response, type) {
+        openHoldon('Сохранение в базу данных');
+        var uuid = response.uuid;
+        var cdn = response.cdnUrl;
+        var file_name = '';
+        if (response.sourceInfo.file) {
+            file_name = response.sourceInfo.file.name;
+        } else {
+            file_name = response.name;
+        }
+
+        $.post(
+            '{{ path('hb.sale_funnel.educational.update.file', {id: funnel.id}) }}', {
+                uuid: uuid,
+                cdn: cdn,
+                file_name: file_name,
+                type: type
+            },
+            function (response) {
+                if ('success' === response.status) {
+                    document.location = document.location;
+                } else {
+                    alert('Error');
+                }
+            });
+    }
+
+    function updateConcreteLetterFile(id, type) {
+        uploadcare.openDialog(null, {
+            tabs: '{{ upload_care_sources }}',
+            validators: [
+                maxFileSize({{ max_file_size }})
+            ]
+        }).done(function (file) {
+            openHoldon('Загрузка файла');
+
+            file.progress(function (uploadInfo) {
+                $('#progressbar').progressbar({value: uploadInfo.progress * 100});
+            });
+
+            file.promise()
+                .done(function (fileInfo) {
+                    saveConcreteLetterFile(fileInfo, id, type);
+                    closeHoldon();
+                });
+        });
+    }
+
+    function saveConcreteLetterFile(response, id, type) {
+        openHoldon('Сохранение в базу данных');
+
+        var uuid = response.uuid;
+        var cdn = response.cdnUrl;
+        var file_name = '';
+        if (response.sourceInfo.file) {
+            file_name = response.sourceInfo.file.name;
+        } else {
+            file_name = response.name;
+        }
+
+        $.post(
+            Routing.generate('hb.sale_funnel.educational.update.letter_file', {id: id}),
+            {
+                uuid: uuid,
+                cdn: cdn,
+                file_name: file_name,
+                type: type
+            },
+            function (response) {
+                if ('success' === response.status) {
+                    document.location = document.location;
+                } else {
+                    alert('Error');
+                }
+            });
+    }
+
+
+
+
+
+    $(function () {
+        $('form[name=add_letter]')
+            .on('submit', function (e) {
+                var lesson_file = $('input[name=letter_lesson_file]').val();
+                var lesson_article = $('input[name=letter_article_file]').val();
+
+                if (!lesson_article && !lesson_file) {
+                    alert('Загрузите письмо или статью!');
+                    e.preventDefault();
+                }
+            })
+
+            .on('click', 'button[id=add_letter_lesson_file]', function () {
+                uploadNewLetterFile('letter_lesson_file')
+            })
+
+            .on('click', 'button[id=add_letter_article_file]', function () {
+                uploadNewLetterFile('letter_article_file')
+            });
+
+        $('div.packet_files').on('click', 'button[id=add_letters_file]', function () {
+            var type = '{{ constant('HB\\AdminBundle\\Entity\\SaleFunnel\\SalesFunnelEducational::LETTERS_FILE') }}';
+            uploadLetterFile(type);
+        }).on('click', 'button[id=add_articles_file]', function () {
+            var type = '{{ constant('HB\\AdminBundle\\Entity\\SaleFunnel\\SalesFunnelEducational::ARTICLES_FILE') }}';
+            uploadLetterFile(type);
+        });
+
+        $('table.letters_table')
+            .on('click', 'button[name^=update_letter_file_]', function () {
+                var type = '{{ constant('HB\\AdminBundle\\Entity\\SaleFunnel\\SalesFunnelEducational::LETTERS_FILE') }}';
+                var letter_id = $(this).data('letter-id');
+
+                updateConcreteLetterFile(letter_id, type);
+            })
+            .on('click', 'button[name^=update_articles_file_]', function () {
+                var type = '{{ constant('HB\\AdminBundle\\Entity\\SaleFunnel\\SalesFunnelEducational::ARTICLES_FILE') }}';
+                var letter_id = $(this).data('letter-id');
+
+                updateConcreteLetterFile(letter_id, type);
+            })
+
+    });
+</script>

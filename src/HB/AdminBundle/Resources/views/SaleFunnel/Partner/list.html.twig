@@ -1,0 +1,75 @@
+{% extends "@HBAdmin/layout.html.twig" %}
+
+{% import '@HBAdmin/macros/view_link.html.twig' as demo_link %}
+{% import '@HBAdmin/macros/return_to_course.html.twig' as return %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="{{ path('hb.courses.list') }}">Продукты</a>
+        </li>
+        <li class="breadcrumb-item active">
+            <a href="{{ path('hb.course.edit', {id: course.id}) }}">{{ course.info.title }}</a>
+        </li>
+        <li class="breadcrumb-item">Воронки</li>
+        <li class="breadcrumb-item">Партнерская программа</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+
+    <div class="card">
+        <div class="card-header">
+            Добавить партнера {{ return.render(course.id) }}
+
+        </div>
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-md-4">
+                    {{ form_start(form) }}
+
+                    {{ form_widget(form) }}
+
+                    <button class="btn btn-success" type="submit">Добавить</button>
+
+                    {{ form_end(form) }}
+                </div>
+
+                {% if course.saleFunnelPartners | length > 0 %}
+                    <div class="col-md-8">
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th>Партнер</th>
+                                <th>Email</th>
+                                <th>Вознаграждение, %</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for partner in course.saleFunnelPartners %}
+                                <tr>
+                                    <td>{{ partner.partner }}</td>
+                                    <td>{{ partner.email }}</td>
+                                    <td>{{ partner.awardPercent }}</td>
+                                    <td>
+                                        <a href="{{ path('hb.sale_funnel.partner.edit', {id: partner.id}) }}" class="btn btn-pill btn-sm btn-primary">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                        <a href="{{ path('hb.sale_funnel.partner.remove', {id: partner.id}) }}" class="btn btn-pill btn-sm btn-danger">
+                                            <i class="fa fa-remove"></i>
+                                        </a>
+
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

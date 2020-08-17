@@ -1,0 +1,221 @@
+{% extends "@HBAdmin/layout.html.twig" %}
+
+{% set published_btn %}<span class='btn btn-sm btn-pill btn-success'><i class='fa fa-check'></i></span>{% endset %}
+
+{% block css_head %}
+    <style>
+        table {
+            font-size: 12px;
+        }
+
+        table td {
+            padding: 0.1em !important;
+        }
+
+        .filters {
+            display: flex;
+        }
+        a[href='#']{
+            color: black;
+        }
+        a[href='#']:hover{
+            text-decoration: none;
+            cursor: unset;
+        }
+    </style>
+{% endblock %}
+
+{% block js_footer %}
+    <script>
+        $(function () {
+            $('.navigation a').click(function () {
+                let page = $(this).text();
+                let input = $("<input>").attr("type", "hidden").attr("name", "page").val(page);
+                {% if use_filters == 1 %}
+                $('form[name=filters] input[type=text][name^="f"], select[name^="f"]').each(function () {
+                    if ($(this).val()) {
+                        $('form[name=filters]').append($(input)).submit();
+                    }
+                });
+                {% endif %}
+            });
+
+            $('button[id^=publish_]').click(function () {
+                var id = $(this).data('log-id');
+                var parent = $(this).parent();
+                openHoldon();
+                $.post(
+                    Routing.generate('hb.customer_action.mark_published', {id: id}),
+                    function (response) {
+                        if (response.status === 'success') {
+                            $(parent).html("{{ published_btn | raw }}");
+                            console.log('yes');
+                        }
+                        closeHoldon();
+                    }
+                )
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block body %}
+    <div class="card">
+        <div class="card-header">
+            Логи изменений данных курсов
+        </div>
+        <div class="card-body">
+
+            <form name="filters" method="get" action="{{ path('hb.customer_actions') }}">
+                <div class="filters">
+                    <select name="f[published]" class="form-control">
+                        <option value="">
+                            Скрывать опубликованные
+                        </option>
+                        <option value="1" {% if filters and filters.published == '1' %}selected{% endif %}>
+                            Показывать опубликованные
+                        </option>
+                    </select>
+
+                    <select name="f[course]" class="form-control">
+                        <option value="">[Курс]</option>
+                        {% for course in filter_courses %}
+                            <option value="{{ course.id }}"
+                                    {% if filters and filters.course == course.id %}selected{% endif %}>
+                                {{ course.id }}. {{ course.info.title }}
+                            </option>
+                        {% endfor %}
+                    </select>
+
+                    <select name="f[editor]" class="form-control">
+                        <option value="">[Пользователь]</option>
+                        {% for editor in filter_editors %}
+                            <option value="{{ editor.id }}"
+                                    {% if filters and filters.editor == editor.id %}selected{% endif %}>
+                                {{ editor.id }}. {{ editor.firstName }} {{ editor.surname }}
+                            </option>
+                        {% endfor %}
+                    </select>
+
+                    <button class="btn btn-success" type="submit">Применить фильтр</button>
+                    <a href="{{ path('hb.customer_actions') }}" class="btn btn-warning">Сбросить</a>
+                </div>
+            </form>
+
+            <br>
+
+            <div class="navigation">
+                {{ knp_pagination_render(logs) }}
+            </div>
+
+            <table class="table table-bordered table-condensed">
+                <tr>
+                    <th>id лога</th>
+                    <th>Время</th>
+                    <th>Курс/Воронка</th>
+                    <th>id / Объект</th>
+                    <th>Кем внесены изменения</th>
+                    <th>Изменения</th>
+                    <th>Опубликовано</th>
+                </tr>
+
+                {% if logs | length > 0 %}
+                    {% for log in logs %}
+                        <tr>
+                            <td>{{ log.id }}</td>
+                            <td>{{ log.time.format("d.m.Y H:i:s") }}</td>
+                            <td>
+                                {{ log.course.id }}. {{ log.course.info.title }}
+                                {% if log.funnel %}
+                                    <br>{% if log.funnelId %} {{ log.funnelId }}. {% endif %}
+                                    <i>{{ log.funnel|trans }}</i>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{{ log | log_route }}" target="_blank">#{{ log.objectId }} / {{ log.object|trans }}</a>
+                            </td>
+                            <td>
+                                {{ log.user.firstName }} {{ log.user.surname }}
+                                <small class="alert-gray-100">
+                                    [{{ log.user.id }}.{{ log.user.username }}]
+                                </small>
+                            </td>
+                            <td style="width: 40%">
+                                {% set iterator = 0 %}
+                                {% for key, change in log.changeSet %}
+                                    {% if key == constant('HB\\AdminBundle\\Listener\\LogEvents::CREATED') %}
+                                        Создан/Добавлен
+                                    {% elseif key == constant('HB\\AdminBundle\\Listener\\LogEvents::REMOVED') %}
+                                        Удален
+                                    {% else %}
+                                        {% if change is iterable %}
+                                            {% if iterator > 0 %}<br>{% endif %}
+                                            <b>{{ key |trans }}</b>
+                                            {% for state, condition in change %}
+                                                {% if condition is not iterable %}
+                                                    {% if state == 0 %}
+                                                        <br><i>было:</i> {{ condition }}
+                                                    {% else %}
+                                                        <br><i>стало:</i> {{ condition }}
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endfor %}
+                                            <br>
+                                            {% set iterator = iterator + 1 %}
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            </td>
+                            <td class="text-center">
+                                {% if log.published %}
+                                    {{ published_btn |raw }}
+                                {% else %}
+                                    {% if is_granted('ROLE_ADMIN') %}
+
+                                        <button class="btn btn-sm btn-primary" data-log-id="{{ log.id }}"
+                                                id="publish_{{ log.id }}" type="button">Опубликовать
+                                        </button>
+                                        {% else %}
+                                            <span class="badge badge-success">Публикуется</span>
+                                    {% endif %}
+
+
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <th colspan="7" class="text-center">Нет свежих логов</th>
+                    </tr>
+                {% endif %}
+            </table>
+
+            <div class="navigation">
+                {{ knp_pagination_render(logs) }}
+            </div>
+
+            {#{% for action in actions %}
+                {% spaceless %}
+                <div id="alert_{{ action.id }}" class="alert alert-{% if action.status == constant('\\HB\\AdminBundle\\Entity\\CustomerAction::STATUS_NEW_MODERATE') %}primary
+                    {% endif %}
+                    " role="alert">
+                    <h6 class="alert-heading">[{{ action.dateCreatedAt.format('d.m.Y H:i') }}] <b>{{ action.title }}</b></h6>
+                    <button onclick="actionViewed({{ action.id }})" type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    Пользователь: {{ action.customer.email }}
+                </div>
+                {% endspaceless %}
+            {% else %}
+                <div style="text-align: center">Нет новых действий</div>
+            {% endfor %}#}
+
+
+
+            {#<div class="alert alert-success" role="alert">#}
+            {#This is a success alert—check it out!#}
+            {#</div>#}
+        </div>
+    </div>
+{% endblock %}

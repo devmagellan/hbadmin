@@ -1,0 +1,116 @@
+{% extends "@HBAdmin/layout.html.twig" %}
+
+{% block css_head %}
+    <style>
+        .filters {
+            display: flex;
+        }
+    </style>
+{% endblock %}
+
+
+{% block js_footer %}
+    <script>
+        $(function () {
+            $('.navigation a').click(function () {
+                let page = $(this).text();
+                let input = $("<input>").attr("type", "hidden").attr("name", "page").val(page);
+                {% if use_filters == 1 %}
+                $('form[name=filters] input[type=text][name^="f"], select[name^="f"]').each(function () {
+                    if ($(this).val()) {
+                        $('form[name=filters]').append($(input)).submit();
+                    }
+                });
+                {% endif %}
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block body %}
+
+    <div class="card">
+        <div class="card-header">
+            Активность студентов
+        </div>
+        <div class="card-body">
+
+            <form name="filters" method="get" action="{{ path('hb.teachable_student.progress_list') }}">
+                <div class="filters">
+
+                    <select name="f[courseName]" class="form-control">
+                        <option value="">[Курс]</option>
+                        {% for courseName in courseNames %}
+                            <option value="{{ courseName }}"
+                                    {% if filters and filters.courseName == courseName %}selected{% endif %}>
+                                {{ courseName }}
+                            </option>
+                        {% endfor %}
+                    </select>
+
+                    <select name="f[studentName]" class="form-control">
+                        <option value="">[Студент]</option>
+                        {% for studentName in studentNames %}
+                            <option value="{{ studentName }}"
+                                    {% if filters and filters.studentName == studentName %}selected{% endif %}>
+                                {{ studentName }}
+                            </option>
+                        {% endfor %}
+                    </select>
+
+
+                    <button class="btn btn-success" type="submit">Применить фильтр</button>
+                    <a href="{{ path('hb.teachable_student.progress_list') }}" class="btn btn-warning">Сбросить</a>
+
+                </div>
+            </form>
+
+            <div class="navigation">
+                {{ knp_pagination_render(students) }}
+            </div>
+
+            <table class="table table-bordered table-condensed">
+                <tr>
+                    <th>ФИО</th>
+                    <th>% завершения</th>
+                    <th>Сдано тестов</th>
+                    <th>Сумма баллов</th>
+
+                    <th>Ответы</th>
+                    <th>Баллы за ответы</th>
+                    <th>Итого баллов</th>
+                    <th>Курс</th>
+                </tr>
+
+                {% if students | length > 0 %}
+                    {% for row in students %}
+                        <tr>
+                            <td>{{ row.progress.studentName }} ({{ row.progress.studentEmail }})</td>
+                            <td>{{ row.progress.percentComplete }}</td>
+                            <td>{% if row.quizCount %}{{ row.quizCount }}{% endif %}</td>
+                            <td>{% if row.progress.correctAnswers %}{{ row.progress.correctAnswers }}{% endif %}</td>
+                            <td>{% if row.commentsCount %}{{ row.commentsCount }}{% endif %}</td>
+                            <td>{% if row.progress.commentsRating %} {{ row.progress.commentsRating }}{% endif %}</td>
+                            <td>
+                                {{ (row.progress.correctAnswers + row.progress.commentsRating) }}
+                                {#count comments marks + correctAnswers by student#}
+                            </td>
+                            <td>{{ row.progress.courseName }}</td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <th colspan="8" class="text-center">
+                            Нет данных по студентам
+                        </th>
+                    </tr>
+                {% endif %}
+            </table>
+
+            <div class="navigation">
+                {{ knp_pagination_render(students) }}
+            </div>
+
+        </div>
+    </div>
+{% endblock %}

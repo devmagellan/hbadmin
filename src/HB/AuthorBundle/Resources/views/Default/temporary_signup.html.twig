@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+
+
+<div class="signup">
+    <script>
+        const packet_professional = '{{ constant('\\HB\\AdminBundle\\Entity\\Types\\CustomerPacketType::PROFESSIONAL') }}';
+        const packet_premium = '{{ constant('\\HB\\AdminBundle\\Entity\\Types\\CustomerPacketType::PREMIUM') }}';
+        const packet_vip = '{{ constant('\\HB\\AdminBundle\\Entity\\Types\\CustomerPacketType::VIP') }}';
+        const packet_custom = '{{ constant('\\HB\\AdminBundle\\Entity\\Types\\CustomerPacketType::CUSTOM') }}';
+
+    </script>
+    <br><br><br><br><br><br>
+    <div style="width: 300px;">
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button type="submit">Зарегистрироваться</button>
+        {{ form_end(form) }}
+    </div>
+    <br><br><br><br>
+</div>
+
+
+</body>
+</html>

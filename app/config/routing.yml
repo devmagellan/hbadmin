@@ -1,0 +1,45 @@
+fos_js_routing:
+    resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
+
+hb_admin:
+    resource: "@HBAdminBundle/Resources/config/routing.yml"
+    prefix:   /crm
+
+hb_api:
+    resource: "@HBAdminBundle/Resources/config/routing_api.yml"
+    prefix:   /api
+
+hb_front:
+    resource: "@HBAuthorBundle/Resources/config/routing.yml"
+    prefix:   /
+
+# author_homepage_alt:
+#     path:     /indexAlt
+#     defaults: { _controller: 'hb.author.controller.indexAlt.view:handleAction' }
+
+login:
+    path:   /login
+    defaults: { _controller: HBAdminBundle:Login:index }
+
+router:
+    path:   /
+    defaults: { _controller: HBAdminBundle:Login:router }
+
+logout:
+    path:   /logout
+
+hb.customer.password.recovery.request:
+    path:  /password_recovery/
+    defaults: { _controller: 'hb.admin.controller.password.recovery.request:handleAction'}
+
+hb.customer.password.recovery:
+    path:  /recovery_password/{hash}
+    defaults: { _controller: 'hb.admin.controller.password.recovery:handleAction'}
+
+hb.customer.signup.confirm_data:
+    path:  /confirm/data/{hash}
+    defaults: { _controller: 'hb.admin.controller.signup.confirm_data:handleAction'}
+
+hb.customer.signup.confirm_sms:
+    path:  /confirm/sms/{hash}
+    defaults: { _controller: 'hb.admin.controller.signup.confirm_sms:handleAction'}

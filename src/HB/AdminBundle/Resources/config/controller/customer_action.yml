@@ -1,0 +1,27 @@
+services:
+    hb.admin.controller.customer_action.list:
+        class: HB\AdminBundle\Controller\CustomerAction\ListController
+        arguments:
+            - "@twig"
+            - "@doctrine.orm.entity_manager"
+            - "@knp_paginator"
+            - "@security.token_storage"
+            - "@customer.access.service"
+
+    hb.admin.controller.customer_action.viewed:
+        class: HB\AdminBundle\Controller\CustomerAction\ViewedController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+
+    hb.admin.controller.customer_action.count:
+        class: HB\AdminBundle\Controller\CustomerAction\ActionCountController
+        arguments:
+            - "@twig"
+            - "@doctrine.orm.entity_manager"
+            - "@security.token_storage"
+
+    hb.admin.controller.customer_action.mark_published:
+        class: HB\AdminBundle\Controller\CustomerAction\MarkPublishedController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@security.token_storage"

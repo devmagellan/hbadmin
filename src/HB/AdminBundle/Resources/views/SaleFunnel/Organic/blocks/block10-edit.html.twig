@@ -1,0 +1,15 @@
+{% form_theme form with ['bootstrap_4_layout.html.twig', '@HBAdmin/form/fields.html.twig'] %}
+
+<form method="post" class="modal_block_form" name="edit_additional_block_{{ block.id }}" data-block-id="{{ block.id }}">
+    {{ form_start(form) }}
+    <div class="modal-body">
+
+        {{ form_widget(form) }}
+
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+    </div>
+    {{ form_end(form) }}
+</form>

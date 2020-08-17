@@ -1,0 +1,79 @@
+{% extends "@HBAdmin/layout.html.twig" %}
+
+{% import '@HBAdmin/macros/view_link.html.twig' as demo_link %}
+{% import '@HBAdmin/macros/return_to_course.html.twig' as return %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="{{ path('hb.courses.list') }}">Продукты</a>
+        </li>
+        <li class="breadcrumb-item active">
+            <a href="{{ path('hb.course.edit', {id: course.id}) }}">{{ course.info.title }}</a>
+        </li>
+        <li class="breadcrumb-item">Воронки</li>
+        <li class="breadcrumb-item">Выгодная формула</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+
+    <div class="card">
+        <div class="card-header">
+            Добавить воронку {{ return.render(course.id) }}
+
+            <div class="pull-right">
+                {{ demo_link.render(asset('bundles/hbadmin/img/funnel_landing/downsell.png')) }}
+            </div>
+        </div>
+        <div class="card-body">
+            {% if added %}
+                <div class="alert alert-success" role="alert">Добавлено!</div>
+            {% endif %}
+            <div class="row">
+
+                <div class="col-md-4">
+                    {{ form_start(form) }}
+                    {{ form_widget(form) }}
+                    <input type="submit" value="Добавить" class="btn btn-primary"/>
+                    {{ form_end(form) }}
+                </div>
+
+                {% if course.salesFunnelDownSells | length > 0 %}
+                    <div class="col-md-8">
+
+                        <h5>Список воронок "Выгодная формула"</h5>
+                        <table class="table table-bordered auto-width text-center">
+
+                            <tr>
+                                <th>Название</th>
+                                <th>Разделов</th>
+                                <th>Разделы</th>
+                                <th>Кол-во дней</th>
+                                <th>Цена</th>
+                                <th></th>
+                            </tr>
+                            {% for funnel in course.salesFunnelDownSells %}
+
+                                <tr>
+                                    <td>{{ funnel.name }}</td>
+                                    <td>{{ funnel.sections | length }}</td>
+                                    <td>{{ funnel.sections | join('<br>') | raw }}</td>
+                                    <td>{{ funnel.term }}</td>
+                                    <td>{{ funnel.price }}</td>
+                                    <td>
+                                        <a href="{{ path('hb.sale_funnel.down_sell.edit', {id: funnel.id}) }}"
+                                           class="btn btn-pill btn-sm btn-info"><i class="fa fa-edit"></i> </a>
+                                        <a href="{{ path('hb.sale_funnel.down_sell.remove', {id: funnel.id}) }}"
+                                           class="btn btn-pill btn-sm btn-danger"><i class="fa fa-remove"></i> </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
